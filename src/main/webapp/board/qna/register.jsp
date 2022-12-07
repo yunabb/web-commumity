@@ -1,7 +1,7 @@
+<%@page import="com.community.dao.QuestionDao"%>
+<%@page import="com.community.vo.Question"%>
 <%@page import="com.community.vo.Board"%>
 <%@page import="com.community.util.StringUtils"%>
-<%@page import="com.community.vo.Post"%>
-<%@page import="com.community.dao.PostDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 
 <%
@@ -13,16 +13,16 @@
 	String content = request.getParameter("content");
 	String important = request.getParameter("important");
 	
-	Post post = new Post();
-	post.setBoard(new Board(boardNo));
-	post.setTitle(title);
-	post.setContent(content);
+	Question question = new Question();
+	question.setBoard(new Board(boardNo));
+	question.setTitle(title);
+	question.setContent(content);
 	// loginUserId 정보를 받아온다
-	// post.setEmployee(new Employee(loginUserId));
-	post.setImportant(important);
+	// qustion.setEmployee(new Employee(loginUserId));
+	question.setImportant(important);
 	
-	PostDao postDao = PostDao.getInstance();
-	postDao.insertPost(post);
+	QuestionDao questionDao = QuestionDao.getInstance();
+	questionDao.insertPost(question);
 	
 	response.sendRedirect("list.jsp");
 %>

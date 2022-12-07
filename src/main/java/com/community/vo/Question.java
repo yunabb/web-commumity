@@ -19,6 +19,11 @@ public class Question {
 	private Date deletedDate;
 	private int originalNo;
 	
+	public Question() {}
+	
+	public Question(int postNo) {
+		this.postNo = postNo;
+	}
 	
 	public int getPostNo() {
 		return postNo;
