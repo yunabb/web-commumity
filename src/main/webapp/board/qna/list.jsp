@@ -96,24 +96,6 @@
 									<td>12</td>
 									<td>10</td>
 								</tr>
-								<tr>
-									<td><input type="checkbox" name="" value=""/></td>
-									<td>100000</td>
-									<td><a href="" class="text-decoration-none text-dark"><i class="bi bi-question-circle-fill"></i> 공지사항 등록</a></td>
-									<td>홍길동</td>
-									<td>2022-12-01</td>
-									<td>12</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="" value=""/></td>
-									<td>100000</td>
-									<td class="ps-4"><a href="" class="text-decoration-none text-dark"><i class="bi bi-arrow-return-right"></i> 공지사항 등록</a></td>
-									<td>홍길동</td>
-									<td>2022-12-01</td>
-									<td>12</td>
-									<td>10</td>
-								</tr>
 							</tbody>
 						</table>
 					</form>
