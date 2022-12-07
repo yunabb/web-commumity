@@ -14,7 +14,7 @@
 	// 저장된 직원정보가 없으면 error=fail 메세지를 띄우고 로그인페이지를 재요청한다.
 	Employee savedEmp = employeeDao.getEmployeeByNo(empNo);
 	if (savedEmp == null) {
-		response.sendRedirect("loginform.jsp?error-fail");
+		response.sendRedirect("loginform.jsp?error=fail");
 		return;
 	}
 	
