@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap namespace="employees">
+
+<!-- 
+	 	사용자정보를 전달받아서 comm_employees 테이블에 저장한다.
+	  -->
+	  
+	  <insert id="insertEmployee" parameterClass="com.community.vo.Employee">
+	  	insert into comm_employees
+	  		(emp_no, emp_password, emp_name, emp_email, emp_phone, emp_dept_no, emp_position_no)
+	  	values
+	  		(comm_employees_seq.nextval, #password#, #name#, #email#, #phone#, #dept.no#, #position.no#)
+	  </insert>
+<!-- 
+		아이디를 전달받아 comm_employees 테이블에서 사용자정보를 조회하여 employee객체 반환
+	 -->
+	 
+	 <select id="getEmployeeByNo" parameterClass="int" resultClass="com.community.vo.Employee">
+	 	select
+	 		emp_no					as no,
+	 		emp_password 			as password,
+	 		emp_name 				as name, 
+	 		emp_email 				as email,
+	 		emp_phone 				as phone,
+	 		emp_dept_no 			as "dept.no"",
+	 		emp_position_no 		as "position.no",
+	 		emp_deleted 			as deleted,
+	 		emp_created_date 		as createdDate,
+	 		emp_updated_date 		as updatedDate
+	 	from
+	 		comm_employees
+	 	where
+	 		emp_ = #value#
+	 </select>
+	 
+	<!-- 
+		전화번호를 전달받아 comm_employees 테이블에서 사용자정보를 조회하여 employee객체 반환
+	 -->
+	  <select id="getEmployeeByPhone" parameterClass="string" resultClass="com.community.vo.Employee">
+	 	select
+	 		emp_no					as no,
+	 		emp_password 			as password,
+	 		emp_name 				as name, 
+	 		emp_email 				as email,
+	 		emp_phone 				as phone,
+	 		emp_dept_no 			as "dept.no"",
+	 		emp_position_no 		as "position.no",
+	 		emp_deleted 			as deleted,
+	 		emp_created_date 		as createdDate,
+	 		emp_updated_date 		as updatedDate
+	 	from
+	 		comm_employees
+	 	where
+	 		emp_email = #value#
+	 </select>
+	 
+	 <!-- 
+		Id가 동일한 Employee객체값 업데이트
+	 -->
+	 <update id="updateEmployee" parameterClass="com.community.vo.Employee">
+		update 
+			comm_employees
+		set
+	 		emp_password = #password#,
+	 		emp_name = #name#, 
+	 		emp_email = #email#,
+	 		emp_phone = #phone#,
+	 		emp_dept_no = #dept.no#,
+	 		emp_position_no = #position.no#
+		where
+			emp_no = #no#
+	</update>
+	 
+	 
+</sqlMap>
+
