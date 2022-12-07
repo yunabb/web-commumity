@@ -26,4 +26,4 @@
 	<sqlMap resource="META-INF/ibatis/mappers/postitions.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/posts.xml" />
 
-</sqlMapConfig>
+</sqlMapConfig>	
