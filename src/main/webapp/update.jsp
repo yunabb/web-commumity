@@ -11,17 +11,10 @@
 	// 비밀번호 
 	String oldPwd = request.getParameter("oldPwd");
 	String newPwd = request.getParameter("newPwd");
-	String confirm = request.getParameter("confirm");
 
 	// 직원정보의 비밀번호와 기존 비밀번호가 다를 경우 에러
-	if(!loginedEmp.getPassword().equals(oldPwd)) {
+	if(!!loginedEmp.getPassword().equals(oldPwd)) {
 		response.sendRedirect("updateform.jsp?error=fail1");
-		return;
-	}
-	
-	// 새 비밀번호와 비밀번호 확인 입력이 다를 때 에러
-	if(!newPwd.equals(confirm)) {
-		response.sendRedirect("updateform.jsp?error=fail2");
 		return;
 	}
 	
@@ -32,7 +25,7 @@
 	
 	empDao.updateEmployee(loginedEmp);
 
-	
+	response.sendRedirect("home.jsp");
 
 
 

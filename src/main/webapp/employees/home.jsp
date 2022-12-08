@@ -41,7 +41,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-9"  id = "myinfo">
+		<div class="col-9">
 			<div class="row mb-3">
 				<div class="col-12">
 					<p>내 정보를 확인하세요</p>
@@ -72,7 +72,7 @@
 					</table>
 				</div>
 			</div>
-			<div class="row mb-3"  id = "myinfo">
+			<div class="row mb-3"  id="myinfo">
 				<div class="col-12">
 					<div class="card">
 						<div class="card-header">내 정보</div>
