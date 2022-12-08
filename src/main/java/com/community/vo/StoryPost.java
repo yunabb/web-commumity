@@ -2,7 +2,7 @@ package com.community.vo;
 
 import java.util.Date;
 
-public class TalkPost {
+public class StoryPost {
 	// 자유게시판의 하위게시판인 사는이야기 게시판의 게시글
 	
 	private int postNo;				// 게시글 번호
@@ -19,7 +19,7 @@ public class TalkPost {
 	private Date updatedDate;		// 수정일
 	private Date deletedDate;		// 삭제일	
 	
-	public TalkPost() {}
+	public StoryPost() {}
 
 	public int getPostNo() {
 		return postNo;
@@ -127,7 +127,7 @@ public class TalkPost {
 
 	@Override
 	public String toString() {
-		return "TalkPost [postNo=" + postNo + ", boardNo=" + boardNo + ", title=" + title + ", writerNo=" + writerNo
+		return "StoryPost [postNo=" + postNo + ", boardNo=" + boardNo + ", title=" + title + ", writerNo=" + writerNo
 				+ ", content=" + content + ", important=" + important + ", readCount=" + readCount
 				+ ", suggestionCount=" + suggestionCount + ", commentCount=" + commentCount + ", deleted=" + deleted
 				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", deletedDate=" + deletedDate
