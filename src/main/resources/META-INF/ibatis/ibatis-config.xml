@@ -27,6 +27,6 @@
 	<sqlMap resource="META-INF/ibatis/mappers/notices.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/postitions.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/posts.xml" />
-	<sqlMap resource="META-INF/ibatis/mappers/talkposts.xml" />
+	<sqlMap resource="META-INF/ibatis/mappers/storyposts.xml" />
 
 </sqlMapConfig>	
