@@ -48,7 +48,8 @@
 	 		emp_email = #email#,
 	 		emp_phone = #phone#,
 	 		emp_dept_no = #department.no#,
-	 		emp_position_no = #position.no#
+	 		emp_position_no = #position.no#,
+	 		emp_updated_date = sysdate
 		where
 			emp_no = #empNo#
 	</update>
