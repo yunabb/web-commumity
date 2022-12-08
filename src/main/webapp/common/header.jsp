@@ -37,6 +37,7 @@
 %>		
 		<span class="navbar-text"><strong class="text-white"><%=emp.getName() %> </strong> 님 환영합니다.</span>
 		<ul class="navbar-nav">
+			<li class="nav-item"><a class="nav-link" href="/web-community/employees/home.jsp">마이페이지</a></li>
 			<li class="nav-item"><a class="nav-link" href="/web-community/logout.jsp">로그아웃</a></li>
 		</ul>
 <%
