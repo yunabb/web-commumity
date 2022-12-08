@@ -18,10 +18,12 @@ public class BoardDao {
 		SqlMapper.insert("boards.insertBoard", board);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Board> getBoards() {
 		return (List<Board>) SqlMapper.selectList("boards.getBoards");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Board> getBoardByNo(int boardNo) {
 		return (List<Board>) SqlMapper.selectList("boards.getBoardByNo", boardNo);
 	}

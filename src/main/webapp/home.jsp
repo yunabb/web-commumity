@@ -22,7 +22,7 @@
 				<p class="">공지사항, 각종 News, 경조사, 생활정보 등의 다양한 내용을 게시판을 통해 공유, 전파할 수 있습니다.</p>
 
 				<div>
-					<a href="/login" class="btn btn-primary">로그인</a>
+					<a href="loginform.jsp" class="btn btn-primary">로그인</a>
                 </div>
             </div>
         </div>

@@ -53,7 +53,7 @@
 					<input type="password" class="form-control" name="password"/>
 				</div>
 				<div class="text-end">
-					<a href="../home.jsp" class="btn btn-secondary">취소</a>
+					<a href="home.jsp" class="btn btn-secondary">취소</a>
 					<button type="submit" class="btn btn-primary">로그인</button>
 				</div>
 			</form>
