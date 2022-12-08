@@ -1,3 +1,6 @@
+<%@page import="com.community.vo.Board"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.dao.BoardDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,6 +18,7 @@
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
 <div class="container my-3">
+
 	<div class="row mb-3">
 		<div class="col">
 			<h1 class="heading">게시판 관리</h1>
@@ -52,6 +56,7 @@
 							</ul>
 						</div>
 						<div class="col-9">
+
 							<form class="p-3" method="post" action="">
 								<table class="table table-sm">
 									<colgroup>
@@ -64,7 +69,7 @@
 											<td>
 												<select class="form-select form-select-sm" name="">
 													<option value=""> 선택안함</option>
-													<option value="100"> 공지사항</option>
+													<option value="100"></option>
 													<option value="100"> 공지사항</option>
 													<option value="100"> 공지사항</option>
 													<option value="100"> 공지사항</option>
@@ -125,7 +130,7 @@
 									</tbody>
 								</table>
 								<div class="text-end">
-									<button class="btn btn-dark btn-xs">수정</button>
+									<button class="btn btn-dark btn-xs"><></button>
 									<button class="btn btn-secondary btn-xs">취소</button>
 									<button class="btn btn-primary btn-xs">신규 등록</button>
 								</div>
