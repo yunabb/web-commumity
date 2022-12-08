@@ -12,7 +12,7 @@
 	  	insert into comm_employees
 	  		(emp_no, emp_password, emp_name, emp_email, emp_phone, emp_dept_no, emp_position_no)
 	  	values
-	  		(comm_employees_seq.nextval, #password#, #name#, #email#, #phone#, #dept.no#, #position.no#)
+	  		(comm_employees_seq.nextval, #password#, #name#, #email#, #phone#, #department.no#, #position.no#)
 	  </insert>
 <!-- 
 		아이디를 전달받아 comm_employees 테이블에서 사용자정보를 조회하여 employee객체 반환
@@ -20,12 +20,12 @@
 	 
 	 <select id="getEmployeeByNo" parameterClass="int" resultClass="com.community.vo.Employee">
 	 	select
-	 		emp_no					as no,
+	 		emp_no					as empNo,
 	 		emp_password 			as password,
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "dept.no"",
+	 		emp_dept_no 			as "department.no"",
 	 		emp_position_no 		as "position.no",
 	 		emp_deleted 			as deleted,
 	 		emp_created_date 		as createdDate,
@@ -33,7 +33,7 @@
 	 	from
 	 		comm_employees
 	 	where
-	 		emp_ = #value#
+	 		emp_no = #value#
 	 </select>
 	 
 	<!-- 
@@ -41,12 +41,12 @@
 	 -->
 	  <select id="getEmployeeByPhone" parameterClass="string" resultClass="com.community.vo.Employee">
 	 	select
-	 		emp_no					as no,
+	 		emp_no					as empNo,
 	 		emp_password 			as password,
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "dept.no"",
+	 		emp_dept_no 			as "department.no"",
 	 		emp_position_no 		as "position.no",
 	 		emp_deleted 			as deleted,
 	 		emp_created_date 		as createdDate,
@@ -68,10 +68,10 @@
 	 		emp_name = #name#, 
 	 		emp_email = #email#,
 	 		emp_phone = #phone#,
-	 		emp_dept_no = #dept.no#,
+	 		emp_dept_no = #department.no#,
 	 		emp_position_no = #position.no#
 		where
-			emp_no = #no#
+			emp_no = #empNo#
 	</update>
 	 
 	 
