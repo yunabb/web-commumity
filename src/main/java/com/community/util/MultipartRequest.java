@@ -32,22 +32,7 @@ public class MultipartRequest {
 	private Map<String, List<FileItem>> parameterMap;
 	private Map<String, List<String>> formFieldMap = new HashMap<>();
 	
-<<<<<<< HEAD
-	   /**
-	    * MultipartRequest 객체를 초기화한다.
-	    * <p>enctype="multipart/form-data" 요청을 처리하는 클래스다.
-	    * <p>MultipartRequest객체를 생성하면 요청 메세지를 바디부에 저장된 폼 입력값, 첨부파일을 분석하고 처리한다.
-	    * <p>MultipartRequest객체를 생성하면 업로드된 첨부파일은 지정된 디렉토리에 자동으로 저장된다.
-	    * 
-	    * <p>폼 입력값은 MultipartRequest가 제공하는 
-	    *    String getParameter(String name), String[] getParameterValues(String name)를 이용해서 조회할 수 있다.
-	    * <p>첨부파일이름은 MultipartRequest가 제공하는 
-	    *    String getFilename(String name)를 이용해서 조회할 수 있다.
-	    * @param request 요청객체
-	    * @param saveDirectory 첨부파일 저장디렉토리 경로
-	    */
-	
-=======
+
 	/**
 	 * MultipartRequest 객체를 요청한다.
 	 * <p>enctype="multipart/form-data" 요청을 처리하는 클래스다.
@@ -61,7 +46,7 @@ public class MultipartRequest {
 	 * @param request 요청객체
 	 * @param saveDirectory 첨부파일 저장디렉토리 경로
 	 */
->>>>>>> ba52911444db368ee677239827b7299a8bf95588
+
 	public MultipartRequest(HttpServletRequest request, String saveDirectory) throws ServletException, IOException {
 		this.request = request;
 		this.directory = saveDirectory;
