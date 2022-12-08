@@ -5,6 +5,7 @@ public class Pagination {
 	private int rows;			// 한 화면에 표시되는 데이터 갯수
 	private int pages;			// 한 화면에 표시되는 페이지번호 갯수
 	private int currentPage;	// 요청한 페이지 번호
+
 	private int totalRows;		// 전체 데이터 갯수
 	
 	/**
@@ -28,6 +29,7 @@ public class Pagination {
 		this(currentPage, totalRows, rows, 5);
 		
 	}
+
 	
 	/**
 	 * 요청한 페이지번호, 전체 데이터 갯수, 한 화면에 표시할 행의 갯수, 한 화면에 표시할 페이지번호 갯수를 전달받아서 Pagination객체를 초기화한다.
@@ -42,7 +44,7 @@ public class Pagination {
 		this.rows = rows;
 		this.pages = pages;
 	}
-	
+  
 	/**
 	 * 요청한 페이지번호의 조회 시작번호를 반환한다.
 	 * @return
