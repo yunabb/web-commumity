@@ -6,9 +6,9 @@ public class StoryPost {
 	// 자유게시판의 하위게시판인 사는이야기 게시판의 게시글
 	
 	private int postNo;				// 게시글 번호
-	private int boardNo;			// 게시판 번호
+	private Board board;			// 게시판 번호
 	private String title;			// 게시글 제목
-	private int writerNo;			// 작성자 번호
+	private Employee employee;			// 작성자 번호
 	private String content;			// 게시글 내용
 	private String important;		// 중요게시글 여부
 	private int readCount;			// 조회수
@@ -29,12 +29,12 @@ public class StoryPost {
 		this.postNo = postNo;
 	}
 
-	public int getBoardNo() {
-		return boardNo;
+	public Board getBoard() {
+		return board;
 	}
 
-	public void setBoardNo(int boardNo) {
-		this.boardNo = boardNo;
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 
 	public String getTitle() {
@@ -45,12 +45,12 @@ public class StoryPost {
 		this.title = title;
 	}
 
-	public int getWriterNo() {
-		return writerNo;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setWriterNo(int writerNo) {
-		this.writerNo = writerNo;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	public String getContent() {
@@ -125,13 +125,5 @@ public class StoryPost {
 		this.deletedDate = deletedDate;
 	}
 
-	@Override
-	public String toString() {
-		return "StoryPost [postNo=" + postNo + ", boardNo=" + boardNo + ", title=" + title + ", writerNo=" + writerNo
-				+ ", content=" + content + ", important=" + important + ", readCount=" + readCount
-				+ ", suggestionCount=" + suggestionCount + ", commentCount=" + commentCount + ", deleted=" + deleted
-				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", deletedDate=" + deletedDate
-				+ "]";
-	}
 
 }
