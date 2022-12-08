@@ -25,7 +25,7 @@
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "department.no"",
+	 		emp_dept_no 			as "department.no",
 	 		emp_position_no 		as "position.no",
 	 		emp_deleted 			as deleted,
 	 		emp_created_date 		as createdDate,
@@ -34,27 +34,6 @@
 	 		comm_employees
 	 	where
 	 		emp_no = #value#
-	 </select>
-	 
-	<!-- 
-		전화번호를 전달받아 comm_employees 테이블에서 사용자정보를 조회하여 employee객체 반환
-	 -->
-	  <select id="getEmployeeByPhone" parameterClass="string" resultClass="com.community.vo.Employee">
-	 	select
-	 		emp_no					as empNo,
-	 		emp_password 			as password,
-	 		emp_name 				as name, 
-	 		emp_email 				as email,
-	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "department.no"",
-	 		emp_position_no 		as "position.no",
-	 		emp_deleted 			as deleted,
-	 		emp_created_date 		as createdDate,
-	 		emp_updated_date 		as updatedDate
-	 	from
-	 		comm_employees
-	 	where
-	 		emp_email = #value#
 	 </select>
 	 
 	 <!-- 
