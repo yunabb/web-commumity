@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap namespace="boards">
+	<!-- 게시판 목록을 등록 -->	
+	<insert id="insertBoard" parameterClass="com.community.vo.Board">
+		insert into comm_boards
+			(board_no, board_name, board_description, board_seq, board_read_option, 
+			 board_write_option, board_deleted, parent_board_no)
+		values
+			(comm_boards_seq.nextval, #name#, #description#, #seq#, 
+				#readOption#, #writeOption#, #deleted#, #parentBoardNo#)
+	</insert>
+
+	<!-- 게시판 목록 정보 가져오기 -->
+	<select id="getBoards" resultClass="com.community.vo.Board">
+		select
+			board_no			as boardNo,
+			board_name			as name,
+			board_description	as description,
+			board_seq			as seq,
+			board_read_option	as readOption,
+			board_write_option	as writeOption,
+			board_deleted		as deleted,
+			board_created_date	as createdDate,
+			board_updated_date	as updatedDate,
+			board_deleted_date	as deletedDate,
+			parent_board_no		as parentBoardNo
+		from	
+			comm_boards
+	</select>
+	
+	<!-- 번호를 통해 상세 게시판 가져옴 -->
+	<select id="getBoardByNo" parameterClass="int" resultClass="com.community.vo.Board">
+		select
+			board_no 			as boardNo,
+			board_name 			as name,
+			board_description 	as description,
+			board_seq 			as seq,
+			board_read_option 	as readOption,
+			board_write_option 	as writeOption,
+			board_deleted 		as deleted,
+			board_created_date 	as createdDate,
+			board_updated_date 	as updatedDate,
+			board_deleted_date 	as deletedDate,
+			parent_board_no 	as parentBoardNo
+		from
+			comm_boards
+		where
+			board_no = #value#
+	</select>
+	
+	<!-- 게시판 목록을 수정 -->
+	<update id="updateBoard" parameterClass="com.community.vo.Board">
+		update
+			comm_boards
+		set
+			board_seq = #seq#,
+			board_name = #name#,
+			board_description = #description#,
+			board_read_option = #readOption#,
+			board_write_option = #writeOption#,
+		where
+			board_no = #boardNo#
+	</update>
+	
+	<!-- 게시판 목록 삭제 -->
+	<delete id="deleteBoard" parameterClass="int">
+		delete from
+			comm_boards
+		where
+			board_no = #value#
+	</delete>
+</sqlMap>
+
