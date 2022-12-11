@@ -17,7 +17,9 @@ public class Question {
 	private Date createdDate;
 	private Date updatedDate;
 	private Date deletedDate;
-	private int originalNo;
+	private Integer originalNo;
+	private Department department;
+	private Position position;
 	
 	public Question() {}
 	
@@ -103,11 +105,29 @@ public class Question {
 	public void setDeletedDate(Date deletedDate) {
 		this.deletedDate = deletedDate;
 	}
-	public int getOriginalNo() {
+	public Integer getOriginalNo() {
 		return originalNo;
 	}
-	public void setOriginalNo(int originalNo) {
+	public void setOriginalNo(Integer originalNo) {
 		this.originalNo = originalNo;
 	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+	
+	
 	
 }

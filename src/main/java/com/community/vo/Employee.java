@@ -17,6 +17,12 @@ public class Employee {
 	private Date updatedDate;
 	private Date deletedDate;
 	
+	public Employee() {}
+	
+	public Employee(String name) {
+		this.name = name;
+	}
+	
 	public int getEmpNo() {
 		return empNo;
 	}
