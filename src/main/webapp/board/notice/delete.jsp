@@ -14,6 +14,7 @@
 	NoticeDao noticeDao = NoticeDao.getInstance();
 	Notice notice = noticeDao.getNoticeByPostNo(no);
 	
+	//commit
 		// 로그인한 사용자의 아이디와 게시글 작성자의 아이디가 서로다르면 게시글을 삭제할 수 없다.
 		// detail.jsp를 재요청하는 URL을 응답으로 보낸다.
 		//if (!loginedEmp.getEmpNo().equals(notice.getEmployees().getEmpNo())) {
