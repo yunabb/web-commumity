@@ -29,4 +29,5 @@ public class EmployeeDao {
 	public Employee getEmployeeByNoJoin(int empNo) {
 		return (Employee) SqlMapper.selectOne("employees.getEmployeeByNoJoin", empNo);
 	}
+
 }

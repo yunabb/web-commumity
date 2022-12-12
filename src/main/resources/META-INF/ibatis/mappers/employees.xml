@@ -53,21 +53,21 @@
 		where
 			emp_no = #empNo#
 	</update>
-	
+
 	<select id="getEmployeeByNoJoin" parameterClass="int" resultClass="com.community.vo.Employee">
 		select
-	 		A.emp_no					as empNo,
+	 		A.emp_no					  as empNo,
 	 		A.emp_password 			as password,
-	 		A.emp_name 				as name, 
+	 		A.emp_name 				  as name, 
 	 		A.emp_email 				as email,
 	 		A.emp_phone 				as phone,
 	 		A.emp_dept_no 			as "department.no",
-            B.department_name         as "department.name", 
-	 		A.emp_position_no 		as "position.no",
-            C.position_name         as "position.name",
+      B.department_name   as "department.name", 
+	 		A.emp_position_no 	as "position.no",
+      C.position_name     as "position.name",
 	 		A.emp_deleted 			as deleted,
-	 		A.emp_created_date 		as createdDate,
-	 		A.emp_updated_date 		as updatedDate
+	 		A.emp_created_date  as createdDate,
+	 		A.emp_updated_date 	as updatedDate
 	 	from
 	 		comm_employees A, comm_departments B, comm_positions C
 	 	where
@@ -75,6 +75,7 @@
             and A.emp_position_no = C.position_no
             and emp_no = #value#
 	</select>
+
 	 
 </sqlMap>
 
