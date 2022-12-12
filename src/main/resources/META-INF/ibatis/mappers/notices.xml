@@ -4,13 +4,156 @@
  
 <sqlMap namespace="notices">
 
-	<select id="getFileShareByNo" parameterClass="int" resultClass="com.community.vo.Notice">
-		select
-			*
-		from
-			semi_community_posts
+	<!-- 
+		공지사항게시판에 게시글 등록하기
+	 -->
+	<insert id="insertNotice" parameterClass="com.community.vo.Notice">
+		insert into comm_posts
+			(post_no, post_board_no, post_title, post_writer_no, post_content)
+		values
+			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#)	
+	</insert>
+	
+	<!--  
+		공지사항 수정하기
+	-->
+	<update id="updateNotice" parameterClass="com.community.vo.Notice">
+		update
+			comm_posts
+		set
+			post_title = #title#,
+			post_content = #content#,
+			post_important = #important#,
+			post_read_count = #readCount#,
+			post_suggestion_count = #suggestionCount#,
+			post_comment_count = #commentCount#,
+			post_deleted = #deleted#,
+			post_updated_date = sysdate,
+			post_deleted_date = sysdate
 		where
-			post_board_no = 100
-			and post_no = #value#
+			post_no = #postNo#
+	</update>
+	
+	<!-- 
+		공지사항 게시판의 게시글 총 갯수 조회 
+	-->
+	<select id="getTotalRows" resultClass="int">
+		select 
+			count(*)
+		from 
+			comm_posts
+		where
+			post_deleted = 'N'
+		<dynamic>
+			<isNotNull property="opt">
+				<isEqual property="opt" compareValue="title">
+					and post_title like '%' || #keyword# || '%'
+				</isEqual>
+				<isEqual property="opt" compareValue="writer">
+					and post_writer_no  in (select emp_no 
+					                        from comm_employees
+					                        where emp_name = #keyword#)
+				</isEqual>
+				<isEqual property="opt" compareValue="content">
+					and post_content like '%' || #keyword# || '%'
+				</isEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<!--
+		공지사항 게시판의 게시글 전체 목록 조회 및 페이징처리		
+	 -->
+	<select id="getNotices" parameterClass="map" resultClass="com.community.vo.Notice">
+		select
+			A.post_no as postNo,
+			A.post_board_no as "board.boardNo",
+			A.post_title as title,
+			A.post_writer_no as "employee.empNo",
+			B.emp_name as "employee.name",
+			A.post_content as content,
+			A.post_important as important,
+			A.post_read_count as readCount,
+			A.post_suggestion_count as suggestionCount,
+			A.post_comment_count as commentCount,
+			A.post_deleted as deleted,
+			A.post_created_date as createdDate,
+			A.post_updated_date as updatedDate,
+			A.post_deleted_date as deletedDate
+		from
+			(select
+				<dynamic>
+					<isEqual property="sort" compareValue="date">
+					row_number() over (order by post_no desc) row_numbers,
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+					row_number() over (order by post_title asc) row_numbers,
+					</isEqual>
+					<isEqual property="sort" compareValue="read">
+					row_number() over (order by post_read_count desc) row_numbers,
+					</isEqual>
+				</dynamic>
+				post_no,
+				post_board_no,
+				post_title,
+				post_writer_no,
+				post_content,
+				post_important,
+				post_read_count,
+				post_suggestion_count,
+				post_comment_count,
+				post_deleted,
+				post_created_date,
+				post_updated_date,
+				post_deleted_date
+			from
+				comm_posts
+			where
+				post_deleted = 'N'
+				<dynamic>
+				<isNotNull property="opt">
+					<isEqual property="opt" compareValue="title">
+						and post_title like '%' || #keyword# || '%'
+					</isEqual>
+					<isEqual property="opt" compareValue="writer">
+						and post_writer_no  in (select emp_no 
+					                        from comm_employees
+					                        where emp_name = #keyword#)
+					</isEqual>
+					<isEqual property="opt" compareValue="content">
+						and post_content like '%' || #keyword# || '%'
+					</isEqual>
+				</isNotNull>
+			  </dynamic>		
+			  )	A, comm_employees B
+		where
+			A.post_writer_no = B.emp_no
+			and A.row_numbers between #begin# and #end#			
+	</select>	
+	
+	<!-- 
+		공지사항 게시판의 게시글 번호를 전달받아서 게시글 상세 정보 조회
+	 -->
+	<select id="getNoticeByPostNo" parameterClass="int" resultClass="com.community.vo.Notice">
+		select
+			A.post_no as postNo,
+			A.post_board_no as "board.boardNo",
+			A.post_title as title,
+			A.post_writer_no as "employee.empNo",
+			B.emp_name as "employee.name",
+			A.post_content as content,
+			A.post_important as important,
+			A.post_read_count as readCount,
+			A.post_suggestion_count as suggestionCount,
+			A.post_comment_count as commentCount,
+			A.post_deleted as deleted,
+			A.post_created_date as createdDate,
+			A.post_updated_date as updatedDate,
+			A.post_deleted_date as deletedDate
+		from
+			comm_posts A, comm_employees B
+		where
+            A.post_writer_no = B.emp_no
+			and post_no = #value#		
 	</select>
 </sqlMap>

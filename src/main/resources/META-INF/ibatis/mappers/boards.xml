@@ -74,5 +74,6 @@
 		where
 			board_no = #value#
 	</delete>
+
 </sqlMap>
 

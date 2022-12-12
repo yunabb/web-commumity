@@ -32,6 +32,7 @@ public class MultipartRequest {
 	private Map<String, List<FileItem>> parameterMap;
 	private Map<String, List<String>> formFieldMap = new HashMap<>();
 	
+
 	/**
 	 * MultipartRequest 객체를 요청한다.
 	 * <p>enctype="multipart/form-data" 요청을 처리하는 클래스다.
@@ -45,6 +46,7 @@ public class MultipartRequest {
 	 * @param request 요청객체
 	 * @param saveDirectory 첨부파일 저장디렉토리 경로
 	 */
+
 	public MultipartRequest(HttpServletRequest request, String saveDirectory) throws ServletException, IOException {
 		this.request = request;
 		this.directory = saveDirectory;

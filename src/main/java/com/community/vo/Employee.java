@@ -19,6 +19,9 @@ public class Employee {
 	
 	public Employee() {}
 	
+	public Employee(int empNo) {
+		this.empNo = empNo;
+	}
 	public Employee(String name) {
 		this.name = name;
 	}

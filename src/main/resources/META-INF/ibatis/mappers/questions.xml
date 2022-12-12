@@ -133,5 +133,13 @@
 		where
 			post_no = #postNo#
 	</update>
+
+	<insert id="insertQuestion" parameterClass="com.community.vo.Question">
+		insert into
+			(post_no, post_board_no, post_title, post_writer_no, post_content)
+		value
+			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#)
+	</insert>
+
 </sqlMap>
 
