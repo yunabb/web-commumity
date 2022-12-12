@@ -5,6 +5,7 @@ import com.community.vo.Employee;
 
 public class EmployeeDao {
 	
+
 	// 입력한 employee 객체를 DB에 저장하는 sql문
 	public void insertEmployee(Employee employee) {
 		SqlMapper.insert("employees.insertEmployee", employee);

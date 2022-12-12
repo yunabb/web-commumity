@@ -33,5 +33,8 @@ public class NoticeDao {
 	
 	public Notice getNoticeByNo(int postNo) {
 		return (Notice)SqlMapper.selectOne("getNoticeByNo", postNo);
+
+	public Notice getNoticeByPostNo(int postNo) {
+		return (Notice)SqlMapper.selectOne("notices.getNoticeByPostNo", postNo);
 	}
 }

@@ -22,14 +22,9 @@
 		기존 비밀번호가 일치하지 않습니다.
 	</div>
 <%
-	} else if ("fail2".equals(errorCode)) {
-%>
-	<div class="alert alert-danger">
-		비밀번호 확인이 일치하지 않습니다.
-	</div>
-<% 
 	}
 %>
+
 
 <div class="container my-3">
 	<div class="row mb-3">
@@ -47,10 +42,6 @@
 				<div class="mb-3">
 					<label class="form-label">새 비밀번호</label>
 					<input type="text" class="form-control" name="newPwd"/>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">비밀번호 확인</label>
-					<input type="password" class="form-control" name="confirm"/>
 				</div>
 				<div class="text-end">
 					<a href="home.jsp" class="btn btn-secondary">취소</a>

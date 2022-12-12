@@ -25,7 +25,7 @@
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "department.no"",
+	 		emp_dept_no 			as "department.no",
 	 		emp_position_no 		as "position.no",
 	 		emp_deleted 			as deleted,
 	 		emp_created_date 		as createdDate,
@@ -34,27 +34,6 @@
 	 		comm_employees
 	 	where
 	 		emp_no = #value#
-	 </select>
-	 
-	<!-- 
-		전화번호를 전달받아 comm_employees 테이블에서 사용자정보를 조회하여 employee객체 반환
-	 -->
-	  <select id="getEmployeeByPhone" parameterClass="string" resultClass="com.community.vo.Employee">
-	 	select
-	 		emp_no					as empNo,
-	 		emp_password 			as password,
-	 		emp_name 				as name, 
-	 		emp_email 				as email,
-	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "department.no"",
-	 		emp_position_no 		as "position.no",
-	 		emp_deleted 			as deleted,
-	 		emp_created_date 		as createdDate,
-	 		emp_updated_date 		as updatedDate
-	 	from
-	 		comm_employees
-	 	where
-	 		emp_email = #value#
 	 </select>
 	 
 	 <!-- 
@@ -69,33 +48,34 @@
 	 		emp_email = #email#,
 	 		emp_phone = #phone#,
 	 		emp_dept_no = #department.no#,
-	 		emp_position_no = #position.no#
+	 		emp_position_no = #position.no#,
+	 		emp_updated_date = sysdate
 		where
 			emp_no = #empNo#
 	</update>
 
 	<select id="getEmployeeByNoJoin" parameterClass="int" resultClass="com.community.vo.Employee">
 		select
-	 		A.emp_no				as empNo,
+	 		A.emp_no					  as empNo,
 	 		A.emp_password 			as password,
-	 		A.emp_name 				as name, 
-	 		A.emp_email 			as email,
-	 		A.emp_phone 			as phone,
+	 		A.emp_name 				  as name, 
+	 		A.emp_email 				as email,
+	 		A.emp_phone 				as phone,
 	 		A.emp_dept_no 			as "department.no",
-            B.department_name       as "department.name", 
-	 		A.emp_position_no 		as "position.no",
-            C.position_name         as "position.name",
+      B.department_name   as "department.name", 
+	 		A.emp_position_no 	as "position.no",
+      C.position_name     as "position.name",
 	 		A.emp_deleted 			as deleted,
-	 		A.emp_created_date 		as createdDate,
-	 		A.emp_updated_date 		as updatedDate
+	 		A.emp_created_date  as createdDate,
+	 		A.emp_updated_date 	as updatedDate
 	 	from
 	 		comm_employees A, comm_departments B, comm_positions C
 	 	where
             A.emp_dept_no = B.department_no
             and A.emp_position_no = C.position_no
             and emp_no = #value#
-	</select>	
-	 
+	</select>
+
 	 
 </sqlMap>
 

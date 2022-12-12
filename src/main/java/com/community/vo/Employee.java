@@ -22,6 +22,10 @@ public class Employee {
 	public Employee(int empNo) {
 		this.empNo = empNo;
 	}
+
+	public Employee(String name) {
+		this.name = name;
+	}
 	
 	public int getEmpNo() {
 		return empNo;

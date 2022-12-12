@@ -29,6 +29,8 @@
 			parent_board_no		as parentBoardNo
 		from	
 			comm_boards
+		where
+			board_no != 102
 	</select>
 	
 	<!-- 번호를 통해 상세 게시판 가져옴 -->
