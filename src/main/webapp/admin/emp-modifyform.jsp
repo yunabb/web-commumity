@@ -42,7 +42,7 @@
 				<div class="card-header">직원 정보 수정폼</div>
 				<div class="card-body">
 					<p>직원정보를 수정하세요.</p>
-					<form class="" method="post" action="modifyform.jsp">
+					<form class="" method="post" action="emp-modify.jsp">
 						<table class="table table-borderless">
 							<colgroup>
 								<col width="10%">
@@ -53,7 +53,7 @@
 							<tbody>
 								<tr>
 									<th class="text-end">직원번호</th>
-									<td><input type="text" class="form-control form-control-sm" value="<%=emp.getEmpNo() %>" readonly="readonly"/></td>
+									<td><input name ="no" type="text" class="form-control form-control-sm" value="<%=emp.getEmpNo() %>" readonly="readonly"/></td>
 									<th class="text-end">직원이름</th>
 									<td><input type="text" class="form-control form-control-sm" value="<%=emp.getName() %>" readonly="readonly"/></td>
 								</tr>
@@ -66,7 +66,7 @@
 								<tr>
 									<th class="text-end">소속부서</th>
 									<td>
-										<select class="form-select form-select-sm">
+										<select name="dept" class="form-select form-select-sm">
 										<%
 											DepartmentDao deptDao = new DepartmentDao();
 											List<Department> deptList = deptDao.getAllDepts();
@@ -80,7 +80,7 @@
 									</td>
 									<th class="text-end">직위</th>
 									<td>
-										<select class="form-select form-select-sm">
+										<select name="pos" class="form-select form-select-sm">
 										<%
 											PositionDao posDao = new PositionDao();
 											List<Position> posList = posDao.getAllPositions();
