@@ -24,5 +24,9 @@ public class EmployeeDao {
 	public void updateEmployee(Employee employee) {
 		SqlMapper.update("employees.updateEmployee", employee);
 	}
+	
+	public Employee getEmployeeByNoJoin(int empNo) {
+		return (Employee) SqlMapper.selectOne("employees.getEmployeeByNoJoin", empNo);
+	}
 
 }

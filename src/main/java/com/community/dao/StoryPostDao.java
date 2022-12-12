@@ -25,8 +25,8 @@ public class StoryPostDao {
 	}
 	
 	// 사는이야기 게시판의 게시글 총 갯수 조회
-	public int getTotalRows() {
-		return (Integer) SqlMapper.selectOne("storyposts.getTotalRows");
+	public int getTotalRows(Map<String, Object> param) {
+		return (Integer) SqlMapper.selectOne("storyposts.getTotalRows", param);
 	}
 	
 	// 사는이야기 게시판의 모든 게시글 조회
