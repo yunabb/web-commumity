@@ -30,9 +30,6 @@ public class NoticeDao {
 	public void updateNotice(Notice notice) {
 		SqlMapper.update("notices.updateNotice", notice);
 	}
-	
-	public Notice getNoticeByNo(int postNo) {
-		return (Notice)SqlMapper.selectOne("getNoticeByNo", postNo);
 
 	public Notice getNoticeByPostNo(int postNo) {
 		return (Notice)SqlMapper.selectOne("notices.getNoticeByPostNo", postNo);
