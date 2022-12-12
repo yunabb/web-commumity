@@ -9,12 +9,19 @@
 	EmployeeDao empDao = new EmployeeDao();
 
 	// 비밀번호 
-	String oldPwd = request.getParameter("oldPwd");
-	String newPwd = request.getParameter("newPwd");
+	String oldPwd = request.getParameter("prevPassword");
+	String newPwd = request.getParameter("password");
+	String pwdCnf = request.getParameter("password2");
 
 	// 직원정보의 비밀번호와 기존 비밀번호가 다를 경우 에러
-	if(!!loginedEmp.getPassword().equals(oldPwd)) {
-		response.sendRedirect("updateform.jsp?error=fail1");
+	if(!loginedEmp.getPassword().equals(oldPwd)) {
+		response.sendRedirect("passwordform.jsp?error=fail1");
+		return;
+	}
+	
+	// 새 비밀번호와 비밀번호 확인이 다를 경우 에러
+	if(!newPwd.equals("pwdCnf")) {
+		response.sendRedirect("passwordform.jsp?error=fail2");
 		return;
 	}
 	

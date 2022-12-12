@@ -6,15 +6,26 @@
 	<select id="getAllPositions" resultClass="com.community.vo.Position">
 		select
 			position_no		as no,
-			position_name	as name,
+			position_name	as name
 		from
 			comm_positions
+	</select>
+	
+	<select id="getNameByEmpNo" parameterClass="int" resultClass="com.community.vo.Position">
+		select
+			a.position_no		as no,
+			a.position_name		as name
+		from
+			comm_positions a, comm_employees b
+		where
+			a.position_no = b.emp_position_no
+			and b.emp_no = #value#
 	</select>
 	
 	<select id="getPositionByNo" parameterClass="int" resultClass="com.community.vo.Position">
 		select
 			position_no		as no,
-			position_name	as name,
+			position_name	as name
 		from
 			comm_positions
 		where

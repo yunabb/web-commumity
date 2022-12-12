@@ -21,7 +21,7 @@
 	if ("fail".equals(errorCode)) {
 %>
 	<div class="alert alert-danger">
-		아이디 혹은 비밀번호가 일치하지 않습니다.
+		아이디나 비밀번호를 잘못 입력했습니다.
 	</div>
 <%
 	} else if ("deny".equals(errorCode)) {
@@ -44,11 +44,11 @@
 			<form class="border bg-light p-3" method="post" action="login.jsp">
 				<div class="mb-3">
 					<label class="form-label">직원번호</label>
-					<input type="text" class="form-control" name="empNo"/>
+					<input type="text" class="form-control" name="empNo" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
 				</div>
 				<div class="mb-3">
 					<label class="form-label">비밀번호</label>
-					<input type="password" class="form-control" name="password"/>
+					<input type="text" class="form-control" name="password"/>
 				</div>
 				<div class="text-end">
 					<a href="home.jsp" class="btn btn-secondary">취소</a>
