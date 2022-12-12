@@ -12,6 +12,10 @@ public class DepartmentDao {
 		return (List<Department>) SqlMapper.selectList("departments.getAllDepts");
 	}
 	
+	public Department getNameByEmpNo(int empNo) {
+		return (Department) SqlMapper.selectOne("departments.getNameByEmpNo", empNo);
+	}
+	
 	public Department getDeptByNo(int no) {
 		return (Department) SqlMapper.selectOne("departments.getDeptByNo", no);
 	}

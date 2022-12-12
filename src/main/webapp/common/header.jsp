@@ -21,8 +21,9 @@
 					<li><a class="dropdown-item" href="/web-community/admin/boards.jsp">게시판관리</a></li>
 					<li><a class="dropdown-item" href="/web-community/admin/posts.jsp">게시글관리</a></li>
 				</ul>
-			</li> 
-		</ul>
+			</li>		
+  </ul>
+  
 <%
 	if (emp == null) {
 %>

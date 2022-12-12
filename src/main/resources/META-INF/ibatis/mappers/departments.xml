@@ -13,6 +13,17 @@
 			department_no asc
 	</select>
 	
+	<select id="getNameByEmpNo" parameterClass="int" resultClass="com.community.vo.Department">
+		select
+			a.department_no		as no,
+			a.department_name	as name
+		from
+			comm_departments a, comm_employees b
+		where
+			a.department_no = b.emp_dept_no
+			and b.emp_no = #value#
+	</select>
+	
 	<select id="getDeptByNo" parameterClass="int" resultClass="com.community.vo.Department">
 		select
 			department_no		as no,
