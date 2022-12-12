@@ -22,14 +22,12 @@
 	<%
 		int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 
-		
-	
 		BoardDao boardDao = BoardDao.getInstance();
 		List<Board> boardList = boardDao.getBoards();
 		
 		for(Board board : boardList) {
 	%>							
-								<option value="<%=board.getBoardNo() %>"><%=board.getName() %></option>
+			<option value="<%=board.getBoardNo() %>"><%=board.getName() %></option>
 	<%
 		}
 	%>								

@@ -18,6 +18,7 @@ public class Post {
 	private Date updatedDate;
 	private Date deletedDate;
 	private int originalNo;
+	
 	private Department department;
 	private Position position;
 	

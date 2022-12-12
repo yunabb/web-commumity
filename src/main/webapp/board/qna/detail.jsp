@@ -79,11 +79,12 @@
 			</table>
 			<div class="d-flex justify-content-between">
 				<span>
-					<a href="" class="btn btn-danger btn-xs">삭제</a>
+					<a href="delete.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
 					<a href="" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>
+					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
 				</span>
 				<span>
-					<a href="" class="btn btn-outline-primary btn-xs">추천</a>
+					<a href="suggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs">추천</a>
 					<button class="btn btn-outline-primary btn-xs">답변</button>
 				</span>
 			</div>
@@ -115,27 +116,6 @@
 					<p class="card-text">내용</p>
 				</div>
 				<!-- 댓글 반복 끝 -->
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
 			</div>				
 		</div>
 	</div>
@@ -205,5 +185,8 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+	
+</script>
 </body>
 </html>

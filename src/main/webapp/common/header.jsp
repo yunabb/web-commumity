@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	String menu = request.getParameter("menu");
+%>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 	<div class="container">
 		<ul class="navbar-nav me-auto">

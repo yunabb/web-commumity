@@ -67,7 +67,7 @@
 			A.post_content	as content,
 			A.post_important	as important,
 			A.post_read_count	as readCount,
-			A.post_suggestion_count	as suggestionCount,
+			A.post_suggestion_count		as suggestionCount,
 			A.post_comment_count	as commentCount,
 			A.post_deleted	as deleted,
 			A.post_created_date	as createdDate,
