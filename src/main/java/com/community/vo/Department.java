@@ -10,6 +10,10 @@ public class Department {
 	public Department(int no) {
 		this.no = no;
 	}
+	
+	public Department(String name) {
+		this.name = name;
+	}
 
 	public int getNo() {
 		return no;

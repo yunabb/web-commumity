@@ -8,7 +8,7 @@ public class StoryPost {
 	private int postNo;				// 게시글 번호
 	private Board board;			// 게시판 번호
 	private String title;			// 게시글 제목
-	private Employee employee;			// 작성자 번호
+	private Employee employee;		// 작성자 번호
 	private String content;			// 게시글 내용
 	private String important;		// 중요게시글 여부
 	private int readCount;			// 조회수

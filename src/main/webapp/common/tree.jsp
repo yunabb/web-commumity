@@ -8,13 +8,13 @@
 		</ul>
 	</li>
 	<li>
-		<span class="caret"><a href="/web-community/board/file/list.jsp" class="text-decoration-none text-dark"><mark>파일게시판</mark></a></span>
+		<span class="caret"><a href="/web-community/board/file/list.jsp" class="text-decoration-none text-dark">파일게시판</a></span>
 	</li>
 	<li>
 		<span class="caret caret-down"><a href="/web-community/board/free/list.jsp" class="text-decoration-none text-dark">자유게시판</a></span>
  		<ul class="nested active">
 			<li><a href="/web-community/board/qna/list.jsp" class="text-decoration-none text-dark">묻고 답하기</a></li>
-			<li><a href="/web-community/board/story/list.jsp" class="text-decoration-none text-dark">사는 얘기</a></li>
+			<li><a href="/web-community/board/story/list.jsp" class="text-decoration-none text-dark">사는 이야기</a></li>
 		</ul>
 	</li>
 	<li>
