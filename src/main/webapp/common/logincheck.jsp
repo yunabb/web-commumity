@@ -7,7 +7,7 @@
 	
 	Employee loginedEmp = (Employee) session.getAttribute("loginedEmp");
 	if(loginedEmp == null) {
-		response.sendRedirect("web-community/loginform.jsp?error=deny");
+		response.sendRedirect("/web-community/loginform.jsp?error=deny");
 		return;
 	}
 

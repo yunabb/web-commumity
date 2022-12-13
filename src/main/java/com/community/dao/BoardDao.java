@@ -23,9 +23,8 @@ public class BoardDao {
 		return (List<Board>) SqlMapper.selectList("boards.getBoards");
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Board> getBoardByNo(int boardNo) {
-		return (List<Board>) SqlMapper.selectList("boards.getBoardByNo", boardNo);
+	public Board getBoardByNo(int boardNo) {
+		return (Board) SqlMapper.selectOne("boards.getBoardByNo", boardNo);
 	}
 	
 	public void updateBoard(Board board) {
