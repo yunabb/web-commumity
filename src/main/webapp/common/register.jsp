@@ -25,9 +25,9 @@
 	PostDao postDao = PostDao.getInstance();
 	postDao.insertPost(post);
 	
-	if(boardNo == 100) {
+	if(boardNo == 101) {
 		response.sendRedirect("/web-community/board/notice/list.jsp");
-	} else if(boardNo == 101) {
+	} else if(boardNo == 102) {
 		response.sendRedirect("/web-community/board/file/list.jsp");
 	} else if(boardNo == 103) {
 		response.sendRedirect("/web-community/board/temp/list.jsp");
