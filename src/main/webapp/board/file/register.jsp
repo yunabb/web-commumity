@@ -15,31 +15,26 @@
 <body>
 <div class="container">
 <%
-	// TODO 로그인한 직원번호를 empNo에 대입한다.
-	int empNo  = 1000;
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
 	
-	// 요청객체에 저장된 요청파라미터값을 가져온다.
-	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
+	int boardNo = StringUtils.stringToInt("boardNo");
 	String title = request.getParameter("title");
+	String writer = request.getParameter("writer");
 	String important = request.getParameter("important");
 	String content = request.getParameter("content");
 	
-	// 조회된 요청파라미터값을 FileShare객체에 저장한다.
 	FileShare fileShare = new FileShare();
 	fileShare.setBoard(new Board(boardNo));
 	fileShare.setTitle(title);
-	fileShare.setEmployee(new Employee(empNo));
-	fileShare.setImportant(important);
+	fileShare.setEmployee(new Employee(writer));
 	fileShare.setContent(content);
+	fileShare.setImportant(important);
 	
-	// FileShareDao객체를 생성하고 insertFileShare메소드를 실행해서 게시글 정보를 저장시킨다.
 	FileShareDao fileShareDao = FileShareDao.getInstance();
 	fileShareDao.insertFileShare(fileShare);
 	
 	response.sendRedirect("list.jsp");
-
 %>
-   
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
