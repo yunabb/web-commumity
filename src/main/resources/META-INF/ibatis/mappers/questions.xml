@@ -115,6 +115,8 @@
 		where
 			A.row_numbers between #begin# and #end#
 			and A.post_writer_no = B.emp_no
+		order by
+			A.post_no desc
 	</select>
 	
 	<update id="updateQuestion" parameterClass="com.community.vo.Question">
@@ -135,7 +137,7 @@
 	</update>
 
 	<insert id="insertQuestion" parameterClass="com.community.vo.Question">
-		insert into
+		insert into comm_posts
 			(post_no, post_board_no, post_title, post_writer_no, post_content)
 		value
 			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#)

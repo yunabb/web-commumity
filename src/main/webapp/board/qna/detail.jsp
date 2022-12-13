@@ -18,6 +18,10 @@
 <jsp:include page="../../common/header.jsp">
 	<jsp:param name="menu" value="board"/>
 </jsp:include>
+
+<%
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
+%>
 <div class="container my-3">
 	<div class="row mb-3">
 		<div class="col">
@@ -79,13 +83,33 @@
 			</table>
 			<div class="d-flex justify-content-between">
 				<span>
+					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
+				
+	<%
+		if(emp != null && emp.getName().equals(question.getEmployee().getName())) {
+	%>			
 					<a href="delete.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
 					<a href="" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>
-					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
+	<%
+		}
+	%>				
+	
 				</span>
 				<span>
-					<a href="suggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs">추천</a>
+				
+	<%
+		if(emp == null || emp.getName().equals(question.getEmployee().getName())) {
+	%>				
+					<a href="suggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled">추천<%=question.getSuggestionCount() %></a>
+					<button class="btn btn-outline-primary btn-xs disabled">답변</button>
+	<%
+		} else{
+	%>			
+					<a href="suggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs">추천<%=question.getSuggestionCount() %></a>
 					<button class="btn btn-outline-primary btn-xs">답변</button>
+	<%
+		}
+	%>		
 				</span>
 			</div>
 		</div>

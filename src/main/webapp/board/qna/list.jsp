@@ -1,3 +1,4 @@
+<%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="java.util.List"%>
 <%@page import="com.community.util.Pagination"%>
@@ -23,6 +24,8 @@
 </jsp:include>
 
 <%
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
+
 	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
 
 	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
@@ -95,7 +98,7 @@
 								<col width="9%">
 								<col width="*">
 								<col width="10%">
-								<col width="14%">
+								<col width="15%">
 								<col width="7%">
 								<col width="7%">
 							</colgroup>
@@ -171,12 +174,17 @@
 					</nav>
 	<%
 		}
+	
+	 	if(emp != null) { 
 	%>					
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
 						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">답변 등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
 					</div>
+ 	<%
+		}
+	%> 
 				</div>
 			</div>
 		</div>

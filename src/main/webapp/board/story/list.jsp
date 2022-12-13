@@ -1,3 +1,4 @@
+<%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.StoryPost"%>
 <%@page import="java.util.List"%>
 <%@page import="com.community.util.Pagination"%>
