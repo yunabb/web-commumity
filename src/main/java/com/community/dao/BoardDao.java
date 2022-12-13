@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.community.util.SqlMapper;
 import com.community.vo.Board;
+import com.community.vo.FileShare;
 
 
 public class BoardDao {
@@ -24,10 +25,10 @@ public class BoardDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Board> getBoardByNo(int boardNo) {
-		return (List<Board>) SqlMapper.selectList("boards.getBoardByNo", boardNo);
+	public Board getBoardByNo(int boardNo) {
+		return (Board) SqlMapper.selectOne("boards.getBoardByNo", boardNo);
 	}
-	
+		
 	public void updateBoard(Board board) {
 		SqlMapper.update("boards.updateBoard", board);
 	}

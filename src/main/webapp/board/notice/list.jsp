@@ -17,7 +17,7 @@
 <div class="container my-3">
 	<div class="row mb-3">
 		<div class="col">
-			<h1 class="heading">공지사항</h1>
+			<h1 class="heading">묻고 답하기</h1>
 		</div>
 	</div>
 	<div class="row mb-3">
@@ -26,7 +26,7 @@
 				<div class="card-header">전체 게시판 목록</div>
 				<div class="card-body">
 					<div class="d-grid gap-2">
-						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">공지사항 등록</button>
+						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
 					</div>
 					<jsp:include page="../../common/tree.jsp" />
 				</div>
@@ -34,7 +34,7 @@
 		</div>
 		<div class="col-9">
 			<div class="card">
-				<div class="card-header">공지사항</div>
+				<div class="card-header">묻고 답하기 게시판</div>
 				<div class="card-body">
 					<form class="mb-3" method="get" action="">
 						<div class="mb-2 d-flex justify-content-between">
@@ -81,7 +81,16 @@
 								<tr>
 									<td><input type="checkbox" name="" value=""/></td>
 									<td>100000</td>
-									<td><a href="" class="text-decoration-none text-dark">[중요] 공지사항 등록</a></td>
+									<td><a href="" class="text-decoration-none text-dark"><i class="bi bi-question-circle-fill"></i> 공지사항 등록</a></td>
+									<td>홍길동</td>
+									<td>2022-12-01</td>
+									<td>12</td>
+									<td>10</td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="" value=""/></td>
+									<td>100000</td>
+									<td class="ps-4"><a href="" class="text-decoration-none text-dark"><i class="bi bi-arrow-return-right"></i> 공지사항 등록</a></td>
 									<td>홍길동</td>
 									<td>2022-12-01</td>
 									<td>12</td>
@@ -104,7 +113,8 @@
 						</ul>
 					</nav>
 					<div class="text-end">
-						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">등록</button>
+						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
+						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">답변 등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
 					</div>
 				</div>

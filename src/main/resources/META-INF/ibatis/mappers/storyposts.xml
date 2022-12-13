@@ -27,12 +27,12 @@
 			post_important = #important#,
 			post_read_count = #readCount#,
 			post_suggestion_count = #suggestionCount#,
-			post_comment_count = #commentCont#,
+			post_comment_count = #commentCount#,
 			post_deleted = #deleted#,
 			post_updated_date = sysdate,
 			post_deleted_date = sysdate
 		where
-			post_no = #no#		
+			post_no = #postNo#		
 	</update>
 	
 	<!-- 

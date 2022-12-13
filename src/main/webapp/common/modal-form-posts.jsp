@@ -62,7 +62,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
 						<div class="col-sm-9 mb-1">
-							<input type="file" class="form-control form-control-sm">
+							<input type="file" class="form-control form-control-sm" name="attachedFile">
 						</div>
 						<div class="col-sm-1">
 							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
@@ -71,7 +71,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
 						<div class="col-sm-9 mb-1">
-							<input type="file" class="form-control form-control-sm">
+							<input type="file" class="form-control form-control-sm" name="attachedFile">
 						</div>
 						<div class="col-sm-1">
 							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
