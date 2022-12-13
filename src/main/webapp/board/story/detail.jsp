@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="com.community.dao.CommentDao"%>
+<%@page import="com.community.vo.Comment"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.dao.EmployeeDao"%>
 <%@page import="com.community.vo.StoryPost"%>
@@ -19,6 +22,9 @@
 <jsp:include page="../../common/header.jsp">
 	<jsp:param name="menu" value="board"/>
 </jsp:include>
+<%
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
+%>
 <div class="container my-3">
 	<div class="row mb-3">
 		<div class="col">
@@ -27,16 +33,11 @@
 	</div>
 <%
 	// list의 글 번호를 조회
-	int StoryPostNo = StringUtils.stringToInt(request.getParameter("postNo"));
+	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 
 	// StoryPostDao 객체를 생성하고 메소드를 실행해서 게시글 정보를 조회하고 출력
 	StoryPostDao storyPostDao = StoryPostDao.getInstance();
-	StoryPost storyPost = storyPostDao.getStoryPostByNo(StoryPostNo);
-	
-	// 작성자번호를 조회 
-	EmployeeDao empDao = new EmployeeDao();
-	Employee emp = new Employee();
-	emp = empDao.getEmployeeByNoJoin(storyPost.getEmployee().getEmpNo());
+	StoryPost storyPost = storyPostDao.getStoryPostByNo(postNo);
 	
 	// 조회수를 1 증가시키고, 테이블에 반영
 	storyPost.setReadCount(storyPost.getReadCount() + 1);
@@ -67,9 +68,9 @@
 					</tr>
 					<tr>
 						<th class="text-center bg-light">작성자</th>
-						<td><%=storyPost.getEmployee().getName() %> (<%=emp.getPosition().getName() %>)</td>
+						<td><%=storyPost.getEmployee().getName() %> (<%=storyPost.getPosition().getName() %>)</td>
 						<th class="text-center bg-light">소속부서</th>
-						<td><%=emp.getDepartment().getName() %></td>
+						<td><%=storyPost.getDepartment().getName() %></td>
 					</tr>
 					<tr>
 						<th class="text-center bg-light">조회수</th>
@@ -85,34 +86,52 @@
 			</table>
 			<div class="d-flex justify-content-between">
 				<span>
-					<a href="" class="btn btn-danger btn-xs">삭제</a>
-					<a href="" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>
+					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
+<%
+	if (emp != null && emp.getName().equals(storyPost.getEmployee().getName())) {
+%>					
+					<a href="delete.jsp?postNo=<%=storyPost.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
+					<a href="" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>					
+<%
+	}
+%>
 				</span>
-				<span>
-					<a href="" class="btn btn-outline-primary btn-xs">추천</a>
-					<button class="btn btn-outline-primary btn-xs">답변</button>
+				<span>	
+<% 
+	if (emp == null || emp.getName().equals(storyPost.getEmployee().getName()))	{
+%>							
+					<a href="suggestion.jsp?postNo=<%=storyPost.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled" onclick="suggestion()">추천</a>				
+<%
+	} else {
+%>			
+					<a href="suggestion.jsp?postNo=<%=storyPost.getPostNo() %>" class="btn btn-outline-primary btn-xs" onclick="suggestion()">추천</a>			
+<%
+	}
+%>		
 				</span>
 			</div>
 		</div>
 	</div>
+	
 	<div class="row mb-3">
 		<div class="col-12 mb-1">
-			<form method="post" action="">
+			<form method="post" action="addComment.jsp">
 				<!-- 게시글의 글 번호을 value에 설정하세요 -->
-				<input type="hidden" name="postNo" value="1000"/>
+				<input type="hidden" name="postNo" value="<%=storyPost.getPostNo() %>"/>
 				<div class="row mb-3">
 					<div class="col-sm-11">
 						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">
 					</div>
 					<div class="col-sm-1 text-end" style="margin-top: 2px;">
-						<button class="btn btn-secondary btn-xs">댓글</button>
+						<button type="submit" class="btn btn-secondary btn-xs">댓글</button>
 					</div>
 				</div>
 			</form>
 		</div>
+		
 		<div class="col-12">
 			<div class="card">
-				<!-- 댓글 반복 시작 -->
+				<!-- 댓글 반복 시작 -->			
 				<div class="card-body py-1 px-3 small border-bottom">
 					<div class="mb-1 d-flex justify-content-between text-muted">
 						<span>홍길동</span>
@@ -121,27 +140,6 @@
 					<p class="card-text">내용</p>
 				</div>
 				<!-- 댓글 반복 끝 -->
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
 			</div>				
 		</div>
 	</div>
@@ -211,5 +209,10 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script type="text/javascript">
+function suggestion() {
+	alert("추천되었습니다.");
+}
+</script>
 </body>
 </html>
