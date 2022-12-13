@@ -3,18 +3,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../common/logincheck.jsp" %>
 <%
-	// 아직 비밀번호 변경 페이지와 에러메세지를 구현하지 않았습니다. 
 
 	// EmployeeDao 객체 생성
 	EmployeeDao empDao = new EmployeeDao();
 
 	// 비밀번호 
-	String oldPwd = request.getParameter("oldPwd");
-	String newPwd = request.getParameter("newPwd");
+	String oldPwd = request.getParameter("prevPassword");
+	String newPwd = request.getParameter("password");
+	String pwdCnf = request.getParameter("password2");
 
 	// 직원정보의 비밀번호와 기존 비밀번호가 다를 경우 에러
-	if(!!loginedEmp.getPassword().equals(oldPwd)) {
-		response.sendRedirect("updateform.jsp?error=fail1");
+	if(!loginedEmp.getPassword().equals(oldPwd)) {
+		response.sendRedirect("passwordform.jsp?error=fail1");
+		return;
+	}
+	
+	// 새 비밀번호와 비밀번호 확인이 다를 경우 에러
+	if(!newPwd.equals("pwdCnf")) {
+		response.sendRedirect("passwordform.jsp?error=fail2");
 		return;
 	}
 	

@@ -1,3 +1,14 @@
+<%@page import="com.community.vo.Position"%>
+<%@page import="com.community.dao.PositionDao"%>
+<%@page import="com.community.vo.Department"%>
+<%@page import="com.community.dao.DepartmentDao"%>
+<%@page import="com.community.vo.Employee"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.util.Pagination"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.community.util.StringUtils"%>
+<%@page import="com.community.dao.EmployeeDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,6 +26,34 @@
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
 <div class="container my-3">
+<%
+
+	// 행 갯수, 정렬방식, 요청한 페이지번호, 검색옵션, 검색키워드를 조회한다.
+	// 값이 존재하지 않으면 기본값을 설정한다.
+	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
+	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
+
+	EmployeeDao empDao = new EmployeeDao();
+	DepartmentDao deptDao = new DepartmentDao();
+	PositionDao posDao = new PositionDao();
+	Map<String, Object> param = new HashMap<>();
+
+	// 게시글 갯수 조회
+	int totalRows = empDao.getTotalRows();
+
+	// Pagination객체를 생성
+	Pagination pagination = new Pagination(currentPage, totalRows, rows);
+
+	// 게시글 목록 조회
+	param.put("begin", pagination.getBegin());
+	param.put("end", pagination.getEnd());
+
+	List<Employee> empList = empDao.getAllEmp(param);
+	
+
+
+
+%>
 	<div class="row mb-3">
 		<div class="col">
 			<h1 class="heading">직원 관리</h1>
@@ -48,144 +87,76 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
-							<tr>
-								<td>100</td>
-								<td>홍길동</td>
-								<td>영업부</td>
-								<td>과장</td>
-								<td>010-1111-1234</td>
-								<td>hong@gmail.com</td>
-								<td>
-									<button class="btn btn-outline-primary btn-xs">수정</button>
-									<button class="btn btn-outline-secondary btn-xs">삭제</button>
-								</td>
-							</tr>
+							<%
+								if (empList.isEmpty()) {
+							%>
+										<tr><td class="text-center" colspan="6"> 회원 정보가 없습니다. </td></tr>
+							<%
+								} else {
+									for (Employee emp : empList) {
+										Department dpt = deptDao.getNameByEmpNo(emp.getEmpNo());
+										Position pos = posDao.getNameByEmpNo(emp.getEmpNo());
+							%>
+										<tr>
+											<td><%=emp.getEmpNo() %></td>
+											<td><%=emp.getName() %></td>
+											<td><%=dpt.getName() %></td>
+											<td><%=pos.getName() %></td>
+											<td><%=emp.getPhone() %></td>
+											<td><%=emp.getEmail() %></td>
+											<td>
+												<a href="emp-modifyform.jsp?no=<%=emp.getEmpNo() %>" class="btn btn-outline-primary btn-xs">수정</a>
+												<a href="emp-delete.jsp?no=<%=emp.getEmpNo() %>" class="btn btn-outline-secondary btn-xs">삭제</a>
+											</td>
+										</tr>
+							<%		
+									}
+								}
+							%>
 						</tbody>
 					</table>
 					<nav>
-						<ul class="pagination pagination-sm justify-content-center">
-							<li class="page-item disabled">
-								<a class="page-link">이전</a>
-							</li>
-							<li class="page-item"><a class="page-link active" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="#">2</a></li>
- 							<li class="page-item"><a class="page-link" href="#">3</a></li>
-							<li class="page-item">
-								<a class="page-link" href="#">다음</a>
-							</li>
-						</ul>
+						<%
+							if (!empList.isEmpty()) {
+							int beginPage = pagination.getBeginPage();	// 시작 페이지번호
+							int endPage = pagination.getEndPage();		// 끝 페이지번호
+							boolean isFirst = pagination.isFirst();		// 첫 페이지인지 여부, 이전 버튼의 비활성화에서 사용
+							boolean isLast = pagination.isLast();		// 마지막 페이지인지 여부, 다음 버튼의 비활성화에서 사용
+							int prevPage = pagination.getPrevPage();	// 이전 페이지번호, 이전 버튼에서 사용
+							int nextPage = pagination.getNextPage();	// 다음 페이지번호, 다음 버튼에서 사용
+						%>
+							<div aria-label="navigation">
+								<ul class="pagination justify-content-center">
+									<li class="page-item">
+										<a class="page-link <%=isFirst ? "disabled" : "" %>"  
+											href="list.jsp?page=<%=prevPage %>"
+											onclick="changePage(event, <%=prevPage %>)">이전</a>
+									</li>
+						<%
+							for (int number = beginPage; number <= endPage; number++) {
+						%>
+									<li class="page-item">
+										<a class="page-link <%=currentPage == number ? "active" : "" %>"  
+											href="list.jsp?page=<%=number %>" 
+											onclick="changePage(event, <%=number %>)"><%=number %></a>
+									</li>
+						<%
+							}
+						%>
+									<li class="page-item">
+										<a class="page-link <%=isLast ? "disabled" : "" %>" 
+											href="list.jsp?page=<%=nextPage %>" 
+											onclick="changePage(event, <%=nextPage %>)">다음</a>
+									</li>
+								</ul>
+							</div>
+							<%
+								}
+							%>
 					</nav>
 				</div>
 				<div class="card-footer text-end">
-					<button class="btn btn-primary btn-xs">신규 등록</button>
+					<a href="registerform.jsp" class="btn btn-primary btn-xs">신규 등록</a>
 				</div>
 			</div>
 		</div>

@@ -19,15 +19,15 @@
 </head>
 <body>
 <jsp:include page="../common/header.jsp">
-	<jsp:param name="menu" value="admin"/>
+	<jsp:param name="menu" value="employee"/>
 </jsp:include>
 <%
 	
+	DepartmentDao deptDao = new DepartmentDao();
+	PositionDao posDao = new PositionDao();
 	
-	Department myDept = loginedEmp.getDepartment();
-	Position mypos = loginedEmp.getPosition();
-	
-	
+	Department dept = deptDao.getNameByEmpNo(loginedEmp.getEmpNo());
+	Position pos = posDao.getNameByEmpNo(loginedEmp.getEmpNo());
 
 %>
 <div class="container my-3">
@@ -42,15 +42,15 @@
 				<div class="card-header">나의 메뉴</div>
 				<div class="card-body">
 					<div class="list-group">
-						<a data-bs-toggle="collapse" href="#myinfo" aria-expanded="true" aria-controls="myinfo" class="list-group-item list-group-item-action <%="aria-expanded".equals("true") ? "active" : "" %>">내 정보 보기</a>
-						<a data-bs-toggle="collapse" href="#myboard" aria-expanded="false" aria-controls="myboard" class="list-group-item list-group-item-action <%="aria-expanded".equals("true") ? "active" : "" %>">내가 작성한 게시글</a>
-						<a data-bs-toggle="collapse" href="#myreply"  aria-expanded="false" aria-controls="myreply" class="list-group-item list-group-item-action <%="aria-expanded".equals("true") ? "active" : "" %>">내가 작성한 댓글</a>
-						<a href="" class="list-group-item list-group-item-action">나에게 온 알림</a>
+						<a href="home.jsp" class="list-group-item list-group-item-action">내 정보 보기</a>
+						<a href="myposts.jsp" class="list-group-item list-group-item-action">내가 작성한 게시글</a>
+						<a href="mycomments.jsp"  class="list-group-item list-group-item-action">내가 작성한 댓글</a>
+						<a href="mynotice.jsp" class="list-group-item list-group-item-action">나에게 온 알림</a>
 					</div>
 				</div>
 				<div class="card-body">
 					<div class="list-group">
-						<a href="../updateform.jsp" class="list-group-item list-group-item-action">비밀번호 변경하기</a>
+						<a href="passwordform.jsp" class="list-group-item list-group-item-action">비밀번호 변경하기</a>
 					</div>
 				</div>
 			</div>
@@ -72,8 +72,8 @@
 								<th class="bg-light">입사일</th><td><%=StringUtils.dateToText(loginedEmp.getCreatedDate()) %></td>
 							</tr>
 							<tr>
-								<th class="bg-light">소속부서</th><td><%=myDept.getName() %></td>
-								<th class="bg-light">직위</th><td><%=mypos.getName() %></td>
+								<th class="bg-light">소속부서</th><td><%=dept.getName() %></td>
+								<th class="bg-light">직위</th><td><%=pos.getName() %></td>
 							</tr>
 							<tr>
 								<th class="bg-light">이름</th><td colspan="3"><%=loginedEmp.getName() %></td>
@@ -86,7 +86,7 @@
 					</table>
 				</div>
 			</div>
-			<div class="row mb-3 collapse" id="myinfo">
+			<div class="row mb-3" id="myinfo">
 				<div class="col-12">
 					<div class="card">
 						<div class="card-header">내 정보</div>
@@ -117,78 +117,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row mb-3 collapse" id="myboard">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-header">내가 작성한 게시글</div>
-						<div class="card-body">
-							<table class="table table-sm border-top">
-							<colgroup>
-								<col width="9%">
-								<col width="*">
-								<col width="10%">
-								<col width="12%">
-								<col width="7%">
-								<col width="7%">
-							</colgroup>
-							<thead>
-								<tr class="bg-light">
-									<th>번호</th>
-									<th>제목</th>
-									<th>작성자</th>
-									<th>등록일</th>
-									<th>조회</th>
-									<th>추천</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>100000</td>
-									<td><a href="" class="text-decoration-none text-dark"> 궁금한 게 있습니다. </a></td>
-									<td>라이언</td>
-									<td>2022-12-07</td>
-									<td>77</td>
-									<td>52</td>
-								</tr>
-							</tbody>
-						</table>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row mb-3 collapse" id="myreply">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-header">내가 작성한 댓글</div>
-						<div class="card-body">
-							<table class="table table-sm border-top">
-							<colgroup>
-								<col width="15%">
-								<col width="*">
-								<col width="10%">
-								<col width="12%">
-							</colgroup>
-							<thead>
-								<tr class="bg-light">
-									<th>게시글 번호</th>
-									<th>댓글 내용</th>
-									<th>작성자</th>
-									<th>등록일</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>100000</td>
-									<td><a href="" class="text-decoration-none text-dark">안녕하세요.</a></td>
-									<td>라이언</td>
-									<td>2022-12-07</td>
-								</tr>
-							</tbody>
-						</table>
 						</div>
 					</div>
 				</div>
