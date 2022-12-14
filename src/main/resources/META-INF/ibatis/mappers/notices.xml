@@ -32,6 +32,7 @@
 			post_deleted_date = sysdate
 		where
 			post_no = #postNo#
+			and post_board_no = 100
 	</update>
 	
 	<!-- 
@@ -44,6 +45,7 @@
 			comm_posts
 		where
 			post_deleted = 'N'
+			and post_board_no = 100
 		<dynamic>
 			<isNotNull property="opt">
 				<isEqual property="opt" compareValue="title">
@@ -59,8 +61,21 @@
 				</isEqual>
 			</isNotNull>
 		</dynamic>
+		<dynamic>
+			<isEqual property="readings" compareValue="Y">
+				and post_no in (select post_no
+				                 from comm_posts
+				                 where post_board_no = 100
+				                 and post_deleted = 'N'
+				                 
+								  minus
+								  
+								  select reading_post_no
+								  from comm_post_readings
+								  where reading_emp_no = #empNo#)
+			</isEqual>
+		</dynamic>
 	</select>
-	
 	<!--
 		공지사항 게시판의 게시글 전체 목록 조회 및 페이징처리		
 	 -->
@@ -110,6 +125,7 @@
 				comm_posts
 			where
 				post_deleted = 'N'
+				and post_board_no = 100
 				<dynamic>
 				<isNotNull property="opt">
 					<isEqual property="opt" compareValue="title">
@@ -117,18 +133,32 @@
 					</isEqual>
 					<isEqual property="opt" compareValue="writer">
 						and post_writer_no  in (select emp_no 
-					                        from comm_employees
-					                        where emp_name = #keyword#)
+						                        from comm_employees
+						                        where emp_name = #keyword#)
 					</isEqual>
 					<isEqual property="opt" compareValue="content">
 						and post_content like '%' || #keyword# || '%'
 					</isEqual>
 				</isNotNull>
-			  </dynamic>		
+			  </dynamic>
+			  <dynamic>
+					<isEqual property="readings" compareValue="Y">
+						and post_no in (select post_no
+					                  from comm_posts
+					                  where post_board_no = 100
+					                  and post_deleted = 'N'
+					                  
+									  minus
+									  
+									  select reading_post_no
+									  from comm_post_readings
+									  where reading_emp_no = #empNo#)
+					</isEqual>
+			  </dynamic>
 			  )	A, comm_employees B
 		where
 			A.post_writer_no = B.emp_no
-			and A.row_numbers between #begin# and #end#			
+			and A.row_numbers between #begin# and #end#
 	</select>	
 	
 	<!-- 
@@ -154,7 +184,8 @@
 			comm_posts A, comm_employees B
 		where
             A.post_writer_no = B.emp_no
-			and post_no = #value#		
+			and post_no = #value#
+			and post_board_no = 100
 	</select>
   
 </sqlMap>

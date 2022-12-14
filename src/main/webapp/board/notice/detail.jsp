@@ -1,3 +1,8 @@
+<%@page import="com.community.dao.PostReadingsDao"%>
+<%@page import="com.community.vo.PostReadings"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.dao.CommentDao"%>
+<%@page import="com.community.vo.Comment"%>
 <%@page import="com.community.dao.EmployeeDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Notice"%>
@@ -25,10 +30,25 @@
 			<h1 class="heading">게시글 상세정보</h1>
 		</div>
 	</div>
-	<%	// list의 no를 가져와서 Notice객체를 가져와 변수notice에 저장한다.
-		int NoticeNo = StringUtils.stringToInt(request.getParameter("no"));
+	<%
+		// list의 no를 가져와서 Notice객체를 가져와 변수notice에 저장한다.
+		int noticeNo = StringUtils.stringToInt(request.getParameter("no"));
+		// 로그인 정보를 가져온다.
+		Employee loginedEmp = (Employee) session.getAttribute("loginedEmp");
+		
+		PostReadingsDao postReadingsDao = PostReadingsDao.getInstance();
+		try {
+			PostReadings postReadings = new PostReadings();
+			postReadings.setEmpNo(loginedEmp.getEmpNo());
+			postReadings.setPostNo(noticeNo);
+			postReadingsDao.insertPostReadings(postReadings);
+		} catch (Exception e) {
+			
+		}
+		
 		NoticeDao noticeDao = NoticeDao.getInstance();
-		Notice notice = noticeDao.getNoticeByPostNo(NoticeNo);
+		Notice notice = noticeDao.getNoticeByPostNo(noticeNo);
+		// noticeReadDao.setReadNotice(noticeNo);
 		// notice객체에 작성자번호(Employee.empNo)를 조회하여 객체를 가져오고 그 객체를 변수emp에 저장한다.
 		EmployeeDao empDao = new EmployeeDao();
 		Employee emp = new Employee();
@@ -37,6 +57,10 @@
 		// 조회수 1증가 시킨다.
 		notice.setReadCount(notice.getReadCount() +1);
 		noticeDao.updateNotice(notice);
+		
+		CommentDao commentDao = CommentDao.getInstance();
+		List<Comment> comments = commentDao.getCommentbyPostNo(noticeNo);
+		
 	%>
 	<div class="row mb-3">
 		<div class="col-12">
@@ -74,69 +98,55 @@
 					</tr>
 					<tr>
 						<th class="text-center bg-light">내용</th>
-						<td colspan="3"><textarea rows="4" class="form-control border-0" readonly></textarea> </td>
+						<td colspan="3"><textarea rows="4" class="form-control border-0" readonly><%=notice.getContent() %></textarea> </td>
 					</tr>
 				</tbody>
 			</table>
 			<div class="d-flex justify-content-between">
 				<span>
-					<a href="delete.jsp" class="btn btn-danger btn-xs">삭제</a>
-					<a href="" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>
+					<a href="delete.jsp?no=<%=notice.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
+					<a href="modifyform.jsp?no=<%=notice.getPostNo() %>" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>
 				</span>
 				<span>
 					<a href="suggestion.jsp?no=<%=notice.getPostNo() %>" class="btn btn-outline-primary btn-xs" onclick="addSuggestion()">추천</a>
-					<button class="btn btn-outline-primary btn-xs">답변</button>
+					<a href="list.jsp" class="btn btn-primary btn-xs" >목록</a>
 				</span>
 			</div>
 		</div>
 	</div>
 	<div class="row mb-3">
 		<div class="col-12 mb-1">
-			<form method="post" action="">
-				<!-- 게시글의 글 번호을 value에 설정하세요 -->
-				<input type="hidden" name="postNo" value="1000"/>
+			<form method="post" action="addComment.jsp">
+				<!-- 게시글의 글 번호를 value에 설정하세요 -->
+				<input type="hidden" name="postNo" value="<%=notice.getPostNo()%>"/>
 				<div class="row mb-3">
 					<div class="col-sm-11">
 						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">
 					</div>
-					<div class="col-sm-1 text-end" style="margin-top: 2px;">
-						<button class="btn btn-secondary btn-xs">댓글</button>
+					<div class="col-sm-1 text-end" style="margin-top: 2px;" >
+						<a href="addComment.jsp?postNo=<%=notice.getPostNo()%>"><button class="btn btn-secondary btn-xs" >댓글</button></a>
 					</div>
 				</div>
 			</form>
 		</div>
 		<div class="col-12">
 			<div class="card">
+			
 				<!-- 댓글 반복 시작 -->
+					<%
+						for (Comment comment : comments) {
+					%>
 				<div class="card-body py-1 px-3 small border-bottom">
 					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+						<span><%=comment.getEmployee().getName() %></span>
+						<span><span class="me-4"><%=StringUtils.dateToText(comment.getCreatedDate()) %></span> <a href="deleteComment.jsp?postNo=<%=comment.getNotice().getPostNo() %>&commentNo=<%=comment.getCommentNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
 					</div>
-					<p class="card-text">내용</p>
+					<p class="card-text"><%=comment.getContent() %></p>
 				</div>
+				<%
+						}
+				%>
 				<!-- 댓글 반복 끝 -->
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
-				<div class="card-body py-1 px-3 small border-bottom">
-					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-					</div>
-					<p class="card-text">내용</p>
-				</div>
 			</div>				
 		</div>
 	</div>
@@ -145,46 +155,45 @@
 	<div class="modal-dialog modal-lg">
 	<form class="border p-3 bg-light" method="post" action="modify.jsp">
 		<!-- 게시글의 글 번호을 value에 설정하세요 -->
-		<input type="hidden" name="postNo" value="1000"/>
+		<input type="hidden" name="postNo" value="<%=notice.getPostNo()%>"/>
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">게시글 등록폼</h5>
+				<h5 class="modal-title">게시글 수정폼</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
 						<div class="col-sm-5">
-							<select class="form-select form-select-sm">
+							<select class="form-select form-select-sm" name="boardNo">
 								<option value="100"> 공지사항</option>
-								<option value="100"> 파일게시판</option>
-								<option value="100"> 갤러리</option>
-								<option value="100"> 묻고 답하기</option>
-								<option value="100"> 벼룩시장</option>
-								<option value="100"> 사는 얘기</option>
+								<option value="101"> 파일게시판</option>
+								<option value="102"> 자유게시판</option>
+								<option value="105"> 묻고 답하기</option>
+								<option value="104"> 사는 얘기</option>
 							</select>
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" placeholder="제목">
+							<input type="text" class="form-control form-control-sm" name="title" placeholder="<%=notice.getTitle()%>" value="<%=notice.getTitle()%>">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" readonly="readonly" value="홍길동">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=notice.getEmployees().getName()%>">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<div class="col-sm-8 offset-sm-2">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="" value="N" checked>
+								<input class="form-check-input" type="radio" name="ordinary" value="N" checked>
 								<label class="form-check-label">일반</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="" value="Y" >
+								<input class="form-check-input" type="radio" name="important" value="Y" >
 								<label class="form-check-label">중요</label>
 							</div>
 						</div>
@@ -192,7 +201,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
 						<div class="col-sm-10">
-							<textarea rows="5" class="form-control">내용을 수정하세요</textarea>
+							<textarea rows="5" class="form-control" name="content">내용을 수정하세요</textarea>
 						</div>
 					</div>
 			</div>

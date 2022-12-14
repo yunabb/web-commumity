@@ -45,6 +45,7 @@
 			comm_posts
 		where
 			post_deleted = 'N'
+			and post_board_no = 104
 		<dynamic>
 			<isNotNull property="opt">
 				<isEqual property="opt" compareValue="title">
@@ -101,6 +102,7 @@
 				comm_posts
 			where
 				post_deleted = 'N'
+				and post_board_no = 104
 			<dynamic>
 				<isNotNull property="opt">
 					<isEqual property="opt" compareValue="title">
@@ -119,9 +121,9 @@
 			) A, comm_employees B		
 		where
 			A.post_writer_no = B.emp_no
-			and A.row_numbers between #begin# and #end#		
+			and A.row_numbers between #begin# and #end#	
 		order by
-			post_no desc		
+			post_no desc	
 	</select>	
 	
 	<!-- 
@@ -147,7 +149,8 @@
 			comm_posts A, comm_employees B
 		where
 			A.post_writer_no = B.emp_no
-			and A.post_no = #value#			
+			and A.post_no = #value#	
+			and post_board_no = 104	
 	</select>
 	
 </sqlMap>
