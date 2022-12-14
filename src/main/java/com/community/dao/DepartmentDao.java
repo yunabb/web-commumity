@@ -19,5 +19,13 @@ public class DepartmentDao {
 	public Department getDeptByNo(int no) {
 		return (Department) SqlMapper.selectOne("departments.getDeptByNo", no);
 	}
+	
+	public void insertDept(Department dept) {
+		SqlMapper.insert("departments.insertDept", dept);
+	}
+	
+	public void updateDept(Department dept) {
+		SqlMapper.update("departments.updateDept", dept);
+	}
 
 }

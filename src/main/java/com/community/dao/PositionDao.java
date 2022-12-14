@@ -19,6 +19,14 @@ public class PositionDao {
 	public Position getPositionByNo(int no) {
 		return (Position) SqlMapper.selectOne("positions.getPositionByNo", no);
 	}
+	
+	public void insertPosition(Position pos) {
+		SqlMapper.insert("insertPosition", pos);
+	}
+	
+	public void updatePosition(Position pos) {
+		SqlMapper.update("updatePosition", pos);
+	}
 
 	
 	
