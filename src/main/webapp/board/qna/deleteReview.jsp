@@ -1,16 +1,26 @@
+<%@page import="java.sql.Date"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="com.community.dao.QuestionDao"%>
 <%@page import="com.community.util.StringUtils"%>
+<%@page import="com.community.vo.Review"%>
+<%@page import="com.community.dao.ReviewDao"%>
+<%@page import="com.community.vo.Employee"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
-<%@ include file="../../common/logincheck.jsp" %>
 <%
+	int reviewNo = StringUtils.stringToInt(request.getParameter("reviewNo"));
 	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
-
+	
+	ReviewDao reviewDao = ReviewDao.getInstance();
+	Review review = reviewDao.getReview(reviewNo);
+	
+	review.setDeleted("Y");
+	
+	reviewDao.updateReview(review);
+	
 	QuestionDao questionDao = QuestionDao.getInstance();
 	Question question = questionDao.getQuestionByNo(postNo);
 	
-	question.setSuggestionCount(question.getSuggestionCount() + 1);
-	question.setReadCount(question.getReadCount() - 1);
+	question.setCommentCount(question.getCommentCount() - 1);
 	
 	questionDao.updateQuestion(question);
 	

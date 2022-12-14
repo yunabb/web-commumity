@@ -23,8 +23,6 @@
 
 				<form class="border p-3 bg-light" action="../../common/register.jsp" id="sendForm">
 
-				<form class="border p-3 bg-light" >
-
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
 						<div class="col-sm-5">

@@ -1,3 +1,10 @@
+<%@page import="java.sql.SQLException"%>
+<%@page import="com.community.vo.Post"%>
+<%@page import="com.community.vo.Reading"%>
+<%@page import="com.community.dao.ReadingDao"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.vo.Review"%>
+<%@page import="com.community.dao.ReviewDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="com.community.dao.QuestionDao"%>
@@ -32,13 +39,21 @@
 	<%
 		int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 	
+		ReadingDao readingDao = ReadingDao.getInstance();
+		try {
+			Reading reading = new Reading();
+			reading.setPost(new Post(postNo));
+			reading.setEmployee(new Employee(emp.getEmpNo()));
+			readingDao.insertReading(reading);
+		} catch (Exception e) {
+		}
+		 
 		QuestionDao questionDao = QuestionDao.getInstance();
 		Question question = questionDao.getQuestionByNo(postNo);
-		
-		System.out.println();
-		
+	
 		question.setReadCount(question.getReadCount() + 1);
 		questionDao.updateQuestion(question);
+		
 	%>
 	
 	<div class="row mb-3">
@@ -77,7 +92,7 @@
 					</tr>
 					<tr>
 						<th class="text-center bg-light">내용</th>
-						<td colspan="3"><textarea rows="4" class="form-control border-0"><%=question.getContent() %></textarea></td>
+						<td colspan="3"><textarea rows="4" class="form-control border-0" readonly><%=question.getContent() %></textarea></td>
 					</tr>
 				</tbody>
 			</table>
@@ -114,31 +129,66 @@
 			</div>
 		</div>
 	</div>
+	
 	<div class="row mb-3">
+	<%
+		if(emp != null) {
+	%>
 		<div class="col-12 mb-1">
-			<form method="post" action="">
+			<form method="post" action="addReview.jsp">
 				<!-- 게시글의 글 번호을 value에 설정하세요 -->
-				<input type="hidden" name="postNo" value="1000"/>
+				<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
 				<div class="row mb-3">
 					<div class="col-sm-11">
 						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">
 					</div>
 					<div class="col-sm-1 text-end" style="margin-top: 2px;">
-						<button class="btn btn-secondary btn-xs">댓글</button>
+						<button class="btn btn-secondary btn-xs" id="submitButton">댓글</button>
 					</div>
 				</div>
 			</form>
 		</div>
+	<%
+		} else {
+	%>
+		<div class="col-12 mb-1">
+			<form method="post" action="addReview.jsp?">
+				<!-- 게시글의 글 번호을 value에 설정하세요 -->
+				<input type="hidden" name="postNo" value="<%=question.getPostNo() %>" />
+				<div class="row mb-3">
+					<div class="col-sm-11">
+						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요" disabled />
+					</div>
+					<div class="col-sm-1 text-end" style="margin-top: 2px;">
+						<button class="btn btn-secondary btn-xs disabled">댓글</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	<%
+		}
+	%>
+		
+	<%
+		ReviewDao reviewDao = ReviewDao.getInstance();
+		List<Review> reviewList = reviewDao.getReviewsByPostNo(postNo);
+	%>	
 		<div class="col-12">
 			<div class="card">
 				<!-- 댓글 반복 시작 -->
+	<%
+		for(Review review : reviewList) {
+	%>				
 				<div class="card-body py-1 px-3 small border-bottom">
 					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+						<span><%=review.getEmployee().getName() %></span>
+						<span><span class="me-4"><%=review.getCreatedDate() %></span> <a href="deleteReview.jsp?postNo=<%=question.getPostNo() %>&reviewNo=<%=review.getReviewNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
 					</div>
-					<p class="card-text">내용</p>
+					<p class="card-text"><%=review.getContent() %></p>
 				</div>
+	<%
+		}
+	%>				
 				<!-- 댓글 반복 끝 -->
 			</div>				
 		</div>

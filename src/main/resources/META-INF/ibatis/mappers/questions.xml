@@ -55,6 +55,20 @@
 					</isEqual>
 				</isNotNull>
 			</dynamic>
+			<dynamic>
+					<isEqual property="read" compareValue="Y">
+						and post_no in (select post_no
+									  from comm_posts
+									  where post_board_no = 104
+									  		and post_deleted = 'N'
+									  
+									  minus
+									  
+									  select reading_post_no
+									  from comm_post_readings	
+									  where reading_emp_no = #readEmp#)
+					</isEqual>
+			</dynamic>
 	</select>
 	
 	<select id="getQuestions" parameterClass="map" resultClass="com.community.vo.Question">
@@ -110,6 +124,20 @@
 							and post_content like '%' || #keyword# || '%'
 						</isEqual>
 					</isNotNull>
+				</dynamic>
+				<dynamic>
+					<isEqual property="read" compareValue="Y">
+						and post_no in (select post_no
+									  from comm_posts
+									  where post_board_no = 104
+									  		and post_deleted = 'N'
+									  
+									  minus
+									  
+									  select reading_post_no
+									  from comm_post_readings	
+									  where reading_emp_no = #readEmp#)
+					</isEqual>
 				</dynamic>
 			) A, comm_employees B
 		where
