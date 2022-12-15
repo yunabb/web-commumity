@@ -18,6 +18,12 @@ public class Notice {
 	private Date updatedDate;		// 수정일
 	private Date DeletedDate;		// 삭제일
 	
+	public Notice() {}
+	
+	public Notice(int postNo) {
+		this.postNo = postNo;
+	}
+	
 	public int getPostNo() {
 		return postNo;
 	}

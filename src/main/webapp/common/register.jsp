@@ -8,8 +8,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ include file="../../common/logincheck.jsp" %>
 <%
+
+	
 	/* employee의 name 가져오기 */
 	Employee writer = (Employee) session.getAttribute("loginedEmp");
+
+	/* employee의 name 가져오기 */
+	Employee writer = (Employee) session.getAttribute("loginedEmp");
+
 
 	// modal-form-posts에서 name을 받아옴
 	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
@@ -30,6 +36,10 @@
 	PostDao postDao = PostDao.getInstance();
 	postDao.insertPost(post);
 	
+
+	if(boardNo == 100) {
+		response.sendRedirect("/web-community/board/notice/list.jsp");
+	} else if(boardNo == 101) {
 	if(boardNo == 101) {
 		response.sendRedirect("/web-community/board/notice/list.jsp");
 	} else if(boardNo == 102) {
