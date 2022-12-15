@@ -1,3 +1,11 @@
+<%@page import="com.community.vo.Position"%>
+<%@page import="com.community.vo.Department"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.community.dao.PositionDao"%>
+<%@page import="com.community.dao.DepartmentDao"%>
+<%@page import="com.community.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,6 +23,17 @@
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
 <div class="container my-3">
+<%
+
+	// 부서, 직위의 Dao 및 List를 생성한다.
+
+	DepartmentDao deptDao = new DepartmentDao();
+	PositionDao posDao = new PositionDao();
+	Map<String, Object> param = new HashMap<>();
+
+	List<Department> deptList = deptDao.getAllDepts();
+	List<Position> posList = posDao.getAllPositions();
+%>
 	<div class="row mb-3">
 		<div class="col">
 			<h1 class="heading">부서/직위 관리</h1>
@@ -30,7 +49,7 @@
 						<colgroup>
 							<col width="15%">
 							<col width="*">
-							<col width="10%">
+							<col width="15%">
 						</colgroup>
 						<thead>
 							<tr>
@@ -40,31 +59,28 @@
 							</tr>
 						</thead>
 						<tbody>
+							<%
+								if (deptList.isEmpty()) {
+							%>
+										<tr><td class="text-center" colspan="6"> 부서 정보가 없습니다. </td></tr>
+							<%
+								} else {
+									for (Department dept : deptList) {
+							%>
 							<tr>
-								<td>1</td>
-								<td>영업부</td>
+								<td><%=dept.getNo() %></td>
+								<td><%=dept.getName() %></td>
 								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
 							</tr>
-							<tr>
-								<td>1</td>
-								<td>영업부</td>
-								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>영업부</td>
-								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>영업부</td>
-								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
-							</tr>
+							<%		
+									}
+								}
+							%>
 						</tbody>
 					</table>
 				</div>
 				<div class="card-footer text-end">
-					<button class="btn btn-primary btn-xs">신규 등록</button>
+					<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-depts-register">신규 등록</button>
 				</div>
 			</div>
 		</div>
@@ -91,34 +107,25 @@
 							</tr>
 						</thead>
 						<tbody>
+							<%
+								if (posList.isEmpty()) {
+							%>
+										<tr><td class="text-center" colspan="6"> 직위 정보가 없습니다. </td></tr>
+							<%
+								} else {
+									for (Position pos : posList) {
+							%>
 							<tr>
 								<td><input type="checkbox" /></td>
-								<td>100</td>
-								<td>1</td>
-								<td>영업부</td>
+								<td><%=pos.getNo() %></td>
+								<td><%=pos.getSeq() %></td>
+								<td><%=pos.getName() %></td>
 								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
 							</tr>
-							<tr>
-								<td><input type="checkbox" /></td>
-								<td>100</td>
-								<td>2</td>
-								<td>영업부</td>
-								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" /></td>
-								<td>100</td>
-								<td>3</td>
-								<td>영업부</td>
-								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" /></td>
-								<td>100</td>
-								<td>4</td>
-								<td>영업부</td>
-								<td><button class="btn btn-outline-primary btn-xs">수정</button></td>
-							</tr>
+							<%
+									}
+								}
+							%>
 						</tbody>
 					</table>
 					<div>
@@ -131,6 +138,29 @@
 				<div class="card-footer text-end">
 					<button class="btn btn-primary btn-xs">신규 등록</button>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal" tabindex="-1" id="modal-form-depts-register">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">부서 신규등록</h5>
+			</div>
+			<div class="modal-body">
+				<form class="border p-3 bg-light" method="post" action="deptregister.jsp">
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">부서명</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" name="name"/>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
+				<a href="deptregister.jsp" class="btn btn-primary btn-xs">등록</a>
 			</div>
 		</div>
 	</div>

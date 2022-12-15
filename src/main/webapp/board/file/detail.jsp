@@ -1,10 +1,7 @@
-<%@page import="java.util.List"%>
-<%@page import="com.community.dao.CommentDao"%>
-<%@page import="com.community.vo.Comment"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.dao.EmployeeDao"%>
-<%@page import="com.community.vo.StoryPost"%>
-<%@page import="com.community.dao.StoryPostDao"%>
+<%@page import="com.community.vo.FileShare"%>
+<%@page import="com.community.dao.FileShareDao"%>
 <%@page import="com.community.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -36,12 +33,12 @@
 	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 
 	// StoryPostDao 객체를 생성하고 메소드를 실행해서 게시글 정보를 조회하고 출력
-	StoryPostDao storyPostDao = StoryPostDao.getInstance();
-	StoryPost storyPost = storyPostDao.getStoryPostByNo(postNo);
+	FileShareDao fileShareDao = FileShareDao.getInstance();
+	FileShare fileShare = fileShareDao.getFileSharesByNo(postNo);
 	
 	// 조회수를 1 증가시키고, 테이블에 반영
-	storyPost.setReadCount(storyPost.getReadCount() + 1);
-	storyPostDao.updateStoryPost(storyPost);
+	fileShare.setReadCount(fileShare.getReadCount() + 1);
+	fileShareDao.updateFileShare(fileShare);
 	
 %>	
 	<div class="row mb-3">
@@ -56,31 +53,31 @@
 				<tbody>
 					<tr>
 						<th class="text-center bg-light">번호</th>
-						<td><%=storyPost.getPostNo() %></td>
+						<td><%=fileShare.getPostNo() %></td>
 						<th class="text-center bg-light">등록일</th>
-						<td><%=StringUtils.dateToText(storyPost.getCreatedDate()) %></td>
+						<td><%=StringUtils.dateToText(fileShare.getCreatedDate()) %></td>
 					</tr>
 					<tr>
 						<th class="text-center bg-light">제목</th>
-						<td><%=storyPost.getTitle() %></td>
+						<td><%=fileShare.getTitle() %></td>
 						<th class="text-center bg-light">추천수</th>
-						<td><%=storyPost.getSuggestionCount() %></td>
+						<td><%=fileShare.getSuggestionCount() %></td>
 					</tr>
 					<tr>
 						<th class="text-center bg-light">작성자</th>
-						<td><%=storyPost.getEmployee().getName() %> (<%=storyPost.getPosition().getName() %>)</td>
+						<td><%=fileShare.getEmployee().getName() %> (<%=fileShare.getPosition().getName() %>)</td>
 						<th class="text-center bg-light">소속부서</th>
-						<td><%=storyPost.getDepartment().getName() %></td>
+						<td><%=fileShare.getDepartment().getName() %></td>
 					</tr>
 					<tr>
 						<th class="text-center bg-light">조회수</th>
-						<td><%=storyPost.getReadCount() %></td>
+						<td><%=fileShare.getReadCount() %></td>
 						<th class="text-center bg-light">댓글 수</th>
-						<td><%=storyPost.getCommentCount() %></td>
+						<td><%=fileShare.getCommentCount() %></td>
 					</tr>
 					<tr>
 						<th class="text-center bg-light">내용</th>
-						<td colspan="3"><textarea rows="4" class="form-control border-0"><%=storyPost.getContent() %></textarea> </td>
+						<td colspan="3"><textarea rows="4" class="form-control border-0"><%=fileShare.getContent() %></textarea> </td>
 					</tr>
 				</tbody>
 			</table>
@@ -88,9 +85,9 @@
 				<span>
 					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
 <%
-	if (emp != null && emp.getName().equals(storyPost.getEmployee().getName())) {
+	if (emp != null && emp.getName().equals(fileShare.getEmployee().getName())) {
 %>					
-					<a href="delete.jsp?postNo=<%=storyPost.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
+					<a href="delete.jsp?postNo=<%=fileShare.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
 					<a href="" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>					
 <%
 	}
@@ -98,13 +95,13 @@
 				</span>
 				<span>	
 <% 
-	if (emp == null || emp.getName().equals(storyPost.getEmployee().getName()))	{
+	if (emp == null || emp.getName().equals(fileShare.getEmployee().getName()))	{
 %>							
-					<a href="suggestion.jsp?postNo=<%=storyPost.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled" onclick="suggestion()">추천</a>				
+					<a href="suggestion.jsp?postNo=<%=fileShare.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled" onclick="suggestion()">추천</a>				
 <%
 	} else {
 %>			
-					<a href="suggestion.jsp?postNo=<%=storyPost.getPostNo() %>" class="btn btn-outline-primary btn-xs" onclick="suggestion()">추천</a>			
+					<a href="suggestion.jsp?postNo=<%=fileShare.getPostNo() %>" class="btn btn-outline-primary btn-xs" onclick="suggestion()">추천</a>			
 <%
 	}
 %>		
@@ -117,7 +114,7 @@
 		<div class="col-12 mb-1">
 			<form method="post" action="addComment.jsp">
 				<!-- 게시글의 글 번호을 value에 설정하세요 -->
-				<input type="hidden" name="postNo" value="<%=storyPost.getPostNo() %>"/>
+				<input type="hidden" name="postNo" value="<%=fileShare.getPostNo() %>"/>
 				<div class="row mb-3">
 					<div class="col-sm-11">
 						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">

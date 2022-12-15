@@ -1,3 +1,4 @@
+<%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="java.util.List"%>
 <%@page import="com.community.util.Pagination"%>
@@ -23,16 +24,23 @@
 </jsp:include>
 
 <%
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
+
 	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
 
 	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
 	String keyword = StringUtils.nullToValue(request.getParameter("keyword"), "");
 	String opt = StringUtils.nullToValue(request.getParameter("opt"), "title");
+	String read = StringUtils.nullToValue(request.getParameter("read"), "");
 	
 	Map<String, Object> param = new HashMap<>();
-	if(!keyword.isEmpty() && !opt.isEmpty()) {
+	if(!keyword.isEmpty() && !opt.isEmpty() && !read.isEmpty()) {
 		param.put("keyword", keyword);
 		param.put("opt", opt);
+	}
+	if(read != null & emp != null) {
+		param.put("read", read);
+		param.put("readEmp", emp.getEmpNo());
 	}
 	
 	QuestionDao questionDao = QuestionDao.getInstance();
@@ -79,7 +87,7 @@
 								</select>
 							</div>
 							<div>
-								<small><input type="checkbox"> 안읽은 게시글</small>
+								<small><input type="checkbox" name="read" value="Y" <%=!read.isEmpty() ? "checked" : ""  %>/> 안읽은 게시글</small>
 								<select class="form-select form-select-xs" name="opt">
 									<option value="title" <%="title".equals(opt) ? "selected" : "" %>> 제목</option>
 									<option value="writer" <%="writer".equals(opt) ? "selected" : "" %>> 작성자</option>
@@ -95,7 +103,7 @@
 								<col width="9%">
 								<col width="*">
 								<col width="10%">
-								<col width="14%">
+								<col width="15%">
 								<col width="7%">
 								<col width="7%">
 							</colgroup>
@@ -171,12 +179,17 @@
 					</nav>
 	<%
 		}
+	
+	 	if(emp != null) { 
 	%>					
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
 						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">답변 등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
 					</div>
+ 	<%
+		}
+	%> 
 				</div>
 			</div>
 		</div>
@@ -205,6 +218,13 @@
 		var form = document.querySelector("form");
 		form.submit();
 	}
+	
+	$(function() {
+		$("[name=read]").change(function() {
+			var form = document.querySelector("form");
+			form.submit();
+		})
+	});	
 </script>
 </body>
 </html>

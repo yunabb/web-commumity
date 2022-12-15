@@ -19,6 +19,7 @@
 
 	<!-- SQL 매퍼 파일을 등록 가능한 알파벳 순으로 -->
 	<sqlMap resource="META-INF/ibatis/mappers/boards.xml" />
+	<sqlMap resource="META-INF/ibatis/mappers/comments.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/departments.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/deptposts.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/employees.xml" />	
@@ -30,6 +31,10 @@
 	<sqlMap resource="META-INF/ibatis/mappers/comments.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/questions.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/postReadings.xml" />
+	<sqlMap resource="META-INF/ibatis/mappers/questions.xml" />
+	<sqlMap resource="META-INF/ibatis/mappers/readings.xml" />
+	<sqlMap resource="META-INF/ibatis/mappers/reviews.xml" />
+	<sqlMap resource="META-INF/ibatis/mappers/storyposts.xml" />
 
 
 </sqlMapConfig>	

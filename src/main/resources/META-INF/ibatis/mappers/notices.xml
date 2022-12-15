@@ -159,6 +159,7 @@
 		where
 			A.post_writer_no = B.emp_no
 			and A.row_numbers between #begin# and #end#
+			and A.row_numbers between #begin# and #end#		
 	</select>	
 	
 	<!-- 

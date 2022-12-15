@@ -55,6 +55,20 @@
 					</isEqual>
 				</isNotNull>
 			</dynamic>
+			<dynamic>
+					<isEqual property="read" compareValue="Y">
+						and post_no in (select post_no
+									  from comm_posts
+									  where post_board_no = 104
+									  		and post_deleted = 'N'
+									  
+									  minus
+									  
+									  select reading_post_no
+									  from comm_post_readings	
+									  where reading_emp_no = #readEmp#)
+					</isEqual>
+			</dynamic>
 	</select>
 	
 	<select id="getQuestions" parameterClass="map" resultClass="com.community.vo.Question">
@@ -111,10 +125,26 @@
 						</isEqual>
 					</isNotNull>
 				</dynamic>
+				<dynamic>
+					<isEqual property="read" compareValue="Y">
+						and post_no in (select post_no
+									  from comm_posts
+									  where post_board_no = 104
+									  		and post_deleted = 'N'
+									  
+									  minus
+									  
+									  select reading_post_no
+									  from comm_post_readings	
+									  where reading_emp_no = #readEmp#)
+					</isEqual>
+				</dynamic>
 			) A, comm_employees B
 		where
 			A.row_numbers between #begin# and #end#
 			and A.post_writer_no = B.emp_no
+		order by
+			A.post_no desc
 	</select>
 	
 	<update id="updateQuestion" parameterClass="com.community.vo.Question">
@@ -135,7 +165,7 @@
 	</update>
 
 	<insert id="insertQuestion" parameterClass="com.community.vo.Question">
-		insert into
+		insert into comm_posts
 			(post_no, post_board_no, post_title, post_writer_no, post_content)
 		value
 			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#)

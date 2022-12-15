@@ -1,3 +1,12 @@
+<%@page import="com.community.vo.Board"%>
+<%@page import="com.community.dao.BoardDao"%>
+<%@page import="com.community.vo.FileShare"%>
+<%@page import="com.community.dao.FileShareDao"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.util.Pagination"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.community.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -8,16 +17,43 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 <link href="/web-community/resources/css/style.css" rel="stylesheet">
-<title>사내 커뮤니티</title>
+<title>파일게시판</title>
 </head>
 <body>
 <jsp:include page="../../common/header.jsp">
 	<jsp:param name="menu" value="board"/>
 </jsp:include>
 <div class="container my-3">
+<%
+
+	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
+	String sort = StringUtils.nullToValue(request.getParameter("sort"), "date");
+	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
+	String opt = StringUtils.nullToValue(request.getParameter("opt"), "title");
+	String keyword = StringUtils.nullToValue(request.getParameter("keyword"), "");
+	
+	FileShareDao fileShareDao = FileShareDao.getInstance();
+	
+	Map<String, Object> param = new HashMap<>();
+	if (!opt.isEmpty() && !keyword.isEmpty()) {
+		param.put("opt", opt);		
+		param.put("keyword", keyword);		
+	}
+	
+	int totalRows = fileShareDao.getTotalRows(param);
+	
+	Pagination pagination = new Pagination(currentPage, totalRows, rows);
+	
+	param.put("sort", sort);
+	param.put("begin", pagination.getBegin());
+	param.put("end", pagination.getEnd());
+	
+	List<FileShare> fileShareList = fileShareDao.getFileShares(param);
+
+%>
 	<div class="row mb-3">
 		<div class="col">
-			<h1 class="heading">파일 게시판</h1>
+			<h1 class="heading">파일게시판</h1>
 		</div>
 	</div>
 	<div class="row mb-3">
@@ -34,74 +70,115 @@
 		</div>
 		<div class="col-9">
 			<div class="card">
-				<div class="card-header">파일 목록</div>
+				<div class="card-header">공지사항</div>
 				<div class="card-body">
-					<form class="mb-3" method="get" action="">
+					<form class="mb-3" method="get" action="list.jsp">
+					<input type="hidden" name="page" value="<%=currentPage %>" />
+					<input type="hidden" name="sort" value="<%=sort %>" />
 						<div class="mb-2 d-flex justify-content-between">
 							<div>
-								<select class="form-select form-select-xs">
-									<option value="10"> 10</option>
-									<option value="10"> 15</option>
-									<option value="10"> 20</option>
+								<select class="form-select form-select-xs" name="rows" onchange="changeRows()">
+									<option value="10" > 10</option>
+									<option value="15" > 15</option>
+									<option value="20" > 20</option>
 								</select>
 							</div>
 							<div>
+								<small><input type="checkbox"> 안읽은 게시글</small>
+							
 								<select class="form-select form-select-xs">
-									<option value="10"> 제목</option>
-									<option value="10"> 작성자</option>
-									<option value="10"> </option>
+									<option value="title"<%="title".equals(opt) ? "selected" : "" %>> 제목</option>
+									<option value="writer"<%="writer".equals(opt) ? "selected" : "" %>> 작성자</option>
+									<option value="content"<%="content".equals(opt) ? "selected" : "" %>> 내용</option>
 								</select>
-								<input type="text" class="form-control form-control-xs w-150">
-								<button type="button" class="btn btn-outline-secondary btn-xs">검색</button>
+								<input type="text" class="form-control form-control-xs w-150" name="keyword" value="<%=keyword %>">
+								<button type="button" class="btn btn-outline-secondary btn-xs" onclick="submitForm(1)">검색</button>
 							</div>
 						</div>
 						<table class="table table-sm border-top">
 							<colgroup>
 								<col width="3%">
 								<col width="9%">
-								<col width="7%">
 								<col width="*">
-								<col width="10%">
-								<col width="12%">
+								<col width="14%">
+								<col width="20%">
+								<col width="7%">
 								<col width="7%">
 							</colgroup>
 							<thead>
 								<tr class="bg-light">
 									<th><input type="checkbox"></th>
 									<th>번호</th>
-									<th><i class="bi bi-paperclip"></i></th>
 									<th>제목</th>
 									<th>작성자</th>
 									<th>등록일</th>
 									<th>조회</th>
+									<th>추천</th>
 								</tr>
 							</thead>
 							<tbody>
+<%
+	if (fileShareList.isEmpty()) {
+%>
+		<tr><td class="text-center" colspan="6"> 게시글 정보가 없습니다. </td></tr>
+<%
+	} else {
+		for (FileShare fileShare : fileShareList) {
+	
+%>
 								<tr>
 									<td><input type="checkbox" name="" value=""/></td>
-									<td>100000</td>
-									<td><a href="download"><i class="bi bi-paperclip"></i></a></td>
-									<td><a href="" class="text-decoration-none text-dark">휴가 신청서</a></td>
-									<td>홍길동</td>
-									<td>2022-12-01</td>
-									<td>12</td>
+									<td><%=fileShare.getPostNo() %></td>
+									<td><a href="detail.jsp?no=<%=fileShare.getPostNo() %>" class="text-decoration-none text-dark"><%=fileShare.getTitle() %></a></td>
+									<td><%=fileShare.getEmployee().getName() %></td>
+									<td><%=StringUtils.dateToText(fileShare.getCreatedDate()) %></td>
+									<td><%=fileShare.getReadCount() %></td>
+									<td><%=fileShare.getSuggestionCount() %></td>
 								</tr>
+<%
+		}
+	}
+%>
 							</tbody>
 						</table>
 					</form>
+<%
+	if (!fileShareList.isEmpty()) {
+		int beginPage = pagination.getBeginPage();	// 시작 페이지번호
+		int endPage = pagination.getEndPage();		// 끝 페이지번호
+		boolean isFirst = pagination.isFirst();		// 첫 페이지인지 여부, 이전 버튼의 비활성화에서 사용
+		boolean isLast = pagination.isLast();		// 마지막 페이지인지 여부, 다음 버튼의 비활성화에서 사용
+		int prevPage = pagination.getPrevPage();	// 이전 페이지번호, 이전 버튼에서 사용
+		int nextPage = pagination.getNextPage();	// 다음 페이지번호, 다음 버튼에서 사용
+%>					
 					<nav>
 						<ul class="pagination pagination-sm justify-content-center">
-							<li class="page-item disabled">
-								<a class="page-link">이전</a>
-							</li>
-							<li class="page-item"><a class="page-link active" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
 							<li class="page-item">
-								<a class="page-link" href="#">다음</a>
+								<a class="page-link <%=isFirst ? "disabled" : "" %>"  
+									href="list.jsp?page=<%=prevPage %>"
+									onclick="changePage(event, <%=prevPage %>)">이전</a>
+							</li>
+<%
+		for (int number = beginPage; number <= endPage; number++) {
+%>							
+							<li class="page-item">
+								<a class="page-link <%=currentPage == number ? "active" : "" %>" 
+									href="list.jsp?page=<%=number%>" 
+									onclick="changePage(event,<%=number %>)"><%=number %></a>
+							</li>
+<%
+		}
+%>
+							<li class="page-item">
+								<a class="page-link <%=isLast ? "disabled" : "" %>" 
+									href="list.jsp?page=<%=nextPage %>" 
+									onclick="changePage(event,<%=nextPage%>)">다음</a>
 							</li>
 						</ul>
 					</nav>
+<%
+	}
+%>
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
@@ -116,5 +193,34 @@
 </jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+function changeRows() {
+	submitForm(1);	
+}
+
+
+function changeSort(event, sort) {
+	event.preventDefault();
+	var sortField = document.querySelector("[name=sort]");	
+	sortField.value = sort;									
+	
+	submitForm(1);	
+}
+
+function changePage(event, page) {
+	event.preventDefault();	
+	
+	submitForm(page); 
+}
+
+function submitForm(page) {
+	var pageField = document.querySelector("[name=page]");	
+	pageField.value = page;									
+	
+	var form = document.querySelector("form");				
+	form.submit();	
+}
+</script>
 </body>
 </html>
