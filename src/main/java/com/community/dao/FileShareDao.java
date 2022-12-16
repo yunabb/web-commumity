@@ -14,6 +14,10 @@ public class FileShareDao {
 		return instance;
 	}
 	
+	public int getSequence() {
+		return (Integer) SqlMapper.selectOne("fileshares.getSequence");
+	}
+	
 	public void insertFileShare(FileShare fileShare) {
 		SqlMapper.insert("fileshares.insertFileShare", fileShare);
 	}

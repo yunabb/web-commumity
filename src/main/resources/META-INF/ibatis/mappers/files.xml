@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="files">
+	<insert id="insertFile" parameterClass="com.community.vo.File">
+		insert into comm_post_files
+			(file_no, file_name, file_post_no)
+		values
+			(comm_posts_files_seq.nextval, #name#, comm_posts_seq.nextval)
+	</insert>
+	
+	<update id="updateFile" parameterClass="com.community.vo.File">
+		update
+			comm_post_files
+		set
+			A.file_no 	as fileNo,
+			A.file_name	as name,
+			B.post_no 	as "file.postNo"
+		from
+			comm_post_files A, comm_posts B
+		where
+			A.file_post_no = B.post_no
+	</update>
+	
+	<select id="getFilesByNo" parameterClass="int" resultClass="com.community.vo.File">
+		select
+			A.file_no 	as fileNo,
+			A.file_name	as name,
+			B.post_no 	as "file.postNo"
+		from
+			comm_post_files A, comm_posts B
+		where
+			A.file_no = #value#
+			and A.file_post_no = B.post_no
+	</select>
+
+</sqlMap>

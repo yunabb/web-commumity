@@ -1,3 +1,7 @@
+<%@page import="com.community.vo.Post"%>
+<%@page import="com.community.dao.FileDao"%>
+<%@page import="com.community.vo.File"%>
+<%@page import="com.community.util.MultipartRequest"%>
 <%@page import="com.community.dao.FileShareDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Board"%>
@@ -16,22 +20,39 @@
 <div class="container">
 <%
 	Employee emp = (Employee) session.getAttribute("loginedEmp");
+
+	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
+	FileShareDao fileShareDao = FileShareDao.getInstance();
 	
-	int boardNo = StringUtils.stringToInt("boardNo");
+ 	MultipartRequest mr = new MultipartRequest(request, "C:\\app\\web-workspace\\temp");
+	
+	String name = mr.getParameter("name");
+	String fileContent = mr.getParameter("fileContent");
+	String[] filenames = mr.getFilenames("attachedFile");
+	
 	String title = request.getParameter("title");
 	String writer = request.getParameter("writer");
 	String important = request.getParameter("important");
 	String content = request.getParameter("content");
 	
+	int sequence = fileShareDao.getSequence(); 
+	
 	FileShare fileShare = new FileShare();
 	fileShare.setBoard(new Board(boardNo));
 	fileShare.setTitle(title);
-	fileShare.setEmployee(new Employee(writer));
+	fileShare.setEmployee(emp);
 	fileShare.setContent(content);
-	fileShare.setImportant(important);
 	
-	FileShareDao fileShareDao = FileShareDao.getInstance();
 	fileShareDao.insertFileShare(fileShare);
+	
+	FileDao fileDao = FileDao.getInstance();
+	
+	for (String filename : filenames) {
+		File file = new File();
+		file.setName(name);
+		
+		fileDao.insertFile(file);
+	}
 	
 	response.sendRedirect("list.jsp");
 %>

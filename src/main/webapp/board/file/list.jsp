@@ -1,3 +1,6 @@
+<%@page import="com.community.dao.FileDao"%>
+<%@page import="com.community.vo.Employee"%>
+<%@page import="com.community.dao.PostDao"%>
 <%@page import="com.community.vo.Board"%>
 <%@page import="com.community.dao.BoardDao"%>
 <%@page import="com.community.vo.FileShare"%>
@@ -33,6 +36,7 @@
 	String keyword = StringUtils.nullToValue(request.getParameter("keyword"), "");
 	
 	FileShareDao fileShareDao = FileShareDao.getInstance();
+	FileDao fileDao = FileDao.getInstance();
 	
 	Map<String, Object> param = new HashMap<>();
 	if (!opt.isEmpty() && !keyword.isEmpty()) {
@@ -49,6 +53,8 @@
 	param.put("end", pagination.getEnd());
 	
 	List<FileShare> fileShareList = fileShareDao.getFileShares(param);
+	
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
 
 %>
 	<div class="row mb-3">
@@ -70,7 +76,7 @@
 		</div>
 		<div class="col-9">
 			<div class="card">
-				<div class="card-header">공지사항</div>
+				<div class="card-header">파일게시판</div>
 				<div class="card-body">
 					<form class="mb-3" method="get" action="list.jsp">
 					<input type="hidden" name="page" value="<%=currentPage %>" />
@@ -99,16 +105,17 @@
 							<colgroup>
 								<col width="3%">
 								<col width="9%">
-								<col width="*">
-								<col width="14%">
+								<col width="25">
 								<col width="20%">
-								<col width="7%">
-								<col width="7%">
+								<col width="20%">
+								<col width="20%">
+								<col width="20%">
 							</colgroup>
 							<thead>
 								<tr class="bg-light">
 									<th><input type="checkbox"></th>
 									<th>번호</th>
+									<th><i class="bi bi-paperclip"></i></th>
 									<th>제목</th>
 									<th>작성자</th>
 									<th>등록일</th>
@@ -120,21 +127,22 @@
 <%
 	if (fileShareList.isEmpty()) {
 %>
-		<tr><td class="text-center" colspan="6"> 게시글 정보가 없습니다. </td></tr>
+		<tr><td class="text-center" colspan="7"> 게시글 정보가 없습니다. </td></tr>
 <%
 	} else {
 		for (FileShare fileShare : fileShareList) {
 	
 %>
-								<tr>
-									<td><input type="checkbox" name="" value=""/></td>
-									<td><%=fileShare.getPostNo() %></td>
-									<td><a href="detail.jsp?no=<%=fileShare.getPostNo() %>" class="text-decoration-none text-dark"><%=fileShare.getTitle() %></a></td>
-									<td><%=fileShare.getEmployee().getName() %></td>
-									<td><%=StringUtils.dateToText(fileShare.getCreatedDate()) %></td>
-									<td><%=fileShare.getReadCount() %></td>
-									<td><%=fileShare.getSuggestionCount() %></td>
-								</tr>
+			<tr>
+				<td><input type="checkbox" name="" value=""/></td>
+				<td><%=fileShare.getPostNo() %></td>
+				<td><a href="download.jsp?postNo=<%=fileShare.getPostNo() %>"><i class="bi bi-paperclip"></i></a></td>
+				<td><a href="detail.jsp?postNo=<%=fileShare.getPostNo() %>" class="text-decoration-none text-dark"><%=fileShare.getTitle() %></a></td>
+				<td><%=fileShare.getEmployee().getName() %></td>
+				<td><%=StringUtils.dateToText(fileShare.getCreatedDate()) %></td>
+				<td><%=fileShare.getReadCount() %></td>
+				<td><%=fileShare.getSuggestionCount() %></td>
+			</tr>
 <%
 		}
 	}
@@ -188,39 +196,124 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal" tabindex="-1" id="modal-form-posts">
+	<div class="modal-dialog modal-lg">
+	<form class="border p-3 bg-light" id="sendForm" method="post" action="../../board/file/register.jsp" >
+		<!-- 게시글의 글 번호을 value에 설정하세요 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">게시글 수정</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
+						<div class="col-sm-5">
+							<select class="form-select form-select-sm" name="boardNo">
+	<%
+	
+		BoardDao boardDao = BoardDao.getInstance();
+		List<Board> boardList = boardDao.getBoards();
+		for(Board board : boardList) {
+	%>							
+								<option value="<%=board.getBoardNo() %>" > <%=board.getName() %></option>
+	<%
+		}
+	%>								
+							</select>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" name="title">
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? emp.getName() : "" %>" name="writer">
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-sm-8 offset-sm-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="imp" value="N" />
+								<label class="form-check-label">일반</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="imp" value="Y" />
+								<label class="form-check-label">중요</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
+						<div class="col-sm-10">
+							<textarea rows="5" class="form-control" name="content"></textarea>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
+						<div class="col-sm-9 mb-1">
+							<input type="file" class="form-control form-control-sm" />
+						</div>
+						<div class="col-sm-1">
+							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
+						<div class="col-sm-9 mb-1">
+							<input type="file" class="form-control form-control-sm" />
+						</div>
+						<div class="col-sm-1">
+							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
+				<button type="submit" class="btn btn-primary btn-xs">수정</button>
+			</div>
+		</div>
+	</form>
+	</div>
+</div>
 <jsp:include page="../../common/modal-form-posts.jsp">
-	<jsp:param name="boardNo" value="100"/>
+	<jsp:param name="boardNo" value="104"/>
 </jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-function changeRows() {
-	submitForm(1);	
-}
-
-
-function changeSort(event, sort) {
-	event.preventDefault();
-	var sortField = document.querySelector("[name=sort]");	
-	sortField.value = sort;									
+	function changeRows() {
+		submitForm(1);	
+	}
 	
-	submitForm(1);	
-}
-
-function changePage(event, page) {
-	event.preventDefault();	
 	
-	submitForm(page); 
-}
-
-function submitForm(page) {
-	var pageField = document.querySelector("[name=page]");	
-	pageField.value = page;									
+	function changeSort(event, sort) {
+		event.preventDefault();
+		var sortField = document.querySelector("[name=sort]");	
+		sortField.value = sort;									
+		
+		submitForm(1);	
+	}
 	
-	var form = document.querySelector("form");				
-	form.submit();	
-}
+	function changePage(event, page) {
+		event.preventDefault();	
+		
+		submitForm(page); 
+	}
+	
+	function submitForm(page) {
+		var pageField = document.querySelector("[name=page]");	
+		pageField.value = page;									
+		
+		var form = document.querySelector("form");				
+		form.submit();	
+	}
 </script>
 </body>
 </html>
