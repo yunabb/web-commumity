@@ -1,5 +1,12 @@
+<%@page import="com.community.util.StringUtils"%>
+<%@page import="com.community.vo.Review"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.community.dao.ReviewDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@include file="../common/logincheck.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,6 +21,13 @@
 <jsp:include page="../common/header.jsp">
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
+<%
+	ReviewDao reviewDao = ReviewDao.getInstance();
+	Map<String, Object> param = new HashMap<>();
+	
+	List<Review> reviewList = reviewDao.getReviewByEmpNo(loginedEmp.getEmpNo());
+	
+%>
 <div class="container my-3">
 	<div class="row mb-3">
 		<div class="col">
@@ -45,43 +59,19 @@
 					<p>내가 작성한 댓글을 확인하세요</p>
 					<div class="card">
 						<!-- 댓글 반복 시작 -->
+						<%
+							for(Review review : reviewList) {
+						%>
 						<div class="card-body py-1 px-3 small border-bottom">
 							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+								<span><span class="me-4"><%=StringUtils.dateToText(review.getCreatedDate()) %></span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
 							</div>
-							<p class="card-text">내용댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.</p>
+							<p class="card-text"><%=review.getContent() %></p>
 						</div>
+						<%
+							}
+						%>
 						<!-- 댓글 반복 끝 -->
-						<div class="card-body py-1 px-3 small border-bottom">
-							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-							</div>
-							<p class="card-text">댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.</p>
-						</div>
-						<div class="card-body py-1 px-3 small border-bottom">
-							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-							</div>
-							<p class="card-text">내용댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.</p>
-						</div>
-						<div class="card-body py-1 px-3 small border-bottom">
-							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-							</div>
-							<p class="card-text">내용댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.</p>
-						</div>
-						<div class="card-body py-1 px-3 small border-bottom">
-							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-							</div>
-							<p class="card-text">내용댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.</p>
-						</div>
-						<div class="card-body py-1 px-3 small border-bottom">
-							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
-							</div>
-							<p class="card-text">내용댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.댓글 내용입니다.</p>
-						</div>
 					</div>		
 				</div>
 			</div>	

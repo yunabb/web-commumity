@@ -1,5 +1,15 @@
+<%@page import="com.community.dao.BoardDao"%>
+<%@page import="com.community.vo.Board"%>
+<%@page import="com.community.util.Pagination"%>
+<%@page import="com.community.util.StringUtils"%>
+<%@page import="com.community.vo.Post"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.community.dao.PostDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@include file="../common/logincheck.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,6 +24,31 @@
 <jsp:include page="../common/header.jsp">
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
+<%
+	
+	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
+	String opt = StringUtils.nullToValue(request.getParameter("opt"), "title");
+	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
+	String keyword = StringUtils.nullToValue(request.getParameter("keyword"), "");
+	
+	BoardDao boardDao = BoardDao.getInstance();
+	PostDao postDao = PostDao.getInstance();
+	Map<String, Object> param = new HashMap<>();
+	if (!keyword.isEmpty() && !opt.isEmpty()) {
+		param.put("keyword", keyword);
+		param.put("opt", opt);
+	}
+	
+	int totalRows = postDao.getTotalRowsByEmpno(loginedEmp.getEmpNo());
+	
+	Pagination pagination = new Pagination(currentPage, totalRows, rows);
+	
+	param.put("begin", pagination.getBegin());
+	param.put("end", pagination.getEnd());
+	
+	List<Post> postList = postDao.getPostsByEmpNo(loginedEmp.getEmpNo());
+	
+%>
 <div class="container my-3">
 	<div class="row mb-3">
 		<div class="col">
@@ -83,28 +118,25 @@
 								</tr>
 							</thead>
 							<tbody>
+							<%
+								for(Post post : postList) {
+									Board board = boardDao.getBoardByNo(post.getBoard().getBoardNo());
+							%>
 								<tr>
-									<td>100000</td>
-									<td>공지사항</td>
-									<td><a href="" class="text-decoration-none text-dark">[중요] 공지사항 등록</a></td>
-									<td>2022-12-01</td>
-									<td>12</td>
-									<td>10</td>
+									<td><%=post.getPostNo() %></td>
+									<td><%=board.getName() %></td>
+								<!-- a href = http://localhost/web-community/board/(카테고리 부분을 어떻게 삽입할지? notice&story&temp%qna)/detail.jsp?postNo=post.getPostNo() -->
+									<td><a href="" class="text-decoration-none text-dark"><%=post.getTitle() %></a></td>
+									<td><%=StringUtils.dateToText(post.getCreatedDate()) %></td>
+									<td><%=post.getReadCount() %></td>
+									<td><%=post.getSuggestionCount() %></td>
 									<td>
 										<a href="" class="btn btn-outline-secondary btn-xs">삭제</a>
 									</td>
 								</tr>
-								<tr>
-									<td>100000</td>
-									<td>공지사항</td>
-									<td><a href="" class="text-decoration-none text-dark">[중요] 공지사항 등록</a></td>
-									<td>2022-12-01</td>
-									<td>12</td>
-									<td>10</td>
-									<td>
-										<a href="" class="btn btn-outline-secondary btn-xs">삭제</a>
-									</td>
-								</tr>
+							<%
+								}
+							%>
 							</tbody>
 						</table>
 					</form>
@@ -128,5 +160,24 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script type="text/javascript">
+function changeRows() {
+	submitForm(1);
+}
+
+function changePage(event, page) {
+	event.preventDefault();
+
+	submitForm(page);		
+}
+	
+function submitForm(page) {
+	var pageField = document.querySelector("[name=page]");
+	pageField.value = page;
+		
+	var form = document.querySelector("form");
+	form.submit();
+}
+</script>
 </body>
 </html>

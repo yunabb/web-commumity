@@ -1,3 +1,15 @@
+<%@page import="com.community.dao.ReviewDao"%>
+<%@page import="com.community.vo.Review"%>
+<%@page import="com.community.vo.Post"%>
+<%@page import="com.community.vo.StoryPost"%>
+<%@page import="com.community.vo.Question"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.community.vo.Notice"%>
+<%@page import="com.community.dao.StoryPostDao"%>
+<%@page import="com.community.dao.QuestionDao"%>
+<%@page import="com.community.dao.PostDao"%>
+<%@page import="com.community.dao.NoticeDao"%>
 <%@page import="com.community.vo.Position"%>
 <%@page import="com.community.dao.PositionDao"%>
 <%@page import="com.community.dao.DepartmentDao"%>
@@ -25,9 +37,14 @@
 	
 	DepartmentDao deptDao = new DepartmentDao();
 	PositionDao posDao = new PositionDao();
+	PostDao postDao = PostDao.getInstance();
+	ReviewDao reviewDao = ReviewDao.getInstance();
+	
+	int myPostRows = postDao.getTotalRowsByEmpno(loginedEmp.getEmpNo());
+	int myCommentRows = reviewDao.getTotalRows(loginedEmp.getEmpNo());
 	
 	Department dept = deptDao.getNameByEmpNo(loginedEmp.getEmpNo());
-	Position pos = posDao.getNameByEmpNo(loginedEmp.getEmpNo());
+	Position pos = posDao.getNameByEmpNo(loginedEmp.getEmpNo());	
 
 %>
 <div class="container my-3">
@@ -96,7 +113,7 @@
 								<div class="card">
 									<div class="card-body bg-primary text-white text-bold">
 										<h5>내가 작성한 글</h5>
-										<small>내가 작성한 글은 <strong>10개</strong> 입니다.</small>
+										<small>내가 작성한 글은 <strong><%=myPostRows %>개</strong> 입니다.</small>
 									</div>
 								</div>
 								</div>
@@ -104,7 +121,7 @@
 									<div class="card">
 										<div class="card-body bg-success text-white text-bold">
 											<h5>내가 작성한 댓글</h5>
-											<small>내가 작성한 댓글은 <strong>10개</strong> 입니다.</small>
+											<small>내가 작성한 댓글은 <strong><%=myCommentRows %>개</strong> 입니다.</small>
 										</div>
 									</div>
 								</div>

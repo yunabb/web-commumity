@@ -49,9 +49,6 @@
 	param.put("end", pagination.getEnd());
 
 	List<Employee> empList = empDao.getAllEmp(param);
-	
-
-
 
 %>
 	<div class="row mb-3">
