@@ -58,5 +58,36 @@
 		where
 			comment_no = #reviewNo#
 	</update>
+	
+	<!-- 
+		직원이 쓴 총 댓글 조회
+	 -->
+	<select id="getReviewByEmpNo" parameterClass="int" resultClass="com.community.vo.Review">
+		select
+			comment_no	as reviewNo,
+			comment_emp_no	as "employee.empNo",
+			comment_content	as content,
+			comment_deleted as deleted,
+			comment_post_no	as "post.postNo",
+			comment_created_date	as createdDate,
+			comment_updated_date	as updatedDate
+		from
+			comm_post_comments
+		where
+			comment_emp_no = #value#
+	</select>
+	
+	<!-- 
+		회원이 등록한 총 댓글수 조회
+	-->
+	<select id="getTotalRows" resultClass="int">
+		select 
+			count(*)
+		from 
+			comm_post_comments
+		where
+			comment_deleted = 'N'
+			and comment_emp_no = #value#	
+	</select>
 </sqlMap>
 

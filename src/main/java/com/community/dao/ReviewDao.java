@@ -29,4 +29,13 @@ public class ReviewDao {
 	public void updateReview(Review review) {
 		SqlMapper.update("reviews.updateReview", review);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Review> getReviewByEmpNo(int empNo) {
+		return (List<Review>) SqlMapper.selectList("reviews.getReviewByEmpNo", empNo);
+	}
+	
+	public int getTotalRows(int empNo) {
+		return (Integer) SqlMapper.selectOne("reviews.getTotalRows", empNo);
+	}
 }
