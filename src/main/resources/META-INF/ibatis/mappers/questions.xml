@@ -6,7 +6,7 @@
 	<select id="getQuestionByNo" parameterClass="int" resultClass="com.community.vo.Question">
 		select
 			A.post_no	as postNo,
-			A.post_board_no	as "board.no",
+			A.post_board_no	as "board.boardNo",
 			A.post_title	as title,
 			A.post_writer_no	as "employee.empNo",
 			B.emp_name	as "employee.name",
@@ -32,49 +32,10 @@
 			and B.emp_dept_no = D.department_no
 	</select>
 	
-	<select id="getTotalRows" resultClass="int">
-		select
-			count(*)
-		from
-			comm_posts
-		where
-			post_deleted = 'N'
-			and post_board_no = 104
-			<dynamic>
-				<isNotNull property="opt">
-					<isEqual property="opt" compareValue="title">
-						and post_title like '%' || #keyword# || '%'
-					</isEqual>
-					<isEqual property="opt" compareValue="writer">
-						and post_writer_no in (select emp_no
-											   from comm_employees
-											   where emp_name = #keyword#)
-					</isEqual>
-					<isEqual property="opt" compareValue="content">
-						and post_content like '%' || #keyword# || '%'
-					</isEqual>
-				</isNotNull>
-			</dynamic>
-			<dynamic>
-					<isEqual property="read" compareValue="Y">
-						and post_no in (select post_no
-									  from comm_posts
-									  where post_board_no = 104
-									  		and post_deleted = 'N'
-									  
-									  minus
-									  
-									  select reading_post_no
-									  from comm_post_readings	
-									  where reading_emp_no = #readEmp#)
-					</isEqual>
-			</dynamic>
-	</select>
-	
 	<select id="getQuestions" parameterClass="map" resultClass="com.community.vo.Question">
 		select
 			A.post_no	as postNo,
-			A.post_board_no	as "board.no",
+			A.post_board_no	as "board.boardNo",
 			A.post_title	as title,
 			A.post_writer_no	as "employee.empNo",
 			B.emp_name	as "employee.name",
@@ -144,7 +105,46 @@
 			A.row_numbers between #begin# and #end#
 			and A.post_writer_no = B.emp_no
 		order by
-			A.post_no desc
+			A.post_original_no desc
+	</select>
+	
+	<select id="getTotalRows" resultClass="int">
+		select
+			count(*)
+		from
+			comm_posts
+		where
+			post_deleted = 'N'
+			and post_board_no = 104
+			<dynamic>
+				<isNotNull property="opt">
+					<isEqual property="opt" compareValue="title">
+						and post_title like '%' || #keyword# || '%'
+					</isEqual>
+					<isEqual property="opt" compareValue="writer">
+						and post_writer_no in (select emp_no
+											   from comm_employees
+											   where emp_name = #keyword#)
+					</isEqual>
+					<isEqual property="opt" compareValue="content">
+						and post_content like '%' || #keyword# || '%'
+					</isEqual>
+				</isNotNull>
+			</dynamic>
+			<dynamic>
+					<isEqual property="read" compareValue="Y">
+						and post_no in (select post_no
+									  from comm_posts
+									  where post_board_no = 104
+									  		and post_deleted = 'N'
+									  
+									  minus
+									  
+									  select reading_post_no
+									  from comm_post_readings	
+									  where reading_emp_no = #readEmp#)
+					</isEqual>
+			</dynamic>
 	</select>
 	
 	<update id="updateQuestion" parameterClass="com.community.vo.Question">
@@ -159,7 +159,8 @@
 			post_comment_count = #commentCount#,
 			post_deleted = #deleted#,
 			post_updated_date = sysdate,
-			post_deleted_date = sysdate
+			post_deleted_date = sysdate,
+			post_original_no = #originalNo#
 		where
 			post_no = #postNo#
 	</update>

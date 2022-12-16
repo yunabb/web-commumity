@@ -33,12 +33,6 @@
 	EmployeeDao empDao = new EmployeeDao();
 	
 	empDao.insertEmployee(emp);
-	
 	response.sendRedirect("complete.jsp");
-
-
-
-
-
 
 %>

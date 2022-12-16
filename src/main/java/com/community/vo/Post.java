@@ -18,7 +18,7 @@ public class Post {
 	private Date updatedDate;
 	private Date deletedDate;
 	private Integer originalNo;
-	
+
 	private Department department;
 	private Position position;
 	

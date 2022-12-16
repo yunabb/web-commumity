@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.community.vo.Board"%>
 <%@page import="java.util.List"%>
 <%@page import="com.community.dao.BoardDao"%>
@@ -18,7 +20,12 @@
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
 <div class="container my-3">
+<%
+	BoardDao boardDao = BoardDao.getInstance();
+	Map<String, Object> param = new HashMap<>();
 
+	List<Board> boardList = boardDao.getBoards();
+%>
 	<div class="row mb-3">
 		<div class="col">
 			<h1 class="heading">게시판 관리</h1>
@@ -31,6 +38,14 @@
 				<div class="card-body">
 					<div class="row p-3">
 						<div class="col-3 border p-3">
+							<%
+								if (boardList.isEmpty()) {
+							%>
+										<p>등록된 게시판이 없습니다.</p>
+							<%
+								} else {
+									for (Board board : boardList) {
+							%>
 							<p>전체 게시판목록을 확인하세요.</p>
 							<ul class="tree border py-3">
 				  				<li>
@@ -54,6 +69,10 @@
 				  					<span class="caret">임시게시판</span>
 				  				</li>
 							</ul>
+							<%
+									}
+								}
+							%>
 						</div>
 						<div class="col-9">
 
@@ -130,7 +149,7 @@
 									</tbody>
 								</table>
 								<div class="text-end">
-									<button class="btn btn-dark btn-xs"><></button>
+									<button class="btn btn-dark btn-xs">수정</button>
 									<button class="btn btn-secondary btn-xs">취소</button>
 									<button class="btn btn-primary btn-xs">신규 등록</button>
 								</div>

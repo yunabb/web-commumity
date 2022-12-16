@@ -44,5 +44,4 @@ public class Position {
 	public void setSeq(int seq) {
 		this.seq = seq;
 	}
-	
-}
+

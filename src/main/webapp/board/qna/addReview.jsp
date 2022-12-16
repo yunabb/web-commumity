@@ -10,7 +10,7 @@
 	Employee emp = (Employee) session.getAttribute("loginedEmp");
 
 	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
-	String content = request.getParameter("content");
+	String content = request.getParameter("reviewContent");
 	
 	
 	Review review = new Review();

@@ -25,6 +25,7 @@
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
+	 		emp_type				as type,
 	 		emp_dept_no 			as "department.no",
 	 		emp_position_no 		as "position.no",
 	 		emp_deleted 			as deleted,
@@ -48,6 +49,7 @@
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
+	 		emp_type				as type,
 	 		emp_dept_no 			as "department.no",
 	 		emp_position_no 		as "position.no",
 	 		emp_deleted 			as deleted,
@@ -70,97 +72,27 @@
 	 		emp_name = #name#, 
 	 		emp_email = #email#,
 	 		emp_phone = #phone#,
-	 		emp_deleted = #deleted#,
 	 		emp_dept_no = #department.no#,
 	 		emp_position_no = #position.no#,
 	 		emp_updated_date = sysdate
 		where
 			emp_no = #empNo#
-			
 	</update>
 	
-	<!-- 
-		총 회원수 조회
-	-->
-	<select id="getTotalRows" resultClass="int">
-		select 
-			count(*)
-		from 
-			comm_employees
-		where
-			emp_deleted = 'N'		
-	</select>
-	
-	<!--
-		전체 회원목록 조회		
-	 -->
-	<select id="getAllEmp" parameterClass="map" resultClass="com.community.vo.Employee">
-		select
-	 		emp_no					as empNo,
-	 		emp_password 			as password,
-	 		emp_name 				as name, 
-	 		emp_email 				as email,
-	 		emp_phone 				as phone,
-	 		emp_dept_no 			as "department.no",
-	 		emp_position_no 		as "position.no",
-	 		emp_type				as type,
-	 		emp_deleted 			as deleted,
-	 		emp_created_date 		as createdDate,
-	 		emp_updated_date 		as updatedDate,
-	 		emp_deleted_date		as deletedDate
-	 	from
-	 		(select
-	 			row_number() over (order by emp_no desc) row_numbers,
-	 			emp_no,
-	 			emp_password,
-	 			emp_name, 
-	 			emp_email,
-	 			emp_phone,
-	 			emp_dept_no,
-	 			emp_position_no,
-	 			emp_type,
-	 			emp_deleted,
-	 			emp_created_date,
-	 			emp_updated_date,
-	 			emp_deleted_date
-	 		from
-	 			comm_employees
-	 		where
-	 			emp_deleted = 'N')
-	 	where
-	 		row_numbers between #begin# and #end#
-	</select>
-	
-	<select id="getNamesByEmpNo" parameterClass="int" resultClass="com.community.vo.Employee">
-		select
-	 		a.emp_no				as empNo,
-	 		a.emp_dept_no 			as "department.no",
-	 		a.emp_position_no 		as "position.no",
-            b.department_name       as deptName,
-            c.position_name         as posName
-	 	from
-	 		comm_employees a, comm_departments b, comm_positions c
-	 	where
-	 		a.emp_no = #value# and
-	 		a.emp_dept_no = b.department_no
-            and a.emp_position_no = c.position_no
-	
-	</select>
-
 	<select id="getEmployeeByNoJoin" parameterClass="int" resultClass="com.community.vo.Employee">
 		select
-	 		A.emp_no					  as empNo,
+	 		A.emp_no				as empNo,
 	 		A.emp_password 			as password,
-	 		A.emp_name 				  as name, 
-	 		A.emp_email 				as email,
-	 		A.emp_phone 				as phone,
+	 		A.emp_name 				as name, 
+	 		A.emp_email 			as email,
+	 		A.emp_phone 			as phone,
 	 		A.emp_dept_no 			as "department.no",
-      B.department_name   as "department.name", 
-	 		A.emp_position_no 	as "position.no",
-      C.position_name     as "position.name",
+            B.department_name       as "department.name",
+	 		A.emp_position_no 		as "position.no",
+            C.position_name         as "position.name",
 	 		A.emp_deleted 			as deleted,
-	 		A.emp_created_date  as createdDate,
-	 		A.emp_updated_date 	as updatedDate
+	 		A.emp_created_date 		as createdDate,
+	 		A.emp_updated_date 		as updatedDate
 	 	from
 	 		comm_employees A, comm_departments B, comm_positions C
 	 	where

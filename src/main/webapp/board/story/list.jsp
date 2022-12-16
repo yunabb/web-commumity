@@ -24,6 +24,8 @@
 </jsp:include>
 <div class="container my-3">  
 <%
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
+
 	// 요청한 페이지번호를 조회하고, 값이 존재하지 않으면 기본값인 1페이지가 나오도록 설정한다.
 	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
 	String opt = StringUtils.nullToValue(request.getParameter("opt"), "title");
@@ -61,7 +63,7 @@
 				<div class="card-header">전체 게시판 목록</div>
 				<div class="card-body">
 					<div class="d-grid gap-2">
-						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">사는이야기 등록</button>
+						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">게시글 등록</button>
 					</div>
 					<jsp:include page="../../common/tree.jsp" />
 				</div>
@@ -177,18 +179,23 @@
 					</nav>
 <%
 	}
+
+	if (emp != null) {
 %>					
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
 					</div>
+<%
+	}
+%>					
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <jsp:include page="../../common/modal-form-posts.jsp">
-	<jsp:param name="boardNo" value="100"/>
+	<jsp:param name="boardNo" value="105"/>
 </jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

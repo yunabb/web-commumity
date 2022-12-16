@@ -5,6 +5,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.community.dao.PositionDao"%>
 <%@page import="com.community.dao.DepartmentDao"%>
+<%@page import="com.community.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -45,7 +46,7 @@
 						<colgroup>
 							<col width="15%">
 							<col width="*">
-							<col width="10%">
+							<col width="15%">
 						</colgroup>
 						<thead>
 							<tr>
@@ -58,7 +59,7 @@
 							<%
 								if (deptList.isEmpty()) {
 							%>
-							<tr><td class="text-center" colspan="6"> 부서 정보가 없습니다. </td></tr>
+										<tr><td class="text-center" colspan="6"> 부서 정보가 없습니다. </td></tr>
 							<%
 								} else {
 									for (Department dept : deptList) {

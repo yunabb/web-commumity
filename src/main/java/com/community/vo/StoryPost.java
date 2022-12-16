@@ -18,8 +18,14 @@ public class StoryPost {
 	private Date createdDate;		// 등록일
 	private Date updatedDate;		// 수정일
 	private Date deletedDate;		// 삭제일	
+	private Department department;  // 부서명
+	private Position position;		// 직위명
 	
 	public StoryPost() {}
+	
+	public StoryPost(int postNo) {
+		this.postNo = postNo;
+	}
 
 	public int getPostNo() {
 		return postNo;
@@ -125,5 +131,29 @@ public class StoryPost {
 		this.deletedDate = deletedDate;
 	}
 
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+
+	@Override
+	public String toString() {
+		return "StoryPost [postNo=" + postNo + ", board=" + board + ", title=" + title + ", employee=" + employee
+				+ ", content=" + content + ", important=" + important + ", readCount=" + readCount
+				+ ", suggestionCount=" + suggestionCount + ", commentCount=" + commentCount + ", deleted=" + deleted
+				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", deletedDate=" + deletedDate
+				+ ", department=" + department + ", position=" + position + "]";
+	}
 
 }
