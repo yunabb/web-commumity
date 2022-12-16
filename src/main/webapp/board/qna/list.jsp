@@ -1,3 +1,5 @@
+<%@page import="com.community.dao.BoardDao"%>
+<%@page import="com.community.vo.Board"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="java.util.List"%>
@@ -34,7 +36,7 @@
 	String read = StringUtils.nullToValue(request.getParameter("read"), "");
 	
 	Map<String, Object> param = new HashMap<>();
-	if(!keyword.isEmpty() && !opt.isEmpty() && !read.isEmpty()) {
+	if(!keyword.isEmpty() && !opt.isEmpty()) {
 		param.put("keyword", keyword);
 		param.put("opt", opt);
 	}
@@ -52,6 +54,7 @@
 	param.put("end", pagination.getEnd());
 	
 	List<Question> questionList = questionDao.getQuestions(param);
+	
 %>
 
 <div class="container my-3">
@@ -66,7 +69,13 @@
 				<div class="card-header">전체 게시판 목록</div>
 				<div class="card-body">
 					<div class="d-grid gap-2">
+	<%
+		if(emp != null) {
+	%>					
 						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
+	<%
+		}
+	%>						
 					</div>
 					<jsp:include page="../../common/tree.jsp" />
 				</div>
@@ -128,7 +137,7 @@
 			for(Question question : questionList) {
 	%>
 				<tr>
-					<td><input type="checkbox" name="" value=""/></td>
+					<td><input type="checkbox" name="checking" value="<%=question.getPostNo() %>" /></td>
 					<td><%=question.getPostNo() %></td>
 					<td><a href="detail.jsp?postNo=<%=question.getPostNo() %>" class="text-decoration-none text-dark"><i class="bi bi-question-circle-fill"></i><%=question.getTitle() %></a></td>
 					<td><%=question.getEmployee().getName() %></td>
@@ -184,7 +193,7 @@
 	%>					
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
-						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">답변 등록</button>
+						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-answer">답변 등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
 					</div>
  	<%
@@ -195,6 +204,80 @@
 		</div>
 	</div>
 </div>
+
+<!-- ------------------------------답변----------------------------------- -->
+<%-- 
+
+<div class="modal" tabindex="-1" id="modal-form-answer">
+	<div class="modal-dialog modal-lg">
+	<form class="border p-3 bg-light" id="sendForm" method="post" action="../../common/register.jsp" >
+		<!-- 게시글의 글 번호을 value에 설정하세요 -->
+		<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">답변</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
+						<div class="col-sm-5">
+							<select class="form-select form-select-sm" name="boardNo">
+	<%
+		BoardDao boardDao = BoardDao.getInstance();
+		List<Board> boardList = boardDao.getBoards();
+
+		for(Board board : boardList) {
+	%>							
+								<option value="<%=board.getBoardNo() %>" <%=board.getBoardNo() == question.getBoard().getBoardNo() ? "selected" : "disabled" %>> <%=board.getName() %></option>
+	<%
+		}
+	%>								
+							</select>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? "ㄴ Re: " + question.getTitle() : "" %>" readonly name="title">
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? question.getEmployee().getName() : "" %>" name="writer">
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-sm-8 offset-sm-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="imp" value="N" <%=emp != null && "N".equals(question.getImportant()) ? "checked" : "disabled" %> >
+								<label class="form-check-label">일반</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="imp" value="Y" <%=emp != null && "Y".equals(question.getImportant()) ? "checked" : "disabled" %> >
+								<label class="form-check-label">중요</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
+						<div class="col-sm-10">
+							<textarea rows="5" class="form-control" name="content"><%=emp != null ? question.getContent() : "" %></textarea>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
+				<button type="submit" class="btn btn-primary btn-xs">수정</button>
+			</div>
+		</div>
+	</form>
+	</div>
+</div>
+ --%>
+ 
+ 
 <jsp:include page="../../common/modal-form-posts.jsp">
 	<jsp:param name="boardNo" value="104"/>
 </jsp:include>

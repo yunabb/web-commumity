@@ -1,3 +1,7 @@
+<%@page import="com.community.vo.Suggestion"%>
+<%@page import="com.community.dao.SuggestionDao"%>
+<%@page import="com.community.vo.Board"%>
+<%@page import="com.community.dao.BoardDao"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="com.community.vo.Post"%>
 <%@page import="com.community.vo.Reading"%>
@@ -28,6 +32,8 @@
 
 <%
 	Employee emp = (Employee) session.getAttribute("loginedEmp");
+
+	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 %>
 <div class="container my-3">
 	<div class="row mb-3">
@@ -37,23 +43,21 @@
 	</div>
 	
 	<%
-		int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
-	
+		QuestionDao questionDao = QuestionDao.getInstance();
+		Question question = questionDao.getQuestionByNo(postNo);
+		
 		ReadingDao readingDao = ReadingDao.getInstance();
+		Reading reading = new Reading();
 		try {
-			Reading reading = new Reading();
 			reading.setPost(new Post(postNo));
 			reading.setEmployee(new Employee(emp.getEmpNo()));
 			readingDao.insertReading(reading);
+			
+			question.setReadCount(question.getReadCount() + 1);
+			questionDao.updateQuestion(question);
 		} catch (Exception e) {
 		}
 		 
-		QuestionDao questionDao = QuestionDao.getInstance();
-		Question question = questionDao.getQuestionByNo(postNo);
-	
-		question.setReadCount(question.getReadCount() + 1);
-		questionDao.updateQuestion(question);
-		
 	%>
 	
 	<div class="row mb-3">
@@ -115,13 +119,13 @@
 	<%
 		if(emp == null || emp.getName().equals(question.getEmployee().getName())) {
 	%>				
-					<a href="suggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled">추천<%=question.getSuggestionCount() %></a>
+					<a href="detailSuggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled">추천<%=question.getSuggestionCount() %></a>
 					<button class="btn btn-outline-primary btn-xs disabled">답변</button>
 	<%
 		} else{
 	%>			
-					<a href="suggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs">추천<%=question.getSuggestionCount() %></a>
-					<button class="btn btn-outline-primary btn-xs">답변</button>
+					<a href="detailSuggestion.jsp?postNo=<%=question.getPostNo() %>" class="btn btn-outline-primary btn-xs">추천<%=question.getSuggestionCount() %></a>
+					<button class="btn btn-outline-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-answer">답변</button>
 	<%
 		}
 	%>		
@@ -140,7 +144,7 @@
 				<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
 				<div class="row mb-3">
 					<div class="col-sm-11">
-						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">
+						<input type="text" class="form-control form-control-sm" name="reviewContent" placeholder="댓글을 남겨주세요">
 					</div>
 					<div class="col-sm-1 text-end" style="margin-top: 2px;">
 						<button class="btn btn-secondary btn-xs" id="submitButton">댓글</button>
@@ -194,50 +198,62 @@
 		</div>
 	</div>
 </div>
+
+
+<!-- null 확인하는 방법 -->
+<%-- <p><%=question.getBoard() %></p>
+<p><%=question.getEmployee() %></p> --%>
+
+<!-- -------------------------------------- 수정--------------------------------------------- -->
+
 <div class="modal" tabindex="-1" id="modal-form-posts">
 	<div class="modal-dialog modal-lg">
-	<form class="border p-3 bg-light" method="post" action="modify.jsp">
+	<form class="border p-3 bg-light" id="sendmodify" method="post" action="modify.jsp" >
 		<!-- 게시글의 글 번호을 value에 설정하세요 -->
-		<input type="hidden" name="postNo" value="1000"/>
+		<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">게시글 등록폼</h5>
+				<h5 class="modal-title">게시글 수정</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
 						<div class="col-sm-5">
-							<select class="form-select form-select-sm">
-								<option value="100"> 공지사항</option>
-								<option value="100"> 파일게시판</option>
-								<option value="100"> 갤러리</option>
-								<option value="100"> 묻고 답하기</option>
-								<option value="100"> 벼룩시장</option>
-								<option value="100"> 사는 얘기</option>
+							<select class="form-select form-select-sm" name="boardNo">
+	<%
+	
+		BoardDao boardDao = BoardDao.getInstance();
+		List<Board> boardList = boardDao.getBoards();
+		for(Board board : boardList) {
+	%>							
+								<option value="<%=board.getBoardNo() %>" <%=board.getBoardNo() == question.getBoard().getBoardNo() ? "selected" : "" %>> <%=board.getName() %></option>
+	<%
+		}
+	%>								
 							</select>
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" placeholder="제목">
+							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? question.getTitle() : "" %>" name="title">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" readonly="readonly" value="홍길동">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? question.getEmployee().getName() : "" %>" name="writer">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<div class="col-sm-8 offset-sm-2">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="" value="N" checked>
+								<input class="form-check-input" type="radio" name="important" value="N" <%=emp != null && "N".equals(question.getImportant()) ? "checked" : "" %> >
 								<label class="form-check-label">일반</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="" value="Y" >
+								<input class="form-check-input" type="radio" name="important" value="Y" <%=emp != null && "Y".equals(question.getImportant()) ? "checked" : "" %> >
 								<label class="form-check-label">중요</label>
 							</div>
 						</div>
@@ -245,7 +261,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
 						<div class="col-sm-10">
-							<textarea rows="5" class="form-control">내용을 수정하세요</textarea>
+							<textarea rows="5" class="form-control" name="content"><%=emp != null ? question.getContent() : "" %></textarea>
 						</div>
 					</div>
 			</div>
@@ -257,10 +273,106 @@
 	</form>
 	</div>
 </div>
+
+<!-- ------------------------------답변----------------------------------- -->
+
+<div class="modal" tabindex="-1" id="modal-form-answer">
+	<div class="modal-dialog modal-lg">
+	<form class="border p-3 bg-light" id="sendAnswer" method="post" action="../../board/qna/register.jsp" >
+		<!-- 게시글의 글 번호을 value에 설정하세요 -->
+		<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">답변</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
+						<div class="col-sm-5">
+							<select class="form-select form-select-sm" name="boardNo">
+	<%
+		for(Board board : boardList) {
+	%>							
+								<option value="<%=board.getBoardNo() %>" <%=board.getBoardNo() == question.getBoard().getBoardNo() ? "selected" : "disabled" %>> <%=board.getName() %></option>
+	<%
+		}
+	%>								
+							</select>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? "ㄴ Re: " + question.getTitle() : "" %>" readonly name="title">
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? question.getEmployee().getName() : "" %>" name="writer">
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-sm-8 offset-sm-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="important" value="N" <%=emp != null && "N".equals(question.getImportant()) ? "checked" : "disabled" %> >
+								<label class="form-check-label">일반</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="important" value="Y" <%=emp != null && "Y".equals(question.getImportant()) ? "checked" : "disabled" %> >
+								<label class="form-check-label">중요</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
+						<div class="col-sm-10">
+							<textarea rows="5" class="form-control" name="content"><%=emp != null ? question.getContent() : "" %></textarea>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
+				<button type="submit" class="btn btn-primary btn-xs">답변</button>
+			</div>
+		</div>
+	</form>
+	</div>
+</div>
+
+<jsp:include page="../../common/modal-form-posts.jsp">
+	<jsp:param name="boardNo" value="104"/>
+</jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
-	
+	$(function() {
+		$("#sendmodify").submit(function() {
+			let titleText = $("#modal-form-posts [name=title]").val();
+			let contentText = $("#modal-form-posts [name=content]").val();
+			
+			if(titleText === "") {
+				alert("제목을 입력해주세요");
+				return false;
+			}
+			if(contentText === "") {
+				alert("내용을 입력해주세요");
+				return false;
+			}
+			return true;
+		});
+		
+		$("#sendAnswer").submit(function() {
+			let contentText = $("#modal-form-answer [name=content]").val();
+			
+			if(contentText === "") {
+				alert("내용을 입력해주세요");
+				return false;
+			}
+			return true;
+		});
+	});
 </script>
 </body>
 </html>
