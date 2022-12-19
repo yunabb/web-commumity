@@ -4,7 +4,7 @@
 	<li>
 		<span class="caret caret-down"><a href="/web-community/board/notice/list.jsp" class="text-decoration-none text-dark">공지사항</a></span>
 		<ul class="nested active">
-			<li><a href="/web-community/board/notice/form.jsp" class="text-decoration-none text-dark">공지사항 추가</a></li>
+			<li><a data-bs-toggle="modal" data-bs-target="#modal-form-posts" class="text-decoration-none text-dark">공지사항 추가</a></li>
 		</ul>
 	</li>
 	<li>

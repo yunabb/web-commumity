@@ -1,5 +1,3 @@
-<%@page import="com.community.dao.PostReadingsDao"%>
-<%@page import="com.community.vo.PostReadings"%>
 <%@page import="com.community.dao.EmployeeDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Notice"%>
@@ -30,12 +28,13 @@
 	Employee loginedEmp = (Employee) session.getAttribute("loginedEmp");
 	// 행 갯수, 정렬방식, 요청한 페이지번호, 검색옵션, 검색키워드를 조회한다.
 	// 값이 존재하지 않으면 기본값을 설정한다.
-	String reading = StringUtils.nullToValue(request.getParameter("readings"), "");
 	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
 	String sort = StringUtils.nullToValue(request.getParameter("sort"), "date");
 	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
 	String opt = StringUtils.nullToValue(request.getParameter("opt"), "title");
 	String keyword = StringUtils.nullToValue(request.getParameter("keyword"), "");
+	
+	String reading = StringUtils.nullToValue(request.getParameter("reading"), "");
 	
 	NoticeDao noticeDao = NoticeDao.getInstance();
 	Map<String, Object> param = new HashMap<>();
@@ -59,8 +58,6 @@
 	param.put("sort", sort);
 	param.put("begin", pagination.getBegin());
 	param.put("end", pagination.getEnd());
-	
-	PostReadings postReadings = new PostReadings();
 	
 	List<Notice> noticeList = noticeDao.getNotices(param);
 %>
@@ -107,7 +104,7 @@
 								
 							   } else {
 							%>
-									<small><input type="checkbox" name="readings" value="Y" <%=reading != null ? "checked" : "" %>> 안읽은 게시글</small>
+									<small><input type="checkbox" name="reading" value="Y" <%=!reading.isEmpty() ? "checked" : "" %>> 안읽은 게시글</small>
 							<%} %>
 								<select class="form-select form-select-xs" name="opt">
 									<option value="title"<%="title".equals(opt) ? "selected" : "" %>> 제목</option>
@@ -130,7 +127,7 @@
 							</colgroup>
 							<thead>
 								<tr class="bg-light">
-									<th><input type="checkbox"></th>
+									<th><input type="checkbox" id="checkbox-all-toggle" onchange="toggleAllCheckUncheck()"></th>
 									<th>번호</th>
 									<th>제목</th>
 									<th>작성자</th>
@@ -150,10 +147,10 @@
 	
 %>
 								<tr>
-									<td><input type="checkbox" name="" value=""/></td>
+									<td><input type="checkbox" name="noticeNo" value="<%=notice.getPostNo()%>"/></td>
 									<td><%=notice.getPostNo() %></td>
 									<td><a href="detail.jsp?no=<%=notice.getPostNo() %>" class="text-decoration-none text-dark"><%=notice.getTitle() %></a></td>
-									<td><%=notice.getEmployees().getName() %></td>
+									<td><%=notice.getEmployee().getName() %></td>
 									<td><%=StringUtils.dateToText(notice.getCreatedDate()) %></td>
 									<td><%=notice.getReadCount() %></td>
 									<td><%=notice.getSuggestionCount() %></td>
@@ -228,38 +225,84 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-function changeRows() {
-	submitForm(1);	
-}
-
-
-function changeSort(event, sort) {
-	event.preventDefault();
-	var sortField = document.querySelector("[name=sort]");	
-	sortField.value = sort;									
+	function changeRows() {
+		submitForm(1);	
+	}
 	
-	submitForm(1);	
-}
-
-function changePage(event, page) {
-	event.preventDefault();	
 	
-	submitForm(page); 
-}
-
-function submitForm(page) {
-	var pageField = document.querySelector("[name=page]");	
-	pageField.value = page;									
+	function changeSort(event, sort) {
+		event.preventDefault();
+		var sortField = document.querySelector("[name=sort]");	
+		sortField.value = sort;									
+		
+		submitForm(1);	
+	}
 	
-	var form = document.querySelector("form");				
-	form.submit();	
-}
-$(function() {
-	$("[name=readings]").change(function() {
-		var form = document.querySelector("form");
-		form.submit();
-	})
-});
+	function changePage(event, page) {
+		event.preventDefault();	
+		
+		submitForm(page); 
+	}
+	
+	function submitForm(page) {
+		var pageField = document.querySelector("[name=page]");	
+		pageField.value = page;									
+		
+		var form = document.querySelector("form");				
+		form.submit();	
+	}
+	
+	$(function() {
+		$("[name=reading]").change(function() {
+			var form = document.querySelector("form");
+			form.submit();
+		})
+	});
+	
+	function toggleAllCheckUncheck() {
+		// 전체 선택/해제 체크박스의 체크상태를 조회하다.
+		var el = document.querySelector("#checkbox-all-toggle");
+		var currentChecked = el.checked;
+		
+		// 모든 보유기술 체크박스의 체크상태를 위에서 조회한 전체 선택/해제 체크박스의 체크상태와 같은 상태로 만든다.
+		var collection = document.querySelectorAll('[name=noticeNo]');
+		for (var index = 0; index < collection.length; index++) {
+			var el = collection[index];
+			el.checked = currentChecked;
+		}
+	}
+
+	function uncheck() {
+		// 체크박스 자바를 선택해제하기
+		var el = document.querySelectorAll('[name=noticeNo]')[0];
+		el.checked = false;
+	}
+	function check() {
+		// 체크박스 자바를 해제하기
+		var el = document.querySelectorAll('[name=noticeNo]')[0];
+		el.checked = true;
+	}
+	function toggleCheck() {
+		// 체크박스 자바를 선택해제를 토글하기
+		var el = document.querySelectorAll('[name=noticeNo]')[0];
+		el.checked = !el.checked
+	}
+	function checkAll() {
+		// 체크박스 전체 선택하기
+		var collection = document.querySelectorAll('[name=noticeNo]');
+		for (var index = 0; index < collection.length; index++) {
+			var el = collection[index];
+			el.checked = true;
+		}
+	}
+	function uncheckAll() {
+		// 체크박스 전체 선택하기
+		var collection = document.querySelectorAll('[name=noticeNo]');
+		for (var index = 0; index < collection.length; index++) {
+			var el = collection[index];
+			el.checked = false;
+		}
+	}
 </script>
 </body>
 </html>

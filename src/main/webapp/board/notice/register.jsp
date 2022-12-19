@@ -1,3 +1,5 @@
+<%@page import="com.community.dao.NoticeDao"%>
+<%@page import="com.community.vo.Notice"%>
 <%@page import="com.community.dao.PostDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Board"%>
@@ -16,17 +18,19 @@
 	String important = request.getParameter("important");
 	String content = request.getParameter("content");
 	
-	Post post = new Post();
-	post.setBoard(new Board(boardNo));
-	post.setTitle(title);
-	post.setEmployee(new Employee(writer.getEmpNo()));
-	post.setImportant(important);
-	post.setContent(content);
+	Notice notice = new Notice();
+	notice.setBoard(new Board(boardNo));
+	notice.setTitle(title);
+	notice.setEmployee(new Employee(writer.getEmpNo()));
+	notice.setImportant(important);
+	notice.setContent(content);
 	
-	PostDao postDao = PostDao.getInstance();
-	postDao.insertPost(post);
+	NoticeDao noticeDao = NoticeDao.getInstance();
+	noticeDao.insertNotice(notice);
 	
 	if(boardNo == 100) {
+		
+		
 		response.sendRedirect("/web-community/board/notice/list.jsp");
 	} else if(boardNo == 101) {
 		response.sendRedirect("/web-community/board/file/list.jsp");

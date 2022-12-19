@@ -13,7 +13,7 @@
 	// Comment 객체를 생성해서 댓글정보 저장
 	Comment comment = new Comment();
 	StoryPost storyPost = new StoryPost();
-	comment.setStoryPost(storyPost);
+	//comment.setStoryPost(storyPost);
 	comment.setContent(content);
 	
 	// CommentDao 객체를 생성하고, insertComment 메소드 실행

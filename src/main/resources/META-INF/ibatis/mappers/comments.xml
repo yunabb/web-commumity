@@ -11,7 +11,7 @@
 		insert into comm_post_comments
 			(comment_no, comment_emp_no, comment_content, comment_post_no)
 		values
-			(comm_comments_seq.nextval, #employee.empNo#, #content#, #storyPost.postNo#)	
+			(comm_comments_seq.nextval, #employee.empNo#, #content#, #post.postNo#)
 	</insert>
 	
 	<!-- 
@@ -23,8 +23,8 @@
 		set
 			comment_content = #content#,
 			comment_deleted = #deleted#,
-			post_updated_date = sysdate,
-			post_deleted_date = sysdate
+			comment_updated_date = sysdate,
+			comment_deleted_date = sysdate
 		where
 			comment_no = #commentNo#		
 	</update>
@@ -34,19 +34,37 @@
 	 -->
 	<select id="getCommentsByPostNo" parameterClass="int" resultClass="com.community.vo.Comment">
 		select
-			comment_no 				as commentNo,
-			comment_emp_no 			as "employee.empNo",
-			comment_content 		as content,
-			comment_deleted 		as deleted,
-			comment_created_date 	as createdDate,
-			comment_updated_date 	as updatedDate,
-			comment_deleted_date 	as deletedDate,
-			comment_post_no 		as "storyPost.postNo"
+			A.comment_no			as commentNo,
+			A.comment_emp_no		as "employee.empNo",
+			A.comment_content		as content,
+			A.comment_deleted 		as deleted,
+			A.comment_post_no		as "post.postNo",
+			A.comment_created_date	as createdDate,
+			A.comment_updated_date	as updatedDate, 
+			B.emp_name				as "employee.name"
 		from
-			comm_post_comments  
+			comm_post_comments A, comm_employees B
 		where
-			and post_no = #value#			
+			A.comment_post_no = #value#
+			and A.comment_emp_no = B.emp_no
+			and A.comment_deleted = 'N'
+		order by
+			A.comment_created_date desc
 	</select>
 	
+	<select id="getComment" parameterClass="int" resultClass="com.community.vo.Comment">
+		select
+			comment_no				as commentNo,
+			comment_emp_no			as "employee.empNo",
+			comment_content			as content,
+			comment_deleted			as deleted,
+			comment_post_no			as "post.postNo",
+			comment_created_date	as createdDate,
+			comment_updated_date	as updatedDate
+		from
+			comm_post_comments
+		where
+			comment_no = #value#
+	</select>
 </sqlMap>
 

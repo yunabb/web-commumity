@@ -9,13 +9,8 @@
 <%@ include file="../../common/logincheck.jsp" %>
 <%
 
-	
 	/* employee의 name 가져오기 */
 	Employee writer = (Employee) session.getAttribute("loginedEmp");
-
-	/* employee의 name 가져오기 */
-	Employee writer = (Employee) session.getAttribute("loginedEmp");
-
 
 	// modal-form-posts에서 name을 받아옴
 	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
@@ -24,7 +19,6 @@
 	String content = request.getParameter("content");
 	
 	// ReviewDao에서 getReviewsRows를 호출해서 post의 commentCount에 저장
-	
 	
 	Post post = new Post();
 	post.setBoard(new Board(boardNo));
@@ -40,7 +34,6 @@
 	if(boardNo == 100) {
 		response.sendRedirect("/web-community/board/notice/list.jsp");
 	} else if(boardNo == 101) {
-	if(boardNo == 101) {
 		response.sendRedirect("/web-community/board/notice/list.jsp");
 	} else if(boardNo == 102) {
 		response.sendRedirect("/web-community/board/file/list.jsp");

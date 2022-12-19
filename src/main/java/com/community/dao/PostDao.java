@@ -18,4 +18,8 @@ public class PostDao {
 	public Post getPostByNo(int postNo) {
 		return (Post) SqlMapper.selectOne("posts.getPostByNo", postNo);
 	}
+	
+	public Post getNoticePostByNo(int postNo) {
+		return (Post) SqlMapper.selectOne("posts.getNoticePostByNo", postNo);
+	}
 }

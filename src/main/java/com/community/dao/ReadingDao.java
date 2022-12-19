@@ -8,6 +8,7 @@ import com.community.vo.Reading;
 public class ReadingDao {
 
 	private static ReadingDao instance = new ReadingDao();
+	
 	private ReadingDao() {}
 	public static ReadingDao getInstance() {
 		return instance;

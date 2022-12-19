@@ -6,7 +6,7 @@
 	<select id="getQuestionByNo" parameterClass="int" resultClass="com.community.vo.Question">
 		select
 			A.post_no	as postNo,
-			A.post_board_no	as "board.no",
+			A.post_board_no	as "board.boardNo",
 			A.post_title	as title,
 			A.post_writer_no	as "employee.empNo",
 			B.emp_name	as "employee.name",

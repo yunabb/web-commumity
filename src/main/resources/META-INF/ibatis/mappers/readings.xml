@@ -21,7 +21,7 @@
 		from
 			comm_post_readings
 		where
-			reading_post_no = #values#
+			reading_post_no = #value#
 	</select>
 </sqlMap>
 

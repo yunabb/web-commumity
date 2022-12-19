@@ -34,7 +34,7 @@
 		List<Board> boardList = boardDao.getBoards();
 		
 		for(Board board : boardList) {
-	%>							
+	%>
 								<option value="<%=board.getBoardNo() %>"><%=board.getName() %></option>
 	<%
 		}
@@ -43,7 +43,7 @@
 		
 		PostDao postDao = PostDao.getInstance();
 		// List<Post> postList = postDao.get
-	%>								
+	%>
 							</select>
 						</div>
 					</div>
@@ -125,6 +125,3 @@
 	}
 
 </script>
-
-</script>
-

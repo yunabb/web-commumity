@@ -46,6 +46,7 @@
 			reading.setEmployee(new Employee(emp.getEmpNo()));
 			readingDao.insertReading(reading);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		 
 		QuestionDao questionDao = QuestionDao.getInstance();

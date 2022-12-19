@@ -29,5 +29,8 @@ public class CommentDao {
 		return (List<Comment>) SqlMapper.selectList("comments.getCommentsByPostNo", postNo);
 	}
 
+	public Comment getComment(int commentNo) {
+		return (Comment)SqlMapper.selectOne("comments.getComment", commentNo);
+	}
 
 }

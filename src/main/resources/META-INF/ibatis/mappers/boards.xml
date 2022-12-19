@@ -6,7 +6,7 @@
 	<!-- 게시판 목록을 등록 -->	
 	<insert id="insertBoard" parameterClass="com.community.vo.Board">
 		insert into comm_boards
-			(board_no, board_name, board_description, board_seq, board_read_option, 
+			(board_boardNo, board_name, board_description, board_seq, board_read_option, 
 			 board_write_option, board_deleted, parent_board_no)
 		values
 			(comm_boards_seq.nextval, #name#, #description#, #seq#, 
