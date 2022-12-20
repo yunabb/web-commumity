@@ -1,3 +1,5 @@
+<%@page import="com.community.vo.Answer"%>
+<%@page import="com.community.dao.AnswerDao"%>
 <%@page import="com.community.vo.Suggestion"%>
 <%@page import="com.community.dao.SuggestionDao"%>
 <%@page import="com.community.vo.Board"%>
@@ -14,7 +16,7 @@
 <%@page import="com.community.dao.QuestionDao"%>
 <%@page import="com.community.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -57,7 +59,7 @@
 			questionDao.updateQuestion(question);
 		} catch (Exception e) {
 		}
-		 
+		
 	%>
 	
 	<div class="row mb-3">
@@ -103,6 +105,7 @@
 			<div class="d-flex justify-content-between">
 				<span>
 					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
+								
 				
 	<%
 		if(emp != null && emp.getName().equals(question.getEmployee().getName())) {
@@ -133,7 +136,43 @@
 			</div>
 		</div>
 	</div>
-	
+				
+<!-- 답변글 시작 -->
+	         <table class="table table-sm table-bordered">
+	            <colgroup>
+	               <col width="15%">
+	               <col width="35%">
+	               <col width="15%">
+	               <col width="35%">
+	            </colgroup>
+	            
+	<%
+		AnswerDao answerDao = AnswerDao.getInstance();
+		List<Answer> answerList = answerDao.getAnswersByNo(postNo);
+		
+		for(Answer answer : answerList) {
+	%>	            
+	            <tbody>
+	               <tr>
+	                  <th class="text-center bg-light">작성자</th>
+	                  <td><%=answer.getEmployee().getName() %> (<%=answer.getPosition().getName() %>)</td>
+	                  <th class="text-center bg-light">등록일</th>
+	                  <td><%=StringUtils.dateToText(answer.getCreatedDate()) %></td>
+	               </tr>
+	               <tr>
+	                  <th class="text-center bg-light">내용</th>
+	                  <td colspan="3">
+	                     <p class="fw-bold mb-1 readonly"><%=question.getTitle() %></p>
+	                     <p><%=answer.getContent() %></p>
+	                  </td>
+	               </tr>
+	            </tbody>
+	<%
+		}
+	%>	            
+	         </table>
+<!-- 답변글 끝 -->
+			
 	<div class="row mb-3">
 	<%
 		if(emp != null) {
@@ -288,41 +327,15 @@
 			</div>
 			<div class="modal-body">
 					<div class="row mb-2">
-						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
-						<div class="col-sm-5">
-							<select class="form-select form-select-sm" name="boardNo">
-	<%
-		for(Board board : boardList) {
-	%>							
-								<option value="<%=board.getBoardNo() %>" <%=board.getBoardNo() == question.getBoard().getBoardNo() ? "selected" : "disabled" %>> <%=board.getName() %></option>
-	<%
-		}
-	%>								
-							</select>
-						</div>
-					</div>
-					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? "ㄴ Re: " + question.getTitle() : "" %>" readonly name="title">
+							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? "┗ Re: " + question.getTitle() : "" %>" readonly name="title">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? question.getEmployee().getName() : "" %>" name="writer">
-						</div>
-					</div>
-					<div class="row mb-2">
-						<div class="col-sm-8 offset-sm-2">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="important" value="N" <%=emp != null && "N".equals(question.getImportant()) ? "checked" : "disabled" %> >
-								<label class="form-check-label">일반</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="important" value="Y" <%=emp != null && "Y".equals(question.getImportant()) ? "checked" : "disabled" %> >
-								<label class="form-check-label">중요</label>
-							</div>
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? emp.getName() : "" %>" name="writer">
 						</div>
 					</div>
 					<div class="row mb-2">

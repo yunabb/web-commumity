@@ -30,4 +30,8 @@ public class QuestionDao {
 	public void updateQuestion(Question question) {
 		SqlMapper.update("questions.updateQuestion", question);
 	}
+	
+	public void insertQuestion(Question question) {
+		SqlMapper.insert("questions.insertQuestion", question);
+	}
 }

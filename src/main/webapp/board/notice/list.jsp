@@ -1,5 +1,3 @@
-<%@page import="com.community.dao.PostReadingsDao"%>
-<%@page import="com.community.vo.PostReadings"%>
 <%@page import="com.community.dao.EmployeeDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Notice"%>
@@ -59,8 +57,6 @@
 	param.put("sort", sort);
 	param.put("begin", pagination.getBegin());
 	param.put("end", pagination.getEnd());
-	
-	PostReadings postReadings = new PostReadings();
 	
 	List<Notice> noticeList = noticeDao.getNotices(param);
 %>
@@ -153,7 +149,7 @@
 									<td><input type="checkbox" name="" value=""/></td>
 									<td><%=notice.getPostNo() %></td>
 									<td><a href="detail.jsp?no=<%=notice.getPostNo() %>" class="text-decoration-none text-dark"><%=notice.getTitle() %></a></td>
-									<td><%=notice.getEmployees().getName() %></td>
+									<td><%=notice.getEmployee().getName() %></td>
 									<td><%=StringUtils.dateToText(notice.getCreatedDate()) %></td>
 									<td><%=notice.getReadCount() %></td>
 									<td><%=notice.getSuggestionCount() %></td>

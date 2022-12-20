@@ -1,3 +1,4 @@
+<%@page import="com.community.vo.Employee"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,6 +15,9 @@
 <jsp:include page="../common/header.jsp">
 	<jsp:param name="menu" value="board"/>
 </jsp:include>
+<%
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
+%>
 <div class="container my-3">
 	<div class="row mb-3">
 		<div class="col">
@@ -26,7 +30,13 @@
 				<div class="card-header">전체 게시판 목록</div>
 				<div class="card-body">
 					<div class="d-grid gap-2">
+	<%
+		if(emp != null) {
+	%>					
 						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">게시글 등록</button>
+	<%
+		}
+	%>						
 					</div>
 					<jsp:include page="../common/tree.jsp" />
 				</div>

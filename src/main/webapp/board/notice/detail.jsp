@@ -1,5 +1,6 @@
-<%@page import="com.community.dao.PostReadingsDao"%>
-<%@page import="com.community.vo.PostReadings"%>
+<%@page import="com.community.vo.Post"%>
+<%@page import="com.community.vo.Reading"%>
+<%@page import="com.community.dao.ReadingDao"%>
 <%@page import="java.util.List"%>
 <%@page import="com.community.dao.CommentDao"%>
 <%@page import="com.community.vo.Comment"%>
@@ -31,35 +32,28 @@
 		</div>
 	</div>
 	<%
-		// list의 no를 가져와서 Notice객체를 가져와 변수notice에 저장한다.
-		int noticeNo = StringUtils.stringToInt(request.getParameter("no"));
 		// 로그인 정보를 가져온다.
 		Employee loginedEmp = (Employee) session.getAttribute("loginedEmp");
-		
-		PostReadingsDao postReadingsDao = PostReadingsDao.getInstance();
+	
+		// list의 no를 가져와서 Notice객체를 가져와 변수notice에 저장한다.
+		int postNo = StringUtils.stringToInt(request.getParameter("no"));
+		 
+		ReadingDao readingDao = ReadingDao.getInstance();
 		try {
-			PostReadings postReadings = new PostReadings();
-			postReadings.setEmpNo(loginedEmp.getEmpNo());
-			postReadings.setPostNo(noticeNo);
-			postReadingsDao.insertPostReadings(postReadings);
+			Reading reading = new Reading();
+			reading.setEmployee(new Employee(loginedEmp.getEmpNo()));
+			reading.setPost(new Post(postNo));
+			readingDao.insertReading(reading);
 		} catch (Exception e) {
 			
 		}
 		
 		NoticeDao noticeDao = NoticeDao.getInstance();
-		Notice notice = noticeDao.getNoticeByPostNo(noticeNo);
-		// noticeReadDao.setReadNotice(noticeNo);
-		// notice객체에 작성자번호(Employee.empNo)를 조회하여 객체를 가져오고 그 객체를 변수emp에 저장한다.
-		EmployeeDao empDao = new EmployeeDao();
-		Employee emp = new Employee();
-		emp = empDao.getEmployeeByNoJoin(notice.getEmployees().getEmpNo());
+		Notice notice = noticeDao.getNoticeByPostNo(postNo);
 		
 		// 조회수 1증가 시킨다.
 		notice.setReadCount(notice.getReadCount() +1);
 		noticeDao.updateNotice(notice);
-		
-		CommentDao commentDao = CommentDao.getInstance();
-		List<Comment> comments = commentDao.getCommentbyPostNo(noticeNo);
 		
 	%>
 	<div class="row mb-3">
@@ -86,9 +80,9 @@
 					</tr>
 					<tr>
 						<th class="text-center bg-light">작성자</th>
-						<td><%=notice.getEmployees().getName() %> <%=emp.getPosition().getName() %></td>
+						<td><%=notice.getEmployee().getName() %> <%=notice.getPosition().getName() %></td>
 						<th class="text-center bg-light">소속부서</th>
-						<td><%=emp.getDepartment().getName() %></td>
+						<td><%=notice.getDepartment().getName() %></td>
 					</tr>
 					<tr>
 						<th class="text-center bg-light">조회수</th>
@@ -107,8 +101,17 @@
 					<a href="delete.jsp?no=<%=notice.getPostNo() %>" class="btn btn-danger btn-xs">삭제</a>
 					<a href="modifyform.jsp?no=<%=notice.getPostNo() %>" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">수정</a>
 				</span>
+<%
+	if(loginedEmp == null ) {
+		
+	} else {
+%>
+				
 				<span>
 					<a href="suggestion.jsp?no=<%=notice.getPostNo() %>" class="btn btn-outline-primary btn-xs" onclick="addSuggestion()">추천</a>
+<%
+	}
+%>					
 					<a href="list.jsp" class="btn btn-primary btn-xs" >목록</a>
 				</span>
 			</div>
@@ -124,11 +127,15 @@
 						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">
 					</div>
 					<div class="col-sm-1 text-end" style="margin-top: 2px;" >
-						<a href="addComment.jsp?postNo=<%=notice.getPostNo()%>"><button class="btn btn-secondary btn-xs" >댓글</button></a>
+						<a href="addComment.jsp?PostNo=<%=notice.getPostNo()%>"><button class="btn btn-secondary btn-xs" >댓글</button></a>
 					</div>
 				</div>
 			</form>
 		</div>
+	<%
+		CommentDao commentDao = CommentDao.getInstance();
+		List<Comment> comments = commentDao.getCommentsByPostNo(postNo);
+	%>
 		<div class="col-12">
 			<div class="card">
 			
@@ -139,7 +146,7 @@
 				<div class="card-body py-1 px-3 small border-bottom">
 					<div class="mb-1 d-flex justify-content-between text-muted">
 						<span><%=comment.getEmployee().getName() %></span>
-						<span><span class="me-4"><%=StringUtils.dateToText(comment.getCreatedDate()) %></span> <a href="deleteComment.jsp?postNo=<%=comment.getNotice().getPostNo() %>&commentNo=<%=comment.getCommentNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+						<span><span class="me-4"><%=StringUtils.dateToText(comment.getCreatedDate()) %></span> <a href="deleteComment.jsp?postNo=<%=notice.getPostNo() %>&commentNo=<%=comment.getCommentNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
 					</div>
 					<p class="card-text"><%=comment.getContent() %></p>
 				</div>
@@ -183,7 +190,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=notice.getEmployees().getName()%>">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=notice.getEmployee().getName()%>">
 						</div>
 					</div>
 					<div class="row mb-2">

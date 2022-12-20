@@ -18,6 +18,9 @@ public class Notice {
 	private Date updatedDate;		// 수정일
 	private Date DeletedDate;		// 삭제일
 	
+	private Department department;
+	private Position position;
+	
 	public Notice() {}
 	
 	public Notice(int postNo) {
@@ -42,10 +45,10 @@ public class Notice {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Employee getEmployees() {
+	public Employee getEmployee() {
 		return employee;
 	}
-	public void setEmployees(Employee employee) {
+	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
 	public String getContent() {
@@ -102,6 +105,19 @@ public class Notice {
 	public void setDeletedDate(Date deletedDate) {
 		DeletedDate = deletedDate;
 	}
+	public Department getDepartment() {
+		return department;
+	}
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+	public Position getPosition() {
+		return position;
+	}
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+
 	@Override
 	public String toString() {
 		return "Notice [postNo=" + postNo + ", board=" + board + ", title=" + title + ", employee=" + employee
