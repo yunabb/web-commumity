@@ -51,7 +51,7 @@
 			A.post_original_no	as originalNo
 		from
 			(select
-				row_number() over (order by post_no desc) row_numbers,
+				row_number() over (order by post_original_no desc) row_numbers,
 				post_no,
 				post_board_no,
 				post_title,
@@ -105,7 +105,7 @@
 			A.row_numbers between #begin# and #end#
 			and A.post_writer_no = B.emp_no
 		order by
-			A.post_original_no desc
+			A.post_original_no desc , A.post_no asc
 	</select>
 	
 	<select id="getTotalRows" resultClass="int">
@@ -167,9 +167,9 @@
 
 	<insert id="insertQuestion" parameterClass="com.community.vo.Question">
 		insert into comm_posts
-			(post_no, post_board_no, post_title, post_writer_no, post_content)
-		value
-			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#)
+			(post_no, post_board_no, post_title, post_writer_no, post_content, post_important, post_original_no)
+		values
+			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#, #important#, #originalNo#)
 	</insert>
 
 </sqlMap>
