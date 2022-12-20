@@ -99,17 +99,18 @@
 	<select id="getAllEmp" parameterClass="map" resultClass="com.community.vo.Employee">
 		select
 	 		emp_no					as empNo,
-	 		emp_password 				as password,
+	 		emp_password 			as password,
 	 		emp_name 				as name, 
 	 		emp_email 				as email,
 	 		emp_phone 				as phone,
-	 		emp_dept_no 				as "department.no",
-	 		emp_position_no 			as "position.no",
+	 		emp_dept_no 			as "department.no",
+	 		emp_position_no 		as "position.no",
 	 		emp_type				as type,
-	 		emp_deleted 				as deleted,
-	 		emp_created_date 			as createdDate,
-	 		emp_updated_date 			as updatedDate,
-	 		emp_deleted_date			as deletedDate
+	 		emp_deleted 			as deleted,
+	 		emp_created_date 		as createdDate,
+	 		emp_updated_date 		as updatedDate,
+	 		emp_deleted_date		as deletedDate
+
 	 	from
 	 		(select
 	 			row_number() over (order by emp_no desc) row_numbers,

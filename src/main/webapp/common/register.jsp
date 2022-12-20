@@ -43,4 +43,5 @@
 	} else if(boardNo == 104) {
 		response.sendRedirect("/web-community/board/qna/list.jsp");
 	}
+	}
 %>

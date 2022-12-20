@@ -64,7 +64,7 @@
 						%>
 						<div class="card-body py-1 px-3 small border-bottom">
 							<div class="mb-1 text-muted text-end">
-								<span><span class="me-4"><%=StringUtils.dateToText(review.getCreatedDate()) %></span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+								<span><span class="me-4"><%=StringUtils.dateToText(review.getCreatedDate()) %></span> <a href="mycomment-delete.jsp?reviewNo=<%=review.getReviewNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
 							</div>
 							<p class="card-text"><%=review.getContent() %></p>
 						</div>

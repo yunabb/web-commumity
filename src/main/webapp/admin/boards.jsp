@@ -38,18 +38,10 @@
 				<div class="card-body">
 					<div class="row p-3">
 						<div class="col-3 border p-3">
-							<%
-								if (boardList.isEmpty()) {
-							%>
-										<p>등록된 게시판이 없습니다.</p>
-							<%
-								} else {
-									for (Board board : boardList) {
-							%>
 							<p>전체 게시판목록을 확인하세요.</p>
 							<ul class="tree border py-3">
 				  				<li>
-				  					<span class="caret">공지사항</span>
+				  					<span class="caret">공지</span>
 								</li>
 				  				<li>
 				  					<span class="caret">파일게시판</span>
@@ -69,10 +61,6 @@
 				  					<span class="caret">임시게시판</span>
 				  				</li>
 							</ul>
-							<%
-									}
-								}
-							%>
 						</div>
 						<div class="col-9">
 
