@@ -1,3 +1,5 @@
+<%@page import="com.community.dao.BellDao"%>
+<%@page import="com.community.vo.Bell"%>
 <%@page import="com.community.dao.QuestionDao"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="com.community.dao.ReviewDao"%>
@@ -12,13 +14,14 @@
 	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 	String content = request.getParameter("reviewContent");
 	
+	ReviewDao reviewDao = ReviewDao.getInstance();
+	int sequence = reviewDao.getSequence();	
 	
 	Review review = new Review();
+	review.setReviewNo(sequence);
 	review.setPost(new Post(postNo));
 	review.setContent(content);
 	review.setEmployee(new Employee(emp.getEmpNo()));
-	
-	ReviewDao reviewDao = ReviewDao.getInstance();
 	reviewDao.insertReview(review);
 	
 	QuestionDao questionDao = QuestionDao.getInstance();
@@ -27,6 +30,16 @@
 	question.setCommentCount(question.getCommentCount() + 1);
 
 	questionDao.updateQuestion(question);
+	
+	
+	Bell bell = new Bell();
+	bell.setReview(new Review(sequence));
+	bell.setPost(new Post(postNo));
+	bell.setSendEmp(emp);
+	bell.setReceiveEmp(new Employee(question.getEmployee().getEmpNo()));
+	
+	BellDao bellDao = BellDao.getInstance();
+	bellDao.insertBell(bell);
 	
 	response.sendRedirect("detail.jsp?postNo=" + postNo);
 %>

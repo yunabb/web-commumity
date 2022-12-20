@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap namespace="bells">
+	<insert id="insertBell" parameterClass="com.community.vo.Bell">
+		insert into comm_post_bells
+			(bell_no, bell_post_no, bell_send_emp_no, bell_receive_emp_no, bell_review_no)
+		values
+			(comm_bells_seq.nextval, #post.postNo#, #sendEmp.empNo#, #receiveEmp.empNo#, comm_comments_seq.nextval)
+	</insert>
+	
+	<select id="getBellsByEmpNo" parameterClass="int" resultClass="com.community.vo.Bell">
+		select
+			A.bell_no	as bellNo,
+			A.bell_post_no	as "post.postNo",
+			A.bell_send_emp_no	as "sendEmp.empNo",
+			A.bell_receive_emp_no	as "receive.empNo",
+			A.bell_content	as content,
+			A.bell_reading_status	as readingStatus,
+			A.bell_deleted	as deleted,
+			A.bell_created_date	as createdDate,
+			A.bell_updated_date	as updatedDate,
+			A.bell_deleted_date	as deletedDate,
+			A.bell_review_no	as "review.reviewNo",
+			C.emp_name	as "sendEmp.name"
+		from
+			comm_post_bells A, comm_employees C
+		where
+			A.bell_receive_emp_no = #value#
+			and C.emp_no = A.bell_send_emp_no
+			and A.bell_deleted = 'N'
+		order by 
+			A.bell_reading_status asc, A.bell_no desc
+	</select>
+	
+	<select id="getBellByBellNo" parameterClass="int" resultClass="com.community.vo.Bell">
+		select
+			bell_no	as bellNo,
+			bell_post_no	as "post.postNo",
+			bell_send_emp_no	as "sendEmp.empNo",
+			bell_receive_emp_no	as "receive.empNo",
+			bell_content	as content,
+			bell_reading_status	as readingStatus,
+			bell_deleted	as deleted,
+			bell_created_date	as createdDate,
+			bell_updated_date	as updatedDate,
+			bell_deleted_date	as deletedDate,
+			bell_review_no	as "review.reviewNo"
+		from
+			comm_post_bells
+		where
+			bell_no = #value#
+			and bell_deleted = 'N'
+	</select>
+	
+	<select id="getBellByReviewNo" parameterClass="int" resultClass="com.community.vo.Bell">
+		select
+			bell_no	as bellNo,
+			bell_post_no	as "post.postNo",
+			bell_send_emp_no	as "sendEmp.empNo",
+			bell_receive_emp_no	as "receive.empNo",
+			bell_content	as content,
+			bell_reading_status	as readingStatus,
+			bell_deleted	as deleted,
+			bell_created_date	as createdDate,
+			bell_updated_date	as updatedDate,
+			bell_deleted_date	as deletedDate,
+			bell_review_no	as "review.reviewNo"
+		from
+			comm_post_bells
+		where
+			bell_review_no = #value#
+			and bell_deleted = 'N'
+	</select>
+	
+	<update id="updateBell" parameterClass="com.community.vo.Bell">
+		update
+			comm_post_bells
+		set
+			bell_reading_status	= #readingStatus#,
+			bell_updated_date	= sysdate
+		where
+			bell_no = #bellNo#
+	</update>
+	
+	<update id="deleteBell" parameterClass="com.community.vo.Bell">
+		update
+			comm_post_bells
+		set
+			bell_deleted = #deleted#,
+			bell_deleted_date = sysdate
+		where
+			bell_no = #bellNo#
+	</update>
+	
+	<select id="getBellsRows" parameterClass="int" resultClass="int">
+		select
+			count(*)
+		from
+			comm_post_bells
+		where
+			bell_receive_emp_no = #value#
+			and bell_deleted = 'N'
+			and bell_reading_status = 'N'
+	</select>
+</sqlMap>
+
