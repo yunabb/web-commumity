@@ -125,8 +125,7 @@
 			A.post_writer_no = B.emp_no
 			and A.row_numbers between #begin# and #end#	
 		order by
-			post_no desc	
-			A.post_no desc	
+			post_no desc
 	</select>	
 	
 	<!-- 

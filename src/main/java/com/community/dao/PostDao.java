@@ -39,4 +39,8 @@ public class PostDao {
 	public int getTotalRows(Map<String, Object> param) {
 		return (Integer) SqlMapper.selectOne("posts.getTotalRows", param);
 	}
+	
+	public void updatePost(Post post) {
+		SqlMapper.update("posts.updatePost", post);
+	}
 }

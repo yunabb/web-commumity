@@ -72,7 +72,7 @@
 											List<Department> deptList = deptDao.getAllDepts();
 											for(Department dept : deptList) {
 										%>
-											<option value="<%=dept.getNo() %>"> <%=dept.getName() %></option>
+											<option value="<%=dept.getNo() %>" <%=dept.getNo() == emp.getDepartment().getNo() ? "selected" : "disabled" %>> <%=dept.getName() %></option>
 											<%
 											}
 											%>
@@ -86,7 +86,7 @@
 											List<Position> posList = posDao.getAllPositions();
 											for(Position pos : posList) {
 										%>
-											<option value="<%=pos.getNo() %>"> <%=pos.getName() %></option>
+											<option value="<%=pos.getNo() %>" <%=pos.getNo() == emp.getPosition().getNo() ? "selected" : "disabled" %>> <%=pos.getName() %></option>
 											<%
 											}
 											%>
