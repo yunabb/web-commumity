@@ -1,3 +1,6 @@
+<%@page import="com.community.dao.AnswerDao"%>
+<%@page import="com.community.vo.Question"%>
+<%@page import="com.community.vo.Answer"%>
 <%@page import="com.community.dao.ReviewDao"%>
 <%@page import="com.community.dao.PostDao"%>
 <%@page import="com.community.vo.Employee"%>
@@ -16,30 +19,17 @@
 	// modal-form-posts에서 name을 받아옴
 	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
 	String title = request.getParameter("title");
-	String important = request.getParameter("important");
 	String content = request.getParameter("content");
 	
-	// ReviewDao에서 getReviewsRows를 호출해서 post의 commentCount에 저장
+	// answerDao 에서 insertAnswer를 호출 answer에 답변 등록
 	
+	Answer answer = new Answer();
+	answer.setQuestion(new Question(postNo));
+	answer.setEmployee(new Employee(writer.getEmpNo()));
+	answer.setContent(content);
 	
-	Post post = new Post();
-	post.setBoard(new Board(boardNo));
-	post.setTitle(title);
-	post.setEmployee(new Employee(writer.getEmpNo()));
-	post.setImportant(important);
-	post.setContent(content);
-	post.setOriginalNo(postNo);
+	AnswerDao answerDao = AnswerDao.getInstance();
+	answerDao.insertAnswer(answer);
 	
-	PostDao postDao = PostDao.getInstance();
-	postDao.insertPost(post);
-	
-	if(boardNo == 101) {
-		response.sendRedirect("/web-community/board/notice/list.jsp");
-	} else if(boardNo == 102) {
-		response.sendRedirect("/web-community/board/file/list.jsp");
-	} else if(boardNo == 103) {
-		response.sendRedirect("/web-community/board/temp/list.jsp");
-	} else if(boardNo == 104) {
-		response.sendRedirect("/web-community/board/qna/list.jsp");
-	}
+	response.sendRedirect("detail.jsp?postNo=" + postNo);
 %>

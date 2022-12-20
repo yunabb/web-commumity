@@ -85,7 +85,7 @@
 			<div class="card">
 				<div class="card-header">묻고 답하기 게시판</div>
 				<div class="card-body">
-					<form class="mb-3" method="get" action="list.jsp">
+					<form class="mb-3" method="get" action="list.jsp" id="questionForm">
 						<input type="hidden" name="page" value="<%=currentPage %>" />
 						<div class="mb-2 d-flex justify-content-between">
 							<div>
@@ -118,7 +118,7 @@
 							</colgroup>
 							<thead>
 								<tr class="bg-light">
-									<th><input type="checkbox"></th>
+									<th></th>
 									<th>번호</th>
 									<th>제목</th>
 									<th>작성자</th>
@@ -137,8 +137,18 @@
 			for(Question question : questionList) {
 	%>
 				<tr>
-					<td><input type="checkbox" name="checking" value="<%=question.getPostNo() %>" /></td>
-					<td><%=question.getPostNo() %></td>
+	<%
+		if(emp != null) {
+	%>
+					<td><input type="radio" name="checking" value=<%=question.getPostNo() %> /></td>
+	<%					
+		} else {
+	%>
+					<td></td>
+	<%
+		}
+	%>				
+					<td id="sendPostNo" ><%=question.getPostNo() %></td>
 					<td><a href="detail.jsp?postNo=<%=question.getPostNo() %>" class="text-decoration-none text-dark"><i class="bi bi-question-circle-fill"></i><%=question.getTitle() %></a></td>
 					<td><%=question.getEmployee().getName() %></td>
 					<td><%=StringUtils.dateToText(question.getCreatedDate())%></td>
@@ -163,7 +173,7 @@
 	%>					
 					<nav>
 						<ul class="pagination pagination-sm justify-content-center">
-							<li class="page-item disabled">
+							<li class="page-item">
 								<a class="page-link <%=isFirst ? "disabled" : "" %>"
 									href="list.jsp?page=<%=prevPage %>"
 									onclick="changePage(event, <%=prevPage %>)">이전</a>
@@ -193,8 +203,8 @@
 	%>					
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">질문 등록</button>
-						<button class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-answer">답변 등록</button>
-						<button class="btn btn-outline-dark btn-xs">삭제</button>
+						<!-- <button class="btn btn-primary btn-xs disabled" data-bs-toggle="modal" data-bs-target="#modal-form-answer" id="answerButton">답변 등록</button> -->
+						<button class="btn btn-outline-dark btn-xs disabled" id="submitPostNo">삭제</button>
 					</div>
  	<%
 		}
@@ -206,13 +216,13 @@
 </div>
 
 <!-- ------------------------------답변----------------------------------- -->
-<%-- 
 
+<%-- 
 <div class="modal" tabindex="-1" id="modal-form-answer">
 	<div class="modal-dialog modal-lg">
-	<form class="border p-3 bg-light" id="sendForm" method="post" action="../../common/register.jsp" >
+	<form class="border p-3 bg-light" id="sendForm" method="post" action="../../board/qna/register.jsp" >
 		<!-- 게시글의 글 번호을 value에 설정하세요 -->
-		<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
+		<input type="hidden" name="postNo"/>
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">답변</h5>
@@ -229,7 +239,8 @@
 
 		for(Board board : boardList) {
 	%>							
-								<option value="<%=board.getBoardNo() %>" <%=board.getBoardNo() == question.getBoard().getBoardNo() ? "selected" : "disabled" %>> <%=board.getName() %></option>
+								<option value="<%=board.getBoardNo() %>"> <%=board.getName() %></option>
+								<%=board.getBoardNo() == question.getBoard().getBoardNo() ? "selected" : "disabled" %>
 	<%
 		}
 	%>								
@@ -239,23 +250,23 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? "ㄴ Re: " + question.getTitle() : "" %>" readonly name="title">
+							<input type="text" class="form-control form-control-sm" readonly name="title" value="">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? question.getEmployee().getName() : "" %>" name="writer">
+							<input type="text" class="form-control form-control-sm" value="<%=emp != null ? emp.getName() : "" %>" readonly="readonly" name="writer">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<div class="col-sm-8 offset-sm-2">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="imp" value="N" <%=emp != null && "N".equals(question.getImportant()) ? "checked" : "disabled" %> >
+								<input class="form-check-input" type="radio" name="imp" value="N">
 								<label class="form-check-label">일반</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="imp" value="Y" <%=emp != null && "Y".equals(question.getImportant()) ? "checked" : "disabled" %> >
+								<input class="form-check-input" type="radio" name="imp" value="Y">
 								<label class="form-check-label">중요</label>
 							</div>
 						</div>
@@ -263,13 +274,13 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
 						<div class="col-sm-10">
-							<textarea rows="5" class="form-control" name="content"><%=emp != null ? question.getContent() : "" %></textarea>
+							<textarea rows="5" class="form-control" name="content"></textarea>
 						</div>
 					</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
-				<button type="submit" class="btn btn-primary btn-xs">수정</button>
+				<button type="submit" class="btn btn-primary btn-xs">답변</button>
 			</div>
 		</div>
 	</form>
@@ -277,13 +288,14 @@
 </div>
  --%>
  
- 
 <jsp:include page="../../common/modal-form-posts.jsp">
 	<jsp:param name="boardNo" value="104"/>
 </jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
+
+/* -------------------------------------------------------		Button(Form을 submit)		----------------------------------------------------------------- */
 	function changePage(event, page) {
 		event.preventDefault();
 		
@@ -301,13 +313,84 @@
 		var form = document.querySelector("form");
 		form.submit();
 	}
+
+	
+	
+/* -------------------------------------------------------		읽은 게시글 form 전달		----------------------------------------------------------------- */	
 	
 	$(function() {
 		$("[name=read]").change(function() {
 			var form = document.querySelector("form");
 			form.submit();
+		});
+		
+		
+		
+/* -------------------------------------------------------		checkBox 제이쿼리		----------------------------------------------------------------- */	
+		
+		$("#questionForm [name=checking]").change(function() {
+			toggleSelectedButton();
+		});
+		
+		function toggleSelectedButton() {
+			
+			let checkedCheckingLength = $("#questionForm [name=checking]:checked").length;
+			
+			/* let $answerButton = $("#answerButton"); */
+			let $submitPostNo = $("#submitPostNo");
+			
+			if(checkedCheckingLength == 0) {
+				/* $answerButton.addClass('disabled'); */
+				$submitPostNo.addClass('disabled');
+			} else {
+				/* $answerButton.removeClass('disabled'); */
+				$submitPostNo.removeClass('disabled');
+			}
+		}
+	
+	
+
+/* -------------------------------------------------------		modal 답변		----------------------------------------------------------------- */	
+
+		/* 
+		 let answerModal = new bootstrap.Modal("#modal-form-answer");
+				         
+
+		   $("#answerButton").click(function() {
+		      
+			      let checkingRadio = $("#questionForm [name=checking]:checked").val();
+			      
+			      $.getJSON("detail.jsp", {postNo:checkingRadio}, function(question) {
+				     	 let postNo = question.postNo;
+				         let boardNo = question.board.boardNo;
+				         let title = question.title;
+				         let important = question.important;
+				         let content = question.content;
+				         
+				         $("#modal-form-answer [name=postNo]").val(postNo);
+				         $("#modal-form-answer [name=boardNo]").val(boardNo);
+				         $("#modal-form-answer [name=title]").val("┗ Re: " + title);
+				         $("#modal-form-answer [name=important]").val(important);
+				         $("#modal-form-answer [name=content]").val(content);
+				         
+				         
+				     	 answerModal.show();
+			      })
+		   })
+		    */
+		   
+		   
+/* -------------------------------------------------------		list에서 게시물 삭제		----------------------------------------------------------------- */	
+		
+		$("#submitPostNo").click(function() {
+			
+			let checkingRadio = $("#questionForm [name=checking]:checked").val();
+			location.href= "delete.jsp?postNo=" + checkingRadio
+					
 		})
-	});	
+		 
+	
+	});
 </script>
 </body>
 </html>

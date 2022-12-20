@@ -22,22 +22,24 @@
 	Employee emp = (Employee) session.getAttribute("loginedEmp");
 
 	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
-	FileShareDao fileShareDao = FileShareDao.getInstance();
-	
- 	MultipartRequest mr = new MultipartRequest(request, "C:\\app\\web-workspace\\temp");
-	
-	String name = mr.getParameter("name");
-	String fileContent = mr.getParameter("fileContent");
-	String[] filenames = mr.getFilenames("attachedFile");
-	
 	String title = request.getParameter("title");
 	String writer = request.getParameter("writer");
 	String important = request.getParameter("important");
 	String content = request.getParameter("content");
 	
+	
+/*  	MultipartRequest mr = new MultipartRequest(request, "C:\\app\\web-workspace\\temp"); */
+	
+	/* String name = mr.getParameter("name");
+	String fileContent = mr.getParameter("fileContent");
+	String[] filenames = mr.getFilenames("attachedFile"); */
+	
+	FileShareDao fileShareDao = FileShareDao.getInstance();
+	
 	int sequence = fileShareDao.getSequence(); 
 	
 	FileShare fileShare = new FileShare();
+	fileShare.setPostNo(sequence);
 	fileShare.setBoard(new Board(boardNo));
 	fileShare.setTitle(title);
 	fileShare.setEmployee(emp);
@@ -45,14 +47,14 @@
 	
 	fileShareDao.insertFileShare(fileShare);
 	
-	FileDao fileDao = FileDao.getInstance();
+	/* FileDao fileDao = FileDao.getInstance();
 	
 	for (String filename : filenames) {
 		File file = new File();
 		file.setName(name);
 		
 		fileDao.insertFile(file);
-	}
+	} */
 	
 	response.sendRedirect("list.jsp");
 %>
