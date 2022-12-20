@@ -1,3 +1,5 @@
+<%@page import="com.community.vo.Bell"%>
+<%@page import="com.community.dao.BellDao"%>
 <%@page import="java.sql.Date"%>
 <%@page import="com.community.vo.Question"%>
 <%@page import="com.community.dao.QuestionDao"%>
@@ -23,6 +25,13 @@
 	question.setCommentCount(question.getCommentCount() - 1);
 	
 	questionDao.updateQuestion(question);
+	
+	BellDao bellDao = BellDao.getInstance();
+	Bell bell = bellDao.getBellByReviewNo(reviewNo + 1);
+	
+	bell.setDeleted("Y");
+	
+	bellDao.deleteBell(bell);
 	
 	response.sendRedirect("detail.jsp?postNo=" + postNo);
 %>

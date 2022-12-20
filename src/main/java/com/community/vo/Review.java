@@ -13,6 +13,11 @@ public class Review {
 	private Date deletedDate;
 	private Post post;
 	
+	public Review() {}
+	
+	public Review(int reviewNo) {
+		this.reviewNo = reviewNo;
+	}
 	
 	public int getReviewNo() {
 		return reviewNo;

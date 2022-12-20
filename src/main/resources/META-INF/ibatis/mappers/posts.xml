@@ -10,10 +10,6 @@
 			(comm_posts_seq.nextval, #board.boardNo#, #title#, #employee.empNo#, #content#, #important#, comm_posts_seq.nextval)
 	</insert>
 	
-	<select id="getSequence" resultClass="int">
-		select comm_posts_seq.nextval from dual
-	</select>
-	
 	<select id="getPostByNo" parameterClass="int" resultClass="com.community.vo.Post">
 		select
 			A.post_no	as postNo,

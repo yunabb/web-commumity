@@ -136,7 +136,11 @@
 			</div>
 		</div>
 	</div>
-				
+	<div class="row mb-3">
+		<div class="col">
+			<h1 class="heading">답변</h1>
+		</div>
+	</div>			
 <!-- 답변글 시작 -->
 	         <table class="table table-sm table-bordered">
 	            <colgroup>
@@ -225,7 +229,9 @@
 				<div class="card-body py-1 px-3 small border-bottom">
 					<div class="mb-1 d-flex justify-content-between text-muted">
 						<span><%=review.getEmployee().getName() %></span>
-						<span><span class="me-4"><%=review.getCreatedDate() %></span> <a href="deleteReview.jsp?postNo=<%=question.getPostNo() %>&reviewNo=<%=review.getReviewNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+						<span><span class="me-4"><%=review.getCreatedDate() %></span> 
+							<a href="deleteReview.jsp?postNo=<%=question.getPostNo() %>&reviewNo=<%=review.getReviewNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a>
+						</span>
 					</div>
 					<p class="card-text"><%=review.getContent() %></p>
 				</div>
@@ -341,7 +347,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
 						<div class="col-sm-10">
-							<textarea rows="5" class="form-control" name="content"><%=emp != null ? question.getContent() : "" %></textarea>
+							<textarea rows="5" class="form-control" name="content"></textarea>
 						</div>
 					</div>
 			</div>

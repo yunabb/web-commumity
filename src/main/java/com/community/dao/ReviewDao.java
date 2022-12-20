@@ -26,6 +26,10 @@ public class ReviewDao {
 		return (Review) SqlMapper.selectOne("reviews.getReview", reviewNo);
 	}
 	
+	public int getSequence() {
+		return (Integer) SqlMapper.selectOne("reviews.getSequence");
+	}
+	
 	public void updateReview(Review review) {
 		SqlMapper.update("reviews.updateReview", review);
 	}
