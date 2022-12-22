@@ -21,6 +21,7 @@ public class Post {
 	
 	private Department department;
 	private Position position;
+	private File file;
 	
 	public Post() {}
 	
@@ -127,6 +128,14 @@ public class Post {
 
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 	
 }

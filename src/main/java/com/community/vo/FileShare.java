@@ -18,12 +18,12 @@ public class FileShare {
 	private Date createdDate;		// 등록일
 	private Date updatedDate;		// 수정일
 	private Date deletedDate;		// 삭제일
+	private Integer originalNo;
 	private Department department;  // 부서명
 	private Position position;		// 직위명
 	
 	public FileShare() {}			// 생성자
 	
-
 	public int getPostNo() {
 		return postNo;
 	}
@@ -146,6 +146,14 @@ public class FileShare {
 
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	public Integer getOriginalNo() {
+		return originalNo;
+	}
+
+	public void setOriginalNo(Integer originalNo) {
+		this.originalNo = originalNo;
 	}
 	
 	
