@@ -32,10 +32,14 @@
 	<sqlMap resource="META-INF/ibatis/mappers/positions.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/posts.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/questions.xml" />
+
+	<sqlMap resource="META-INF/ibatis/mappers/storyposts.xml" />
+
 	<sqlMap resource="META-INF/ibatis/mappers/readings.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/reviews.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/storyposts.xml" />
 	<sqlMap resource="META-INF/ibatis/mappers/suggestions.xml" />
+
 
 
 </sqlMapConfig>	

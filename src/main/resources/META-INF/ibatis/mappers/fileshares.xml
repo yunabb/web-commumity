@@ -32,6 +32,7 @@
 			post_deleted_date = sysdate
 		where
 			post_no = #postNo#	
+			and post_board_no = 101
 	</update>
 	
 	<!-- 파일공유게시판의 게시글 총 개수 조회 -->
@@ -49,9 +50,9 @@
 					and post_title like '%' || #keyword# || '%'
 				</isEqual>
 				<isEqual property="opt" compareValue="writer">
-					and post_writer_no in (select emp_no
-										   from comm_employees
-										   where emp_name = #keyword#)
+					and post_writer_no  in (select emp_no 
+					                        from comm_employees
+					                        where emp_name = #keyword#)
 				</isEqual>
 				<isEqual property="opt" compareValue="content">
 					and post_content like '%' || #keyword# || '%'
@@ -104,9 +105,9 @@
 						and post_title like '%' || #keyword# || '%'
 					</isEqual>
 					<isEqual property="opt" compareValue="writer">
-						and post_writer_no in (select emp_no
-											   from comm_employees
-											   where emp_name = #keyword#)
+						and post_writer_no  in (select emp_no 
+						                        from comm_employees
+						                        where emp_name = #keyword#)
 					</isEqual>
 					<isEqual property="opt" compareValue="content">
 						and post_content like '%' || #keyword# || '%'

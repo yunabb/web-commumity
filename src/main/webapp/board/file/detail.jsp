@@ -1,3 +1,10 @@
+<%@page import="com.community.vo.Post"%>
+<%@page import="com.community.dao.PostDao"%>
+<%@page import="com.community.dao.FileDao"%>
+<%@page import="com.community.vo.File"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.dao.CommentDao"%>
+<%@page import="com.community.vo.Comment"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.dao.EmployeeDao"%>
 <%@page import="com.community.vo.FileShare"%>
@@ -32,13 +39,21 @@
 	// list의 글 번호를 조회
 	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
 
-	// StoryPostDao 객체를 생성하고 메소드를 실행해서 게시글 정보를 조회하고 출력
 	FileShareDao fileShareDao = FileShareDao.getInstance();
 	FileShare fileShare = fileShareDao.getFileSharesByNo(postNo);
 	
 	// 조회수를 1 증가시키고, 테이블에 반영
 	fileShare.setReadCount(fileShare.getReadCount() + 1);
 	fileShareDao.updateFileShare(fileShare);
+	
+	CommentDao commentDao = CommentDao.getInstance();
+	List<Comment> comments = commentDao.getCommentsByPostNo(postNo);
+	
+	FileDao fileDao = FileDao.getInstance();
+	List<File> files = fileDao.getFilesByPostNo(postNo);
+	
+	PostDao postDao = PostDao.getInstance();
+	Post post = postDao.getPostByNo(postNo);
 	
 %>	
 	<div class="row mb-3">
@@ -75,15 +90,35 @@
 						<th class="text-center bg-light">댓글 수</th>
 						<td><%=fileShare.getCommentCount() %></td>
 					</tr>
+					
+					<tr>
+					<th class="text-center bg-light">첨부파일</th>
+					<td colspan="3">
+					<%
+						if (files.isEmpty()) {
+					%>	
+							첨부파일이 없습니다.
+					<%
+						} else {
+							for (File file : files) {
+					%>
+						<a href="/web-community/download?filename=<%=file.getName()%>" class="btn btn-light btn-xs"><%=file.getName() %></a> 
+					<%					
+							}
+						}
+					%>
+						
+					</td>
+				</tr>
 					<tr>
 						<th class="text-center bg-light">내용</th>
-						<td colspan="3"><textarea rows="4" class="form-control border-0"><%=fileShare.getContent() %></textarea> </td>
+						<td colspan="3"><textarea rows="4" class="form-control border-0" readonly><%=fileShare.getContent() %></textarea> </td>
 					</tr>
 				</tbody>
 			</table>
 			<div class="d-flex justify-content-between">
 				<span>
-					<a href="list.jsp" class="btn btn-success btn-xs" >목록</a>
+					<a href="list.jsp" class="btn btn-dark btn-xs" >목록</a>
 <%
 	if (emp != null && emp.getName().equals(fileShare.getEmployee().getName())) {
 %>					
@@ -97,11 +132,13 @@
 <% 
 	if (emp == null || emp.getName().equals(fileShare.getEmployee().getName()))	{
 %>							
-					<a href="suggestion.jsp?postNo=<%=fileShare.getPostNo() %>" class="btn btn-outline-primary btn-xs disabled" onclick="suggestion()">추천</a>				
+					<a href="suggestion.jsp?postNo=<%=fileShare.getPostNo() %>" 
+					class="btn btn-outline-primary btn-xs disabled" onclick="suggestion()">추천</a>				
 <%
 	} else {
 %>			
-					<a href="suggestion.jsp?postNo=<%=fileShare.getPostNo() %>" class="btn btn-outline-primary btn-xs" onclick="suggestion()">추천</a>			
+		<a href="suggestion.jsp?postNo=<%=fileShare.getPostNo() %>" 
+		class="btn btn-outline-primary btn-xs" onclick="suggestion()">추천</a>			
 <%
 	}
 %>		
@@ -119,8 +156,9 @@
 					<div class="col-sm-11">
 						<input type="text" class="form-control form-control-sm" name="content" placeholder="댓글을 남겨주세요">
 					</div>
-					<div class="col-sm-1 text-end" style="margin-top: 2px;">
-						<button type="submit" class="btn btn-secondary btn-xs">댓글</button>
+					<div class="col-sm-1 text-end" style="margin-top: 2px;" >
+						<a href="addComment.jsp?postNo=<%=fileShare.getPostNo()%>">
+						<button class="btn btn-secondary btn-xs" >댓글</button></a>
 					</div>
 				</div>
 			</form>
@@ -128,14 +166,23 @@
 		
 		<div class="col-12">
 			<div class="card">
-				<!-- 댓글 반복 시작 -->			
-				<div class="card-body py-1 px-3 small border-bottom">
+				<!-- 댓글 반복 시작 -->		
+				<%
+					for (Comment comment : comments) {
+				%>	
+					<div class="card-body py-1 px-3 small border-bottom">
 					<div class="mb-1 d-flex justify-content-between text-muted">
-						<span>홍길동</span>
-						<span><span class="me-4">2022년 12월 10일</span> <a href="" class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
+						<span><%=comment.getEmployee().getName() %></span>
+						<span><span class="me-4"><%=StringUtils.dateToText(comment.getCreatedDate()) %>
+						</span> <a href="deleteComment.jsp?postNo=<%=fileShare.getPostNo() %>
+						&commentNo=<%=comment.getCommentNo() %>" 
+							class="text-danger"><i class="bi bi-trash-fill"></i></a></span>
 					</div>
-					<p class="card-text">내용</p>
+					<p class="card-text"><%=comment.getContent() %></p>
 				</div>
+				<%
+						}
+				%>
 				<!-- 댓글 반복 끝 -->
 			</div>				
 		</div>
@@ -145,46 +192,46 @@
 	<div class="modal-dialog modal-lg">
 	<form class="border p-3 bg-light" method="post" action="modify.jsp">
 		<!-- 게시글의 글 번호을 value에 설정하세요 -->
-		<input type="hidden" name="postNo" value="1000"/>
+		<input type="hidden" name="postNo" value="<%=fileShare.getPostNo() %>"/>
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">게시글 등록폼</h5>
+				<h5 class="modal-title">게시글 수정</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
 						<div class="col-sm-5">
-							<select class="form-select form-select-sm">
+							<select class="form-select form-select-sm" name="boardNo">
 								<option value="100"> 공지사항</option>
-								<option value="100"> 파일게시판</option>
-								<option value="100"> 갤러리</option>
-								<option value="100"> 묻고 답하기</option>
-								<option value="100"> 벼룩시장</option>
-								<option value="100"> 사는 얘기</option>
+								<option value="101"> 파일게시판</option>
+								<option value="102"> 자유게시판</option>
+								<option value="103"> 임시게시판</option>
+								<option value="104"> 묻고 답하기</option>
+								<option value="105"> 사는 얘기</option>
 							</select>
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" placeholder="제목">
+							<input type="text" class="form-control form-control-sm" name="title" placeholder="<%=fileShare.getTitle() %>" value="<%=fileShare.getTitle() %>">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" readonly="readonly" value="홍길동">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=fileShare.getEmployee().getName() %>">
 						</div>
 					</div>
 					<div class="row mb-2">
 						<div class="col-sm-8 offset-sm-2">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="" value="N" checked>
+								<input class="form-check-input" type="radio" name="important" value="N" checked>
 								<label class="form-check-label">일반</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="" value="Y" >
+								<input class="form-check-input" type="radio" name="important" value="Y" >
 								<label class="form-check-label">중요</label>
 							</div>
 						</div>
@@ -192,9 +239,20 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
 						<div class="col-sm-10">
-							<textarea rows="5" class="form-control">내용을 수정하세요</textarea>
+							<textarea rows="5" class="form-control" name="content"><%=fileShare.getContent()%></textarea>
 						</div>
 					</div>
+						<%-- 수정폼에 첨부파일 추가
+						<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
+						<div class="col-sm-9 mb-1">
+							<input type="file" class="form-control form-control-sm" name="attachedFile"/>
+						<div class="col-sm-1">
+							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
+						</div>
+					</div>
+				</div> --%>
+					
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>

@@ -22,6 +22,10 @@ public class PostDao {
 		return (Post) SqlMapper.selectOne("posts.getPostByNo", postNo);
 	}
 	
+
+	public int getSequence() {
+		return (Integer) SqlMapper.selectOne("posts.getSequence");
+
 	@SuppressWarnings("unchecked")
 	public List<Post> getPostsByEmpNo(int empNo) {
 		return (List<Post>) SqlMapper.selectList("posts.getPostsByEmpNo", empNo);
@@ -42,5 +46,6 @@ public class PostDao {
 	
 	public void updatePost(Post post) {
 		SqlMapper.update("posts.updatePost", post);
+
 	}
 }
