@@ -25,6 +25,7 @@ public class PostDao {
 
 	public int getSequence() {
 		return (Integer) SqlMapper.selectOne("posts.getSequence");
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Post> getPostsByEmpNo(int empNo) {
