@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.community.vo.Board"%>
 <%@page import="java.util.List"%>
 <%@page import="com.community.dao.BoardDao"%>
@@ -18,7 +20,12 @@
 	<jsp:param name="menu" value="admin"/>
 </jsp:include>
 <div class="container my-3">
+<%
+	BoardDao boardDao = BoardDao.getInstance();
+	Map<String, Object> param = new HashMap<>();
 
+	List<Board> boardList = boardDao.getBoards();
+%>
 	<div class="row mb-3">
 		<div class="col">
 			<h1 class="heading">게시판 관리</h1>
@@ -34,7 +41,7 @@
 							<p>전체 게시판목록을 확인하세요.</p>
 							<ul class="tree border py-3">
 				  				<li>
-				  					<span class="caret">공지사항</span>
+				  					<span class="caret">공지</span>
 								</li>
 				  				<li>
 				  					<span class="caret">파일게시판</span>
@@ -130,7 +137,7 @@
 									</tbody>
 								</table>
 								<div class="text-end">
-									<button class="btn btn-dark btn-xs"><></button>
+									<button class="btn btn-dark btn-xs">수정</button>
 									<button class="btn btn-secondary btn-xs">취소</button>
 									<button class="btn btn-primary btn-xs">신규 등록</button>
 								</div>

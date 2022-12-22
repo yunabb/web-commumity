@@ -45,6 +45,7 @@
 			comm_posts
 		where
 			post_deleted = 'N'
+			and post_board_no = 104
 			and post_board_no = 105
 		<dynamic>
 			<isNotNull property="opt">
@@ -102,6 +103,7 @@
 				comm_posts
 			where
 				post_deleted = 'N'
+				and post_board_no = 104
 				and post_board_no = 105
 			<dynamic>
 				<isNotNull property="opt">
@@ -123,7 +125,7 @@
 			A.post_writer_no = B.emp_no
 			and A.row_numbers between #begin# and #end#	
 		order by
-			A.post_no desc	
+			post_no desc
 	</select>	
 	
 	<!-- 
@@ -152,6 +154,7 @@
 		where
 			A.post_writer_no = B.emp_no
 			and A.post_no = #value#	
+			and post_board_no = 104	
 			and A.post_board_no = 105
 			and B.emp_position_no = C.position_no
 			and B.emp_dept_no = D.department_no	

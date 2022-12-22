@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+ 
+<sqlMap namespace="readings">
+
+	<!-- 읽은 게시물 넣기 -->
+	<insert id="insertReading" parameterClass="com.community.vo.Reading">
+		insert into comm_post_readings
+			(reading_post_no, reading_emp_no)
+		values
+			(#post.postNo#, #employee.empNo#)
+	</insert>
+	
+	<!-- 읽은 게시물 가져오기 -->
+	<select id="getReadings" parameterClass="int" resultClass="com.community.vo.Reading">
+		select
+			reading_post_no	as "post.postNo",
+			reading_emp_no	as "employee.empNo"
+		from
+			comm_post_readings
+		where
+			reading_post_no = #values#
+	</select>
+</sqlMap>
+

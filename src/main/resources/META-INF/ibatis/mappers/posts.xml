@@ -16,31 +16,166 @@
 	
 	<select id="getPostByNo" parameterClass="int" resultClass="com.community.vo.Post">
 		select
-			A.post_no	as postNo,
-			A.post_board_no	as "board.no",
-			A.post_title	as title,
-			A.post_writer_no	as "employee.empNo",
-			B.emp_name	as "employee.name",
-			C.position_name	as "position.name",
-			D.department_name	as "department.name",
-			A.post_content	as content,
-			A.post_important	as important,
-			A.post_read_count	as readCount,
+			A.post_no				as postNo,
+			A.post_board_no			as "board.no",
+			A.post_title			as title,
+			A.post_writer_no		as "employee.empNo",
+			B.emp_name				as "employee.name",
+			C.position_name			as "position.name",
+			D.department_name		as "department.name",
+			E.board_no				as "boardNo",
+			A.post_content			as content,
+			A.post_important		as important,
+			A.post_read_count		as readCount,
 			A.post_suggestion_count	as suggestionCount,
 			A.post_comment_count	as commentCount,
-			A.post_deleted	as deleted,
-			A.post_created_date	as createdDate,
-			A.post_updated_date	as updatedDate,
-			A.post_deleted_date	as deletedDate,
-			A.post_original_no	as originalNo
+			A.post_deleted			as deleted,
+			A.post_created_date		as createdDate,
+			A.post_updated_date		as updatedDate,
+			A.post_deleted_date		as deletedDate,
+			A.post_original_no		as originalNo
 		from
-			comm_posts A, comm_employees B, comm_positions C, comm_departments D
+			comm_posts A, comm_employees B, comm_positions C, comm_departments D, comm_boards E
 		where
-			A.post_board_no = 104
-			and A.post_no = #value#
+			A.post_no = #value#
 			and A.post_writer_no = B.emp_no
 			and B.emp_position_no = C.position_no
 			and B.emp_dept_no = D.department_no
+			and A.post_board_no = E.board_no
 	</select>
+	
+	<!--
+		회원번호를 입력받아 회원이 작성한 게시판의 게시글 전체 조회
+	 -->
+	<select id="getPostsByEmpNo" parameterClass="int" resultClass="com.community.vo.Post">
+		select
+			A.post_no as postNo,
+			A.post_board_no as "board.boardNo",
+			A.post_title as title,
+			A.post_writer_no as "employee.empNo",
+			B.emp_name as "employee.name",
+			C.board_name as name,
+			A.post_content as content,
+			A.post_important as important,
+			A.post_read_count as readCount,
+			A.post_suggestion_count as suggestionCount,
+			A.post_comment_count as commentCount,
+			A.post_deleted as deleted,
+			A.post_created_date as createdDate,
+			A.post_updated_date as updatedDate,
+			A.post_deleted_date as deletedDate
+		from
+			(select
+				post_no,
+				post_board_no,
+				post_title,
+				post_writer_no,
+				post_content,
+				post_important,
+				post_read_count,
+				post_suggestion_count,
+				post_comment_count,
+				post_deleted,
+				post_created_date,
+				post_updated_date,
+				post_deleted_date
+			from
+				comm_posts
+			where
+				post_deleted = 'N'
+			  )	A, comm_employees B, comm_boards C
+		where
+			A.post_writer_no = B.emp_no
+			and A.post_board_no = C.board_no
+			and A.post_writer_no = #value#
+	</select>
+	
+	<!-- 
+		회원이 등록한 총 게시글 수 조회
+	-->
+	<select id="getTotalRowsByEmpno" resultClass="int">
+		select 
+			count(*)
+		from 
+			comm_posts
+		where
+			post_deleted = 'N'
+			and post_writer_no = #value#	
+	</select>
+	
+	<!--
+		게시글 전체 목록 조회 및 페이징처리		
+	 -->
+	<select id="getPosts" parameterClass="map" resultClass="com.community.vo.Post">
+		select
+			A.post_no as postNo,
+			A.post_board_no as "board.boardNo",
+			A.post_title as title,
+			A.post_writer_no as "employee.empNo",
+			B.emp_name as "employee.name",
+			A.post_content as content,
+			A.post_important as important,
+			A.post_read_count as readCount,
+			A.post_suggestion_count as suggestionCount,
+			A.post_comment_count as commentCount,
+			A.post_deleted as deleted,
+			A.post_created_date as createdDate,
+			A.post_updated_date as updatedDate,
+			A.post_deleted_date as deletedDate
+		from
+			(select
+				row_number() over (order by post_no desc) row_numbers,
+				post_no,
+				post_board_no,
+				post_title,
+				post_writer_no,
+				post_content,
+				post_important,
+				post_read_count,
+				post_suggestion_count,
+				post_comment_count,
+				post_deleted,
+				post_created_date,
+				post_updated_date,
+				post_deleted_date
+			from
+				comm_posts
+			) A, comm_employees B		
+		where
+			A.post_writer_no = B.emp_no
+			and A.row_numbers between #begin# and #end#		
+		order by
+			post_no desc		
+	</select>
+	
+	<!-- 
+		삭제된 게시글까지 포함한 모든 게시글의 갯수 조회
+	-->
+	<select id="getTotalRows" parameterClass="map" resultClass="int">
+		select 
+			count(*)
+		from 
+			comm_posts	
+	</select>
+	
+		<!--  
+		사는이야기 게시판의 게시글 번호를 전달받아서 게시글 정보 수정
+	-->
+	<update id="updatePost" parameterClass="com.community.vo.Post">
+		update
+			comm_posts
+		set
+			post_title = #title#,
+			post_content = #content#,
+			post_important = #important#,
+			post_read_count = #readCount#,
+			post_suggestion_count = #suggestionCount#,
+			post_comment_count = #commentCount#,
+			post_deleted = #deleted#,
+			post_updated_date = sysdate,
+			post_deleted_date = sysdate
+		where
+			post_no = #postNo#		
+	</update>
 	
 </sqlMap>

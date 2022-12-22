@@ -34,5 +34,9 @@ public class BoardDao {
 	public void deleteBoard(int boardNo) {
 		SqlMapper.delete("boards.deleteBoard", boardNo);
 	}
+	
+	public Board getBoardByPostNo(int postNo) {
+		return (Board) SqlMapper.selectOne("boards.getBoardByPostNo", postNo);
+	}
 
 }

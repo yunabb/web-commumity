@@ -38,6 +38,23 @@
 	FileShareDao fileShareDao = FileShareDao.getInstance();
 	
 	int sequence = fileShareDao.getSequence(); 
+
+	int boardNo = StringUtils.stringToInt(request.getParameter("boardNo"));
+	String title = request.getParameter("title");
+	String writer = request.getParameter("writer");
+	String important = request.getParameter("important");
+	String content = request.getParameter("content");
+
+	
+/*  	MultipartRequest mr = new MultipartRequest(request, "C:\\app\\web-workspace\\temp"); */
+	
+	/* String name = mr.getParameter("name");
+	String fileContent = mr.getParameter("fileContent");
+	String[] filenames = mr.getFilenames("attachedFile"); */
+	
+	FileShareDao fileShareDao = FileShareDao.getInstance();
+	
+	int sequence = fileShareDao.getSequence(); 
 	
 	FileShare fileShare = new FileShare();
 	fileShare.setPostNo(sequence);
@@ -60,6 +77,16 @@
 			fileDao.insertFile(file);
 			} 
 		}
+
+	/* FileDao fileDao = FileDao.getInstance();
+	
+	for (String filename : filenames) {
+		File file = new File();
+		file.setName(name);
+		
+		fileDao.insertFile(file);
+	} */
+
 	
 	response.sendRedirect("list.jsp");
 %>

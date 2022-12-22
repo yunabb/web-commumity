@@ -25,8 +25,10 @@
 </jsp:include>
 <div class="container my-3">
 <%
+	Employee loginedEmp = (Employee) session.getAttribute("loginedEmp");
 	// 행 갯수, 정렬방식, 요청한 페이지번호, 검색옵션, 검색키워드를 조회한다.
 	// 값이 존재하지 않으면 기본값을 설정한다.
+	String reading = StringUtils.nullToValue(request.getParameter("readings"), "");
 	int rows = StringUtils.stringToInt(request.getParameter("rows"), 10);
 	String sort = StringUtils.nullToValue(request.getParameter("sort"), "date");
 	int currentPage = StringUtils.stringToInt(request.getParameter("page"), 1);
@@ -34,11 +36,15 @@
 	String keyword = StringUtils.nullToValue(request.getParameter("keyword"), "");
 	
 	NoticeDao noticeDao = NoticeDao.getInstance();
-	
 	Map<String, Object> param = new HashMap<>();
 	if (!opt.isEmpty() && !keyword.isEmpty()) {
-		param.put("opt", opt);		
-		param.put("keyword", keyword);		
+		param.put("opt", opt);
+		param.put("keyword", keyword);
+	}
+	
+	if (reading != null & loginedEmp != null) {
+		param.put("reading", reading);
+		param.put("empNo", loginedEmp.getEmpNo());
 	}
 	
 	// 게시글 갯수 조회
@@ -53,7 +59,6 @@
 	param.put("end", pagination.getEnd());
 	
 	List<Notice> noticeList = noticeDao.getNotices(param);
-
 %>
 	<div class="row mb-3">
 		<div class="col">
@@ -65,9 +70,14 @@
 			<div class="card">
 				<div class="card-header">전체 게시판 목록</div>
 				<div class="card-body">
+				<% if(loginedEmp == null) {
+					
+				} else {
+				%>
 					<div class="d-grid gap-2">
 						<button class="btn btn-dark btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#modal-form-posts">공지사항 등록</button>
 					</div>
+				<%} %>
 					<jsp:include page="../../common/tree.jsp" />
 				</div>
 			</div>
@@ -76,21 +86,26 @@
 			<div class="card">
 				<div class="card-header">공지사항</div>
 				<div class="card-body">
+				
 					<form class="mb-3" method="get" action="list.jsp">
 					<input type="hidden" name="page" value="<%=currentPage %>" />
 					<input type="hidden" name="sort" value="<%=sort %>" />
 						<div class="mb-2 d-flex justify-content-between">
 							<div>
 								<select class="form-select form-select-xs" name="rows" onchange="changeRows()">
-									<option value="10" > 10</option>
-									<option value="15" > 15</option>
-									<option value="20" > 20</option>
+									<option value="10" <%=rows == 10 ? "checked" : "" %>> 10</option>
+									<option value="15" <%=rows == 15 ? "checked" : "" %>> 15</option>
+									<option value="20" <%=rows == 20 ? "checked" : "" %>> 20</option>
 								</select>
 							</div>
 							<div>
-								<small><input type="checkbox"> 안읽은 게시글</small>
-							
-								<select class="form-select form-select-xs">
+							<% if (loginedEmp == null) {
+								
+							   } else {
+							%>
+									<small><input type="checkbox" name="readings" value="Y" <%=reading != null ? "checked" : "" %>> 안읽은 게시글</small>
+							<%} %>
+								<select class="form-select form-select-xs" name="opt">
 									<option value="title"<%="title".equals(opt) ? "selected" : "" %>> 제목</option>
 									<option value="writer"<%="writer".equals(opt) ? "selected" : "" %>> 작성자</option>
 									<option value="content"<%="content".equals(opt) ? "selected" : "" %>> 내용</option>
@@ -134,7 +149,7 @@
 									<td><input type="checkbox" name="" value=""/></td>
 									<td><%=notice.getPostNo() %></td>
 									<td><a href="detail.jsp?no=<%=notice.getPostNo() %>" class="text-decoration-none text-dark"><%=notice.getTitle() %></a></td>
-									<td><%=notice.getEmployees().getName() %></td>
+									<td><%=notice.getEmployee().getName() %></td>
 									<td><%=StringUtils.dateToText(notice.getCreatedDate()) %></td>
 									<td><%=notice.getReadCount() %></td>
 									<td><%=notice.getSuggestionCount() %></td>
@@ -180,13 +195,23 @@
 							</li>
 						</ul>
 					</nav>
-<%
+<% 		
 	}
+%>
+
+<%
+	if (loginedEmp == null) {
+		
+	} else {
 %>
 					<div class="text-end">
 						<button class="btn btn-dark btn-xs" data-bs-toggle="modal" data-bs-target="#modal-form-posts">등록</button>
 						<button class="btn btn-outline-dark btn-xs">삭제</button>
 					</div>
+<%
+	}
+%>	
+				
 				</div>
 			</div>
 		</div>
@@ -225,6 +250,12 @@ function submitForm(page) {
 	var form = document.querySelector("form");				
 	form.submit();	
 }
+$(function() {
+	$("[name=readings]").change(function() {
+		var form = document.querySelector("form");
+		form.submit();
+	})
+});
 </script>
 </body>
 </html>

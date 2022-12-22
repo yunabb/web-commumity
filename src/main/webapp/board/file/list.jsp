@@ -57,6 +57,8 @@
 	param.put("end", pagination.getEnd());
 	
 	List<FileShare> fileShareList = fileShareDao.getFileShares(param);
+	
+	Employee emp = (Employee) session.getAttribute("loginedEmp");
 
 %>
 	<div class="row mb-3">
@@ -136,6 +138,23 @@
 		if (fileShareList.isEmpty()) {
 %>
 		<tr><td class="text-center" colspan="7"> 게시글 정보가 없습니다. </td></tr>
+
+<%
+	} else {
+		for (FileShare fileShare : fileShareList) {
+	
+%>
+			<tr>
+				<td><input type="checkbox" name="" value=""/></td>
+				<td><%=fileShare.getPostNo() %></td>
+				<td><a href="download.jsp?postNo=<%=fileShare.getPostNo() %>"><i class="bi bi-paperclip"></i></a></td>
+				<td><a href="detail.jsp?postNo=<%=fileShare.getPostNo() %>" class="text-decoration-none text-dark"><%=fileShare.getTitle() %></a></td>
+				<td><%=fileShare.getEmployee().getName() %></td>
+				<td><%=StringUtils.dateToText(fileShare.getCreatedDate()) %></td>
+				<td><%=fileShare.getReadCount() %></td>
+				<td><%=fileShare.getSuggestionCount() %></td>
+			</tr>
+
 <%
 		} else {
 			// 게시글을 하나씩 웹페이지에 뿌려준다.
@@ -231,6 +250,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">게시글 등록</h5>
+
+	<form class="border p-3 bg-light" id="sendForm" method="post" action="../../board/file/register.jsp" >
+		<!-- 게시글의 글 번호을 value에 설정하세요 -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">게시글 수정</h5>
+
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -266,11 +292,17 @@
 					<div class="row mb-2">
 						<div class="col-sm-8 offset-sm-2">
 							<div class="form-check form-check-inline">
+
 								<input class="form-check-input" type="radio" name="important" value="N" />
 								<label class="form-check-label">일반</label>
 							</div>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="radio" name="important" value="Y" />
+								<input class="form-check-input" type="radio" name="imp" value="N" />
+								<label class="form-check-label">일반</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="imp" value="Y" />
 								<label class="form-check-label">중요</label>
 							</div>
 						</div>
@@ -285,6 +317,7 @@
 						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
 						<div class="col-sm-9 mb-1">
 							<input type="file" class="form-control form-control-sm" name="attachedFile"/>
+							<input type="file" class="form-control form-control-sm" />
 						</div>
 						<div class="col-sm-1">
 							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
@@ -294,6 +327,7 @@
 						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
 						<div class="col-sm-9 mb-1">
 							<input type="file" class="form-control form-control-sm" name="attachedFile" />
+							<input type="file" class="form-control form-control-sm" />
 						</div>
 						<div class="col-sm-1">
 							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
@@ -303,6 +337,7 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
 				<button type="submit" class="btn btn-primary btn-xs">등록</button>
+				<button type="submit" class="btn btn-primary btn-xs">수정</button>
 			</div>
 		</div>
 	</form>
@@ -320,12 +355,29 @@
 	}
 	
 	
+
 	function changePage(event, page) {
 		event.preventDefault();	
 		
 		submitForm(page); 
 	}
 	
+
+	function changeSort(event, sort) {
+		event.preventDefault();
+		var sortField = document.querySelector("[name=sort]");	
+		sortField.value = sort;									
+		
+		submitForm(1);	
+	}
+	
+	function changePage(event, page) {
+		event.preventDefault();	
+		
+		submitForm(page); 
+	}
+	
+
 	function submitForm(page) {
 		var pageField = document.querySelector("[name=page]");	
 		pageField.value = page;									

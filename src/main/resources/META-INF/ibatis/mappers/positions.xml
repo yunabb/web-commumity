@@ -6,7 +6,8 @@
 	<select id="getAllPositions" resultClass="com.community.vo.Position">
 		select
 			position_no		as no,
-			position_name	as name
+			position_name	as name,
+			position_seq	as seq
 		from
 			comm_positions
 	</select>
@@ -14,7 +15,8 @@
 	<select id="getNameByEmpNo" parameterClass="int" resultClass="com.community.vo.Position">
 		select
 			a.position_no		as no,
-			a.position_name		as name
+			a.position_name		as name,
+			a.position_seq		as seq
 		from
 			comm_positions a, comm_employees b
 		where
@@ -25,11 +27,29 @@
 	<select id="getPositionByNo" parameterClass="int" resultClass="com.community.vo.Position">
 		select
 			position_no		as no,
-			position_name	as name
+			position_name	as name,
+			position_seq	as seq
 		from
 			comm_positions
 		where
 			position_no = #value#
 	</select>
+	
+	<insert id="insertPosition" parameterClass="com.community.vo.Position">
+		insert into comm_positions
+			(position_no, position_name, position_seq)
+		values
+			(comm_positions_seq.nextval, #name#, #seq#)
+	</insert>
+	
+	<update id="updatePosition" parameterClass="com.community.vo.Position">
+		update
+			comm_positions
+		set
+			position_name = #name#,
+			position_seq = #seq#
+		where
+			position_no = #no#
+	</update>
 </sqlMap>
 

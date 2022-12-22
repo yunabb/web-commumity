@@ -1,3 +1,5 @@
+<%@page import="com.community.vo.Question"%>
+<%@page import="com.community.dao.QuestionDao"%>
 <%@page import="com.community.vo.Employee"%>
 <%@page import="com.community.vo.Post"%>
 <%@page import="com.community.dao.PostDao"%>
@@ -7,10 +9,11 @@
 <%@page import="com.community.dao.BoardDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
     <%
     	/* emp는 로그인 변수 */
     	Employee emp = (Employee) session.getAttribute("loginedEmp");
+    
+    	int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
     %>
 <div class="modal" tabindex="-1" id="modal-form-posts">
 	<div class="modal-dialog modal-lg">
@@ -21,17 +24,13 @@
 			</div>
 			<div class="modal-body">
 
-				<form class="border p-3 bg-light" action="../../common/register.jsp" id="sendForm">
-
-				<form class="border p-3 bg-light" >
+				<form class="border p-3 bg-light" action="../../common/register.jsp" id="sendForm" enctype="multipart/form-data">
 
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
 						<div class="col-sm-5">
 							<select class="form-select form-select-sm" name="boardNo">
 	<%
-		int postNo = StringUtils.stringToInt(request.getParameter("postNo"));
-	
 		/* 질문등록 -> 게시판 목록 가져오기 */
 		BoardDao boardDao = BoardDao.getInstance();
 		List<Board> boardList = boardDao.getBoards();
@@ -41,11 +40,6 @@
 								<option value="<%=board.getBoardNo() %>"><%=board.getName() %></option>
 	<%
 		}
-		
-		/* 게시글 수정 모달 posts.xml, postDao, Post(Vo) 이용해서 부탁드립니다! */
-		
-		PostDao postDao = PostDao.getInstance();
-		// List<Post> postList = postDao.get
 	%>								
 							</select>
 						</div>
@@ -53,7 +47,7 @@
 					<div class="row mb-2">
 						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control form-control-sm" name="title" value=""/>
+							<input type="text" class="form-control form-control-sm" name="title" />
 						</div>
 					</div>
 					<div class="row mb-2">
@@ -126,4 +120,5 @@
 		}
 		document.getElementById("sendForm").submit();
 	}
+
 </script>

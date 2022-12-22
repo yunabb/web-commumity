@@ -33,5 +33,22 @@
 		where
 			department_no = #value#
 	</select>
+	
+	<insert id="insertDept" parameterClass="com.community.vo.Department">
+		insert into comm_departments
+			(department_no, department_name)
+		values
+			(comm_departments_seq.nextval, #name#)		
+	</insert>
+	
+	<update id="updateDept" parameterClass="com.community.vo.Department">
+		update
+			comm_departments
+		set
+			department_name = #name#
+		where
+			department_no = #no#
+	</update>
+	
 </sqlMap>
 

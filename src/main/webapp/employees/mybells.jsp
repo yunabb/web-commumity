@@ -1,5 +1,12 @@
+<%@page import="com.community.util.StringUtils"%>
+<%@page import="com.community.vo.Bell"%>
+<%@page import="com.community.dao.BellDao"%>
+<%@page import="com.community.vo.Answer"%>
+<%@page import="java.util.List"%>
+<%@page import="com.community.dao.AnswerDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@include file="../common/logincheck.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -29,7 +36,7 @@
 						<a href="home.jsp" class="list-group-item list-group-item-action">내 정보 보기</a>
 						<a href="myposts.jsp" class="list-group-item list-group-item-action">내가 작성한 게시글</a>
 						<a href="mycomments.jsp"  class="list-group-item list-group-item-action">내가 작성한 댓글</a>
-						<a href="mynotice.jsp" class="list-group-item list-group-item-action">나에게 온 알림</a>
+						<a href="mybells.jsp" class="list-group-item list-group-item-action">나에게 온 알림</a>
 					</div>
 				</div>
 				<div class="card-body">
@@ -79,56 +86,35 @@
 									<th></th>
 								</tr>
 							</thead>
+	<%
+		Employee receiveEmpNo = (Employee) session.getAttribute("loginedEmp");	
+	
+		BellDao bellDao = BellDao.getInstance();
+		List<Bell> bellList = bellDao.getBellsByEmpNo(receiveEmpNo.getEmpNo());
+		
+		for(Bell bell : bellList) {
+	%>
 							<tbody>
 								<tr>
-									<td class="border-bottom-0">100000</td>
-									<td class="border-bottom-0">홍길동</td>
-									<td class="border-bottom-0">2022-12-01</td>
-									<td class="border-bottom-0">읽음</td>
-									<td class="border-bottom-0">2022-12-10</td>
+									<td class="border-bottom-0"><%=bell.getBellNo() %></td>
+									<td class="border-bottom-0"><%=bell.getSendEmp().getName() %></td>
+									<td class="border-bottom-0"><%=StringUtils.dateToText(bell.getCreatedDate()) %></td>
+									<td class="border-bottom-0"><%=("N").equals(bell.getReadingStatus()) ? "미확인" : "읽음" %></td>
+									<td class="border-bottom-0"><%=StringUtils.dateToText(bell.getUpdatedDate()) %></td>
 									<td class="border-bottom-0 pt-2">
-										<a href="" class="btn btn-outline-secondary btn-xs">확인</a>
-										<a href="" class="btn btn-outline-secondary btn-xs">삭제</a>
+										<a href="checkBell.jsp?bellNo=<%=bell.getBellNo() %>" class="btn btn-outline-secondary btn-xs">확인</a>
+										<a href="deleteBell.jsp?bellNo=<%=bell.getBellNo() %>" class="btn btn-outline-secondary btn-xs">삭제</a>
 									</td>
 								</tr>
 								<tr>
 									<td colspan="6" class="small ps-5 py-2">
-										<a href="">100번 게시글</a>에 <strong>홍길동</strong>님이 댓글을 달았습니다.
-									</td>
-								</tr>
-								<tr>
-									<td class="border-bottom-0">100000</td>
-									<td class="border-bottom-0">홍길동</td>
-									<td class="border-bottom-0">2022-12-01</td>
-									<td class="border-bottom-0">읽음</td>
-									<td class="border-bottom-0">2022-12-10</td>
-									<td class="border-bottom-0 pt-2">
-										<a href="" class="btn btn-outline-secondary btn-xs">확인</a>
-										<a href="" class="btn btn-outline-secondary btn-xs">삭제</a>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="6" class="small ps-5 py-2">
-										<a href="">100번 게시글</a>에 <strong>홍길동</strong>님이 댓글을 달았습니다.
-									</td>
-								</tr>
-								<tr>
-									<td class="border-bottom-0">100000</td>
-									<td class="border-bottom-0">홍길동</td>
-									<td class="border-bottom-0">2022-12-01</td>
-									<td class="border-bottom-0">읽음</td>
-									<td class="border-bottom-0">2022-12-10</td>
-									<td class="border-bottom-0 pt-2">
-										<a href="" class="btn btn-outline-secondary btn-xs">확인</a>
-										<a href="" class="btn btn-outline-secondary btn-xs">삭제</a>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="6" class="small ps-5 py-2">
-										<a href="">100번 게시글</a>에 <strong>홍길동</strong>님이 댓글을 달았습니다.
+										<a href=""><%=bell.getPost().getPostNo() %>번 게시글</a>에 <strong><%=bell.getSendEmp().getName() %></strong>님이 댓글을 달았습니다.
 									</td>
 								</tr>
 							</tbody>
+	<%
+		}
+	%> 
 						</table>
 					</form>
 					<nav>

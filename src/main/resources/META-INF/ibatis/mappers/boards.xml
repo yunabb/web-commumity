@@ -53,6 +53,28 @@
 			board_no = #value#
 	</select>
 	
+	<!-- 게시물 번호를 통해 게시판 정보 가져옴 -->
+	<select id="getBoardByPostNo" parameterClass="int" resultClass="com.community.vo.Board">
+		select
+			A.board_no 				as boardNo,
+			B.post_no				as postNo,
+			A.board_name 			as name,
+			A.board_description 	as description,
+			A.board_seq 			as seq,
+			A.board_read_option 	as readOption,
+			A.board_write_option 	as writeOption,
+			A.board_deleted 		as deleted,
+			A.board_created_date 	as createdDate,
+			A.board_updated_date 	as updatedDate,
+			A.board_deleted_date 	as deletedDate,
+			A.parent_board_no 		as parentBoardNo
+		from
+			comm_boards A, comm_posts B
+		where
+			B.post_no = #value#
+			and A.board_no = B.post_board_no
+	</select>
+	
 	<!-- 게시판 목록을 수정 -->
 	<update id="updateBoard" parameterClass="com.community.vo.Board">
 		update

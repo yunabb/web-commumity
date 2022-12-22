@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap namespace="answers">
+	<insert id="insertAnswer" parameterClass="com.community.vo.Answer">
+		insert into comm_answers
+			(answer_no, answer_post_no, answer_writer_no, answer_content)
+		values
+			(comm_answers_seq.nextval, #question.postNo#, #employee.empNo#, #content#)
+	</insert>
+	
+	<select id="getAnswersByNo" parameterClass="int" resultClass="com.community.vo.Answer">
+		select
+			A.answer_no	as answerNo,
+			A.answer_post_no	as "question.postNo",
+			A.answer_writer_no	as "employee.empNo",
+			A.answer_content	as	content,
+			A.answer_deleted	as deleted,
+			A.answer_created_date	as createdDate,
+			A.answer_updated_date	as updatedDate,
+			A.answer_deleted_date	as deletedDate,
+			B.emp_name as "employee.name",
+			C.position_name	as "position.name"
+		from
+			comm_answers A, comm_employees B, comm_positions C
+		where
+			A.answer_post_no = #value#
+			and A.answer_deleted = 'N'
+			and A.answer_writer_no = B.emp_no
+			and B.emp_position_no = C.position_no
+	</select>
+	
+	<select id="getAnswersRows" parameterClass="int" resultClass="int">
+		select
+			count(*)
+		from
+			comm_answers
+		where
+			answer_post_no = #value#
+			and answer_deleted = 'N'
+	</select>
+</sqlMap>
+
