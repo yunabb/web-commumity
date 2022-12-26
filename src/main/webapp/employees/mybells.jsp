@@ -123,9 +123,7 @@
 								<a class="page-link">이전</a>
 							</li>
 							<li class="page-item"><a class="page-link active" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-							<li class="page-item">
+							<li class="page-item disabled">
 								<a class="page-link" href="#">다음</a>
 							</li>
 						</ul>

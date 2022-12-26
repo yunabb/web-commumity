@@ -60,6 +60,11 @@
 		} catch (Exception e) {
 		}
 		
+		if(emp == null) {
+			question.setReadCount(question.getReadCount() + 1);
+			questionDao.updateQuestion(question);
+		}
+		
 	%>
 	
 	<div class="row mb-3">
@@ -182,7 +187,7 @@
 		if(emp != null) {
 	%>
 		<div class="col-12 mb-1">
-			<form method="post" action="addReview.jsp">
+			<form method="post" action="addReview.jsp" id="reviewForm">
 				<!-- 게시글의 글 번호을 value에 설정하세요 -->
 				<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
 				<div class="row mb-3">
@@ -230,7 +235,7 @@
 					<div class="mb-1 d-flex justify-content-between text-muted">
 						<span><%=review.getEmployee().getName() %></span>
 						<span><span class="me-4"><%=review.getCreatedDate() %></span> 
-							<a href="deleteReview.jsp?postNo=<%=question.getPostNo() %>&reviewNo=<%=review.getReviewNo() %>" class="text-danger"><i class="bi bi-trash-fill"></i></a>
+							<a href="deleteReview.jsp?postNo=<%=question.getPostNo() %>&reviewNo=<%=review.getReviewNo() %>" class="text-danger"><i class="<%=emp != null ? "bi bi-trash-fill" : "" %>"></i></a>
 						</span>
 					</div>
 					<p class="card-text"><%=review.getContent() %></p>
@@ -323,7 +328,7 @@
 
 <div class="modal" tabindex="-1" id="modal-form-answer">
 	<div class="modal-dialog modal-lg">
-	<form class="border p-3 bg-light" id="sendAnswer" method="post" action="../../board/qna/register.jsp" >
+	<form class="border p-3 bg-light" id="sendAnswer" method="post" action="../../board/qna/answerRegister.jsp" >
 		<!-- 게시글의 글 번호을 value에 설정하세요 -->
 		<input type="hidden" name="postNo" value="<%=question.getPostNo() %>"/>
 		<div class="modal-content">
@@ -387,6 +392,16 @@
 			
 			if(contentText === "") {
 				alert("내용을 입력해주세요");
+				return false;
+			}
+			return true;
+		});
+		
+		$("#submitButton").click(function() {
+			let reviewText = $("#reviewForm [name=reviewContent]").val();
+			
+			if(reviewText === "") {
+				alert("댓글을 입력해주세요");
 				return false;
 			}
 			return true;

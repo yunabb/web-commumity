@@ -34,4 +34,8 @@ public class QuestionDao {
 	public void insertQuestion(Question question) {
 		SqlMapper.insert("questions.insertQuestion", question);
 	}
+	
+	public int getSequence() {
+		return (Integer) SqlMapper.selectOne("questions.getSequence");
+	}
 }

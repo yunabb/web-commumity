@@ -1,3 +1,5 @@
+<%@page import="com.community.vo.Answer"%>
+<%@page import="com.community.dao.AnswerDao"%>
 <%@page import="com.community.dao.BoardDao"%>
 <%@page import="com.community.vo.Board"%>
 <%@page import="com.community.vo.Employee"%>
@@ -138,15 +140,15 @@
 	%>
 				<tr>
 	<%
-		if(emp != null) {
+				if(emp != null && question.getEmployee().getEmpNo() == emp.getEmpNo()) {
 	%>
 					<td><input type="radio" name="checking" value=<%=question.getPostNo() %> /></td>
 	<%					
-		} else {
+				} else {
 	%>
 					<td></td>
 	<%
-		}
+				}
 	%>				
 					<td id="sendPostNo" ><%=question.getPostNo() %></td>
 					<td><a href="detail.jsp?postNo=<%=question.getPostNo() %>" class="text-decoration-none text-dark"><i class="bi bi-question-circle-fill"></i><%=question.getTitle() %></a></td>
@@ -214,6 +216,96 @@
 		</div>
 	</div>
 </div>
+
+<!-- ------------------------------ 글 등록 ----------------------------------- -->
+<%-- 
+<div class="modal" tabindex="-1" id="modal-form-post">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">묻답 게시글 등록폼</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<form class="border p-3 bg-light" action="../../board/qna/register.jsp" id="sendForm" enctype="multipart/form-data">
+
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">게시판 이름</label>
+						<div class="col-sm-5">
+							<select class="form-select form-select-sm" name="boardNo">
+	<%
+		/* 질문등록 -> 게시판 목록 가져오기 */
+		BoardDao boardDao = BoardDao.getInstance();
+		List<Board> boardList = boardDao.getBoards();
+		
+		for(Board board : boardList) {
+	%>							
+								<option value="<%=board.getBoardNo() %>"><%=board.getName() %></option>
+	<%
+		}
+	%>								
+							</select>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">제목</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" name="title" />
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">작성자</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control form-control-sm" readonly="readonly" value="<%=emp != null ? emp.getName() : ""%>" name="writer" />
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-sm-8 offset-sm-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="important" value="N" checked>
+								<label class="form-check-label">일반</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="important" value="Y" >
+								<label class="form-check-label">중요</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">내용</label>
+						<div class="col-sm-10">
+							<textarea rows="5" class="form-control" name="content" ></textarea>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
+						<div class="col-sm-9 mb-1">
+							<input type="file" class="form-control form-control-sm" name="attachedFile"/>
+						</div>
+						<div class="col-sm-1">
+							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<label class="col-sm-2 col-form-label col-form-label-sm">첨부파일</label>
+						<div class="col-sm-9 mb-1">
+							<input type="file" class="form-control form-control-sm" name="attachedFile"/>
+						</div>
+						<div class="col-sm-1">
+							<button type="button" class="btn btn-sm"><i class="bi bi-plus-circle"></i></button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary btn-xs" onclick="submitRegister()">등록</button>
+			</div>
+		</div>
+	</div>
+</div>
+ --%>
 
 <!-- ------------------------------답변----------------------------------- -->
 
