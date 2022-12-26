@@ -7,7 +7,7 @@
 		insert into comm_post_files
 			(file_no, file_name, file_post_no)
 		values
-			(comm_posts_files_seq.nextval, #name#, comm_posts_seq.nextval)
+			(comm_posts_files_seq.nextval, #name#, #post.postNo#)
 	</insert>
 	
 	<update id="updateFile" parameterClass="com.community.vo.File">
